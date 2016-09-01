@@ -1,0 +1,8 @@
+# test runs requirements (versions we'll be testing against) - automatically updated by requires.io
+coverage==4.1 # pytest-cov
+pylama==7.0.9
+pyflakes==1.2.3
+pep257==0.7.0
+pep8==1.7.0
+mccabe==0.5.0
+pyroma==2.0.2

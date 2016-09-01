@@ -1,0 +1,29 @@
+language: python
+python:
+    - "2.7"
+    - "3.3"
+    - "3.4"
+    - "3.5"
+    - "pypy"
+    - "pypy3"
+install:
+    - "pip install -r requirements-test.txt"
+    - "python setup.py develop"
+    - "pip install pytest-postgresql[tests] coveralls wheel"
+script:
+    - "py.test -v --cov pytest_postgresql tests/"
+    - "pylama"
+    - "pyroma ."
+after_success:
+    - coveralls
+
+deploy:
+    provider: pypi
+    user: thearoom
+    password:
+        secure: "run travis encrypt --add deploy.password"
+    on:
+        tags: true
+        all_branches: true
+        repo: ClearcodeHQ/pytest-postgresql
+    distributions: "sdist bdist_wheel"

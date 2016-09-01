@@ -1,0 +1,4 @@
+include *.rst *.py
+recursive-include src/pytest_postgresql *.py
+recursive-include docs *
+prune docs/build
