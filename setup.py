@@ -16,15 +16,18 @@
 
 # You should have received a copy of the GNU Lesser General Public License
 # along with pytest-postgresql. If not, see <http://www.gnu.org/licenses/>.
-
+"""pytest-postgresql setup.py module."""
 
 import os
 import re
 from setuptools import setup, find_packages
 
 here = os.path.dirname(__file__)
-with open(os.path.join(here, 'src', 'pytest_postgresql', '__init__.py')) as v_file:
-    package_version = re.compile(r".*__version__ = '(.*?)'", re.S).match(v_file.read()).group(1)
+with open(
+        os.path.join(here, 'src', 'pytest_postgresql', '__init__.py')
+) as v_file:
+    package_version = re.compile(
+        r".*__version__ = '(.*?)'", re.S).match(v_file.read()).group(1)
 
 
 def read(fname):
@@ -59,7 +62,7 @@ setup(
     long_description=(
         read('README.rst') + '\n\n' + read('CHANGES.rst')
     ),
-    keywords='',
+    keywords='tests py.test pytest fixture postgresql',
     author='Clearcode - The A Room',
     author_email='thearoom@clearcode.cc',
     url='https://github.com/ClearcodeHQ/pytest-postgresql',
@@ -68,7 +71,8 @@ setup(
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)',
+        'License :: OSI Approved :: '
+        'GNU Lesser General Public License v3 or later (LGPLv3+)',
         'Natural Language :: English',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
