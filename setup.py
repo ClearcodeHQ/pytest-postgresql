@@ -42,7 +42,8 @@ def read(fname):
 
 requirements = [
     'psycopg2',
-    'pytest'
+    'pytest',
+    'port-for'
 ]
 
 test_requires = [
