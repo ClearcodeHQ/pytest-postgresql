@@ -1,29 +1,29 @@
 language: python
 python:
-    - "2.7"
-    - "3.3"
-    - "3.4"
-    - "3.5"
-    - "pypy"
-    - "pypy3"
+- '2.7'
+- '3.3'
+- '3.4'
+- '3.5'
+env:
+- INSTALLATION="python setup.py develop" XDIST=1
+- INSTALLATION="pip install ." XDIST=0
 install:
-    - "pip install -r requirements-test.txt"
-    - "python setup.py develop"
-    - "pip install pytest-postgresql[tests] coveralls wheel"
+- pip install -r requirements-test.txt
+- "$INSTALLATION"
+- pip install pytest-postgresql[tests] coveralls wheel
 script:
-    - "py.test -v --cov pytest_postgresql tests/"
-    - "pylama"
-    - "pyroma ."
+- py.test -n $XDIST --cov src/pytest_postgresql tests
+- pylama
+- pyroma .
 after_success:
-    - coveralls
-
+- coveralls
 deploy:
-    provider: pypi
-    user: thearoom
-    password:
-        secure: "run travis encrypt --add deploy.password"
-    on:
-        tags: true
-        all_branches: true
-        repo: ClearcodeHQ/pytest-postgresql
-    distributions: "sdist bdist_wheel"
+  provider: pypi
+  user: thearoom
+  password:
+    secure: FAN5dMk+ktvFdfZX6OjKy9+XWwbTrJcZ4OrV6LVKNyZdsVRi0+iE6opSQXH8HjO6DCXsyHkZDD8a6f81y/Cc3j6QsRItnJwjQllu4dNce5LYHZNA/sQ9O8mgC9+DrPWzPYRlMkSgG9eVH3tI8UX1P7Wh4yuJLbQbNkWw8ZX7j+HSwZtYLPhP2uBp7xMF5rYO+9PcIA/I0QI0AkfRQtYtwSp3QAjKUVWnWXnUQOILey5wP+3ENYVojKmYSocmOtbKUUNfExgZIep8gsZXx60fuBQLRSG0XhDxud51nGKvzNegqQoN5Mpt61VslT7trS/D6zOzMCUTqNwbg/gMrebU5IMZm5ijJSKkvw5Cl30Yc5+cZ0o7N9NbepBjlEX3ByDUnDk7bfSRHukJw9lG5+mBHLi+aJ9+ZPEqUcIHuYzv6+yvjlGPkETqlxkCunU6HzwrsD5QdYwqcY4PLHf7Onx3I2Vjg4XxZO27BDbhvpOTF4SaAk45ALi9y10Gu7FSswp44/l5k54Ur1/JPhSmFGIO8XZJZ7mLGftextYLEmQuai7IKmu46rZ3ffzEpIk0lP5xi2NWyQvD9DHEJSMKxc4koVKb72lLbl69aVp+6vKRH4VtJ1E5/Hybrxe9bbz+upQ4xRdXjRAml4xAnGeBcH5hf2owbijYuoU26qOHKl68Ej0=
+  on:
+    tags: true
+    all_branches: true
+    repo: ClearcodeHQ/pytest-postgresql
+  distributions: sdist bdist_wheel

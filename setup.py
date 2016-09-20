@@ -37,11 +37,14 @@ def read(fname):
     """
     return open(os.path.join(here, fname)).read()
 
-requirements = []
+requirements = [
+    'psycopg2',
+    'pytest'
+]
 
 test_requires = [
-    'pytest',
-    'pytest-cov'
+    'pytest-cov==2.3.1',
+    'pytest-xdist==1.15.0',
 ]
 
 extras_require = {
