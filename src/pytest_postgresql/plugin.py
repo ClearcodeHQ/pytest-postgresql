@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 # Copyright (C) 2016 by Clearcode <http://clearcode.cc>
 # and associates (see AUTHORS).
 
 # This file is part of pytest-postgresql.
 
-# pytest-postgresql is free software: you can redistribute it and/or modify
+# pytest-dbfixtures is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
@@ -15,12 +14,21 @@
 # GNU Lesser General Public License for more details.
 
 # You should have received a copy of the GNU Lesser General Public License
-# along with pytest-postgresql. If not, see <http://www.gnu.org/licenses/>.
-"""Main module for pytest-postgresql."""
-
-import logging
-
-__version__ = '0.0.0'
+# along with pytest-postgresql.  If not, see <http://www.gnu.org/licenses/>.
+"""Plugin module of pytest-postgresql."""
+from pytest_postgresql import factories
 
 
-logger = logging.getLogger(__name__)
+def pytest_addoption(parser):
+    """Configure options for pytest-postgresql."""
+    parser.addoption(
+        '--pgsql-logsdir',
+        action='store',
+        default='/tmp',
+        metavar='path',
+        dest='pgsql_logsdir',
+    )
+
+
+postgresql_proc = factories.postgresql_proc()
+postgresql = factories.postgresql('postgresql_proc')

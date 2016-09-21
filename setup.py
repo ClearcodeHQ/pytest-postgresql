@@ -61,7 +61,7 @@ extras_require = {
 setup(
     name='pytest-postgresql',
     version=package_version,
-    description='',
+    description='Postgresql fixtures and fixture factories for Pytest.',
     long_description=(
         read('README.rst') + '\n\n' + read('CHANGES.rst')
     ),
@@ -88,6 +88,10 @@ setup(
     install_requires=requirements,
     tests_require=test_requires,
     test_suite='tests',
+    entry_points={
+        'pytest11': [
+            'pytest_postgresql = pytest_postgresql.plugin'
+        ]},
     include_package_data=True,
     zip_safe=False,
     extras_require=extras_require,

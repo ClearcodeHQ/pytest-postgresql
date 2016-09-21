@@ -1,5 +1,5 @@
 pytest-postgresql
-====
+=================
 
 .. image:: https://img.shields.io/pypi/v/pytest-postgresql.svg
     :target: https://pypi.python.org/pypi/pytest-postgresql/
