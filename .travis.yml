@@ -12,7 +12,7 @@ install:
 - "$INSTALLATION"
 - pip install pytest-postgresql[tests] coveralls wheel
 script:
-- py.test -n $XDIST --cov src/pytest_postgresql tests
+- py.test -n $XDIST --cov src/pytest_postgresql
 - pylama
 - pyroma .
 after_success:
