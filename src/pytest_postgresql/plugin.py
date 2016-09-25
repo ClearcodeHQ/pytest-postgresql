@@ -19,8 +19,53 @@
 from pytest_postgresql import factories
 
 
+_help_executable = 'Path to PostgreSQL executable'
+_help_host = 'Host at which PostgreSQL will accept connections'
+_help_port = 'Port at which PostgreSQL will accept connections'
+
+
 def pytest_addoption(parser):
     """Configure options for pytest-postgresql."""
+    parser.addini(
+        name='postgresql_exec',
+        help=_help_executable,
+        default='/usr/lib/postgresql/9.1/bin/pg_ctl'
+    )
+
+    parser.addini(
+        name='postgresql_host',
+        help=_help_host,
+        default='127.0.0.1'
+    )
+
+    parser.addini(
+        name='postgresql_port',
+        help=_help_port,
+        default=None,
+    )
+
+    parser.addoption(
+        '--postgresql-exec',
+        action='store',
+        metavar='path',
+        dest='postgresql_exec',
+        help=_help_executable
+    )
+
+    parser.addoption(
+        '--postgresql-host',
+        action='store',
+        dest='postgresql_host',
+        help=_help_host,
+    )
+
+    parser.addoption(
+        '--postgresql-port',
+        action='store',
+        dest='postgresql_port',
+        help=_help_port
+    )
+
     parser.addoption(
         '--pgsql-logsdir',
         action='store',

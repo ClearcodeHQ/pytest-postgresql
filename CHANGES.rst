@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
-0.0.0
+unreleased
 -------
-- Created the pytest-postgresql [by Clearcode - The A Room]
+
+- make the port random by default
+- create command line and pytest.ini configuration options for executable
+- create command line and pytest.ini configuration options for host
+- create command line and pytest.ini configuration options for port
+- Extracted code from pytest-dbfixtures
