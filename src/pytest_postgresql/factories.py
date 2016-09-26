@@ -32,6 +32,18 @@ from pytest_postgresql.executor import PostgreSQLExecutor
 from pytest_postgresql.port import get_port
 
 
+def get_config(request):
+    """Return a dictionary with config options."""
+    config = {}
+    options = ['exec', 'host', 'port']
+    for option in options:
+        option_name = 'postgresql_' + option
+        conf = request.config.getoption(option_name) or \
+            request.config.getini(option_name)
+        config[option] = conf
+    return config
+
+
 START_INFO = 'database system is ready to accept connections'
 
 
@@ -134,9 +146,8 @@ def drop_postgresql_database(user, host, port, db, version):
 
 
 def postgresql_proc(
-        executable='/usr/lib/postgresql/9.1/bin/pg_ctl',
-        # TODO: revert port to -1 once configuration gets updated
-        host='127.0.0.1', port=5433, user='postgres',
+        executable=None,
+        host=None, port=-1, user='postgres',
         startparams='-w', unixsocketdir='/tmp', logs_prefix='',
 ):
     """
@@ -147,6 +158,7 @@ def postgresql_proc(
     :param str|int|tuple|set|list port:
         exact port (e.g. '8000', 8000)
         randomly selected port (None) - any random available port
+        -1 - command line or pytest.ini configured port
         [(2000,3000)] or (2000,3000) - random available port from a given range
         [{4002,4003}] or {4002,4003} - random of 4002 or 4003 ports
         [(2000,3000), {4002,4003}] - random of given range and set
@@ -163,8 +175,8 @@ def postgresql_proc(
         :rtype: pytest_dbfixtures.executors.TCPExecutor
         :returns: tcp executor
         """
-        # config = get_config(request)
-        postgresql_ctl = executable
+        config = get_config(request)
+        postgresql_ctl = executable or config['exec']
         # check if that executable exists, as it's no on system PATH
         # only replace if executable isn't passed manually
         if not os.path.exists(postgresql_ctl) and executable is None:
@@ -173,8 +185,8 @@ def postgresql_proc(
             ).strip()
             postgresql_ctl = os.path.join(pg_bindir, 'pg_ctl')
 
-        pg_host = host
-        pg_port = get_port(port)
+        pg_host = host or config['host']
+        pg_port = get_port(port) or get_port(config['port'])
         datadir = path(gettempdir()) / 'postgresqldata.{0}'.format(pg_port)
         pg_user = user
         pg_unixsocketdir = unixsocketdir
