@@ -37,7 +37,7 @@ class PostgreSQLExecutor(TCPExecutor):
     -o "-F -p {port} -c log_destination='stderr' -c %s='{unixsocketdir}'"
     -l {logfile} {startparams}"""
 
-    def __init__(self, pg_ctl, host, port,
+    def __init__(self, pg_ctl, host, port, user,
                  datadir, unixsocketdir, logfile, startparams,
                  shell=False, timeout=60, sleep=0.1):
         """
@@ -46,6 +46,8 @@ class PostgreSQLExecutor(TCPExecutor):
         :param str pg_ctl: pg_ctl location
         :param str host: host under which process is accessible
         :param int port: port under which process is accessible
+        :param str user: postgresql's username used to manage
+            and access PostgreSQL
         :param str datadir: path to postgresql datadir
         :param str unixsocketdir: path to socket directory
         :param str logfile: path to logfile for postgresql
@@ -56,6 +58,7 @@ class PostgreSQLExecutor(TCPExecutor):
         :param float sleep: how often to check for start/stop condition
         """
         self.pg_ctl = pg_ctl
+        self.user = user
         self.version = self.version()
         self.datadir = path(datadir)
         self.unixsocketdir = unixsocketdir

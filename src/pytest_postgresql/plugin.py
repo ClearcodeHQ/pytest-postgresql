@@ -22,6 +22,7 @@ from pytest_postgresql import factories
 _help_executable = 'Path to PostgreSQL executable'
 _help_host = 'Host at which PostgreSQL will accept connections'
 _help_port = 'Port at which PostgreSQL will accept connections'
+_help_user = "PostgreSQL username"
 
 
 def pytest_addoption(parser):
@@ -44,6 +45,12 @@ def pytest_addoption(parser):
         default=None,
     )
 
+    parser.addini(
+        name='postgresql_user',
+        help=_help_user,
+        default='postgres'
+    )
+
     parser.addoption(
         '--postgresql-exec',
         action='store',
@@ -64,6 +71,13 @@ def pytest_addoption(parser):
         action='store',
         dest='postgresql_port',
         help=_help_port
+    )
+
+    parser.addoption(
+        '--postgresql-user',
+        action='store',
+        dest='postgresql_user',
+        help=_help_user
     )
 
     parser.addoption(

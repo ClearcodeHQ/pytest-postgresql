@@ -35,7 +35,7 @@ from pytest_postgresql.port import get_port
 def get_config(request):
     """Return a dictionary with config options."""
     config = {}
-    options = ['exec', 'host', 'port']
+    options = ['exec', 'host', 'port', 'user']
     for option in options:
         option_name = 'postgresql_' + option
         conf = request.config.getoption(option_name) or \
@@ -146,8 +146,7 @@ def drop_postgresql_database(user, host, port, db, version):
 
 
 def postgresql_proc(
-        executable=None,
-        host=None, port=-1, user='postgres',
+        executable=None, host=None, port=-1, user=None,
         startparams='-w', unixsocketdir='/tmp', logs_prefix='',
 ):
     """
@@ -162,6 +161,7 @@ def postgresql_proc(
         [(2000,3000)] or (2000,3000) - random available port from a given range
         [{4002,4003}] or {4002,4003} - random of 4002 or 4003 ports
         [(2000,3000), {4002,4003}] - random of given range and set
+    :param str user: postgresql username
     :param str logs_prefix: prefix for log filename
     :rtype: func
     :returns: function which makes a postgresql process
@@ -188,7 +188,7 @@ def postgresql_proc(
         pg_host = host or config['host']
         pg_port = get_port(port) or get_port(config['port'])
         datadir = path(gettempdir()) / 'postgresqldata.{0}'.format(pg_port)
-        pg_user = user
+        pg_user = user or config['user']
         pg_unixsocketdir = unixsocketdir
         pg_startparams = startparams
         logsdir = path(request.config.getvalue('pgsql_logsdir'))
@@ -209,6 +209,7 @@ def postgresql_proc(
             pg_ctl=postgresql_ctl,
             host=pg_host,
             port=pg_port,
+            user=pg_user,
             datadir=datadir,
             unixsocketdir=pg_unixsocketdir,
             logfile=logfile_path,
@@ -231,7 +232,7 @@ def postgresql_proc(
     return postgresql_proc_fixture
 
 
-def postgresql(process_fixture_name, db='tests', user='postgres'):
+def postgresql(process_fixture_name, db='tests'):
     """
     Connection fixture factory for PostgreSQL.
 
@@ -254,7 +255,7 @@ def postgresql(process_fixture_name, db='tests', user='postgres'):
         # _, config = try_import('psycopg2', request)
         pg_host = proc_fixture.host
         pg_port = proc_fixture.port
-        pg_user = user
+        pg_user = proc_fixture.user
         pg_db = db
 
         init_postgresql_database(
