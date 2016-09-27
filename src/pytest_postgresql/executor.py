@@ -33,21 +33,19 @@ class PostgreSQLExecutor(TCPExecutor):
     <http://www.postgresql.org/docs/9.1/static/app-pg-ctl.html>`_
     """
 
-    BASE_PROC_START_COMMAND = """{pg_ctl} start -D {datadir}
+    BASE_PROC_START_COMMAND = """{executable} start -D {datadir}
     -o "-F -p {port} -c log_destination='stderr' -c %s='{unixsocketdir}'"
     -l {logfile} {startparams}"""
 
-    def __init__(self, pg_ctl, host, port, user,
+    def __init__(self, executable, host, port,
                  datadir, unixsocketdir, logfile, startparams,
-                 shell=False, timeout=60, sleep=0.1):
+                 shell=False, timeout=60, sleep=0.1, user='postgres'):
         """
         Initialize PostgreSQLExecutor executor.
 
-        :param str pg_ctl: pg_ctl location
+        :param str executable: pg_ctl location
         :param str host: host under which process is accessible
         :param int port: port under which process is accessible
-        :param str user: postgresql's username used to manage
-            and access PostgreSQL
         :param str datadir: path to postgresql datadir
         :param str unixsocketdir: path to socket directory
         :param str logfile: path to logfile for postgresql
@@ -56,14 +54,16 @@ class PostgreSQLExecutor(TCPExecutor):
         :param int timeout: time to wait for process to start or stop.
             if None, wait indefinitely.
         :param float sleep: how often to check for start/stop condition
+        :param str user: [default] postgresql's username used to manage
+            and access PostgreSQL
         """
-        self.pg_ctl = pg_ctl
+        self.executable = executable
         self.user = user
         self.version = self.version()
         self.datadir = path(datadir)
         self.unixsocketdir = unixsocketdir
         command = self.proc_start_command().format(
-            pg_ctl=self.pg_ctl,
+            executable=self.executable,
             datadir=self.datadir,
             port=port,
             unixsocketdir=self.unixsocketdir,
@@ -84,7 +84,7 @@ class PostgreSQLExecutor(TCPExecutor):
     def version(self):
         """Detect postgresql version."""
         version_string = subprocess.check_output(
-            [self.pg_ctl, '--version']).decode('utf-8')
+            [self.executable, '--version']).decode('utf-8')
         matches = re.search('.* (?P<version>\d\.\d)', version_string)
         return matches.groupdict()['version']
 
@@ -95,7 +95,7 @@ class PostgreSQLExecutor(TCPExecutor):
 
         output = subprocess.check_output(
             '{pg_ctl} status -D {datadir}'.format(
-                pg_ctl=self.pg_ctl,
+                pg_ctl=self.executable,
                 datadir=self.datadir
             ),
             shell=True
@@ -103,10 +103,10 @@ class PostgreSQLExecutor(TCPExecutor):
         return "pg_ctl: server is running" in output
 
     def stop(self):
-        """Issue a stop request to pg_ctl."""
+        """Issue a stop request to executable."""
         subprocess.check_output(
             '{pg_ctl} stop -D {datadir} -m f'.format(
-                pg_ctl=self.pg_ctl,
+                pg_ctl=self.executable,
                 datadir=self.datadir,
                 port=self.port,
                 unixsocketdir=self.unixsocketdir

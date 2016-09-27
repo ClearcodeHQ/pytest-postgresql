@@ -183,7 +183,7 @@ def postgresql_proc(
             pg_bindir = subprocess.check_output(
                 ['pg_config', '--bindir'], universal_newlines=True
             ).strip()
-            postgresql_ctl = os.path.join(pg_bindir, 'pg_ctl')
+            postgresql_ctl = os.path.join(pg_bindir, 'executable')
 
         pg_host = host or config['host']
         pg_port = get_port(port) or get_port(config['port'])
@@ -206,7 +206,7 @@ def postgresql_proc(
                 f.write('host all all 0.0.0.0/0 trust\n')
 
         postgresql_executor = PostgreSQLExecutor(
-            pg_ctl=postgresql_ctl,
+            executable=postgresql_ctl,
             host=pg_host,
             port=pg_port,
             user=pg_user,
@@ -261,7 +261,7 @@ def postgresql(process_fixture_name, db='tests'):
         init_postgresql_database(
             pg_user, pg_host, pg_port, pg_db
         )
-        conn = psycopg2.connect(
+        connection = psycopg2.connect(
             dbname=pg_db,
             user=pg_user,
             host=pg_host,
@@ -269,7 +269,7 @@ def postgresql(process_fixture_name, db='tests'):
         )
 
         def drop_database():
-            conn.close()
+            connection.close()
             drop_postgresql_database(
                 pg_user, pg_host, pg_port, pg_db,
                 proc_fixture.version
@@ -277,7 +277,7 @@ def postgresql(process_fixture_name, db='tests'):
 
         request.addfinalizer(drop_database)
 
-        return conn
+        return connection
 
     return postgresql_factory
 
