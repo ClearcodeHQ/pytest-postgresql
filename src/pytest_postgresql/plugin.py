@@ -23,6 +23,7 @@ _help_executable = 'Path to PostgreSQL executable'
 _help_host = 'Host at which PostgreSQL will accept connections'
 _help_port = 'Port at which PostgreSQL will accept connections'
 _help_user = "PostgreSQL username"
+_help_startparams = "Starting parameters for the PostgreSQL"
 
 
 def pytest_addoption(parser):
@@ -49,6 +50,12 @@ def pytest_addoption(parser):
         name='postgresql_user',
         help=_help_user,
         default='postgres'
+    )
+
+    parser.addini(
+        name='postgresql_startparams',
+        help=_help_startparams,
+        default='-w'
     )
 
     parser.addoption(
@@ -78,6 +85,13 @@ def pytest_addoption(parser):
         action='store',
         dest='postgresql_user',
         help=_help_user
+    )
+
+    parser.addoption(
+        '--postgresql-startparams',
+        action='store',
+        dest='postgresql_startparams',
+        help=_help_startparams
     )
 
     parser.addoption(

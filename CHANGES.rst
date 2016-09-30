@@ -4,6 +4,7 @@ CHANGELOG
 unreleased
 -------
 
+- create command line and pytest.ini configuration options for postgresql starting parameters
 - create command line and pytest.ini configuration options for postgresql username
 - make the port random by default
 - create command line and pytest.ini configuration options for executable
