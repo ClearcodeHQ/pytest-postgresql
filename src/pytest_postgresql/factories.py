@@ -35,7 +35,7 @@ from pytest_postgresql.port import get_port
 def get_config(request):
     """Return a dictionary with config options."""
     config = {}
-    options = ['exec', 'host', 'port', 'user']
+    options = ['exec', 'host', 'port', 'user', 'startparams']
     for option in options:
         option_name = 'postgresql_' + option
         conf = request.config.getoption(option_name) or \
@@ -147,7 +147,7 @@ def drop_postgresql_database(user, host, port, db, version):
 
 def postgresql_proc(
         executable=None, host=None, port=-1, user=None,
-        startparams='-w', unixsocketdir='/tmp', logs_prefix='',
+        startparams=None, unixsocketdir='/tmp', logs_prefix='',
 ):
     """
     Postgresql process factory.
@@ -190,7 +190,7 @@ def postgresql_proc(
         datadir = path(gettempdir()) / 'postgresqldata.{0}'.format(pg_port)
         pg_user = user or config['user']
         pg_unixsocketdir = unixsocketdir
-        pg_startparams = startparams
+        pg_startparams = startparams or config['startparams']
         logsdir = path(request.config.getvalue('pgsql_logsdir'))
         logfile_path = logsdir / '{prefix}postgresql.{port}.log'.format(
             prefix=logs_prefix,
