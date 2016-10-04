@@ -18,15 +18,15 @@
 """Fixture factories for postgresql fixtures."""
 
 import os
-import platform
+import time
 import shutil
+import platform
 import subprocess
 from tempfile import gettempdir
-import time
 
 import pytest
 import psycopg2
-from path import path
+from path import Path
 
 from pytest_postgresql.executor import PostgreSQLExecutor
 from pytest_postgresql.port import get_port
@@ -35,7 +35,10 @@ from pytest_postgresql.port import get_port
 def get_config(request):
     """Return a dictionary with config options."""
     config = {}
-    options = ['exec', 'host', 'port', 'user', 'startparams']
+    options = [
+        'exec', 'host', 'port', 'user', 'startparams', 'logsdir',
+        'logsprefix', 'unixsocketdir'
+    ]
     for option in options:
         option_name = 'postgresql_' + option
         conf = request.config.getoption(option_name) or \
@@ -147,7 +150,7 @@ def drop_postgresql_database(user, host, port, db, version):
 
 def postgresql_proc(
         executable=None, host=None, port=-1, user=None,
-        startparams=None, unixsocketdir='/tmp', logs_prefix='',
+        startparams=None, unixsocketdir=None, logsdir=None, logs_prefix='',
 ):
     """
     Postgresql process factory.
@@ -162,6 +165,9 @@ def postgresql_proc(
         [{4002,4003}] or {4002,4003} - random of 4002 or 4003 ports
         [(2000,3000), {4002,4003}] - random of given range and set
     :param str user: postgresql username
+    :param str startparams: postgresql starting parameters
+    :param str unixsocketdir: directory to create postgresql's unixsockets
+    :param str logsdir: location for logs
     :param str logs_prefix: prefix for log filename
     :rtype: func
     :returns: function which makes a postgresql process
@@ -187,12 +193,12 @@ def postgresql_proc(
 
         pg_host = host or config['host']
         pg_port = get_port(port) or get_port(config['port'])
-        datadir = path(gettempdir()) / 'postgresqldata.{0}'.format(pg_port)
+        datadir = Path(gettempdir()) / 'postgresqldata.{0}'.format(pg_port)
         pg_user = user or config['user']
-        pg_unixsocketdir = unixsocketdir
+        pg_unixsocketdir = unixsocketdir or config['unixsocketdir']
         pg_startparams = startparams or config['startparams']
-        logsdir = path(request.config.getvalue('pgsql_logsdir'))
-        logfile_path = logsdir / '{prefix}postgresql.{port}.log'.format(
+        pg_logsdir = Path(logsdir or config['logsdir'])
+        logfile_path = pg_logsdir / '{prefix}postgresql.{port}.log'.format(
             prefix=logs_prefix,
             port=pg_port
         )

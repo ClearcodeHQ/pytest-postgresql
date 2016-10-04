@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with pytest-postgresql.  If not, see <http://www.gnu.org/licenses/>.
 """Plugin module of pytest-postgresql."""
+from tempfile import gettempdir
+
 from pytest_postgresql import factories
 
 
@@ -24,6 +26,9 @@ _help_host = 'Host at which PostgreSQL will accept connections'
 _help_port = 'Port at which PostgreSQL will accept connections'
 _help_user = "PostgreSQL username"
 _help_startparams = "Starting parameters for the PostgreSQL"
+_help_logsdir = "Logs directory location"
+_help_logsprefix = "Prefix for the log files"
+_help_unixsocketdir = "Location of the socket directory"
 
 
 def pytest_addoption(parser):
@@ -56,6 +61,24 @@ def pytest_addoption(parser):
         name='postgresql_startparams',
         help=_help_startparams,
         default='-w'
+    )
+
+    parser.addini(
+        name='postgresql_logsdir',
+        help=_help_logsdir,
+        default=gettempdir()
+    )
+
+    parser.addini(
+        name='postgresql_logsprefix',
+        help=_help_logsprefix,
+        default=''
+    )
+
+    parser.addini(
+        name='postgresql_unixsocketdir',
+        help=_help_unixsocketdir,
+        default=gettempdir()
     )
 
     parser.addoption(
@@ -95,11 +118,24 @@ def pytest_addoption(parser):
     )
 
     parser.addoption(
-        '--pgsql-logsdir',
+        '--postgresql-logsdir',
         action='store',
-        default='/tmp',
-        metavar='path',
-        dest='pgsql_logsdir',
+        dest='postgresql_logsdir',
+        help=_help_logsdir
+    )
+
+    parser.addoption(
+        '--postgresql-logsprefix',
+        action='store',
+        dest='postgresql_logsprefix',
+        help=_help_logsprefix
+    )
+
+    parser.addoption(
+        '--postgresql-unixsocketdir',
+        action='store',
+        dest='postgresql_unixsocketdir',
+        help=_help_unixsocketdir
     )
 
 
