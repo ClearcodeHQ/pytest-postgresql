@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-unreleased
+1.0.0
 -------
 
 - create command line and pytest.ini configuration options for postgresql starting parameters
