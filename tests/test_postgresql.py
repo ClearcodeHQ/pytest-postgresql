@@ -23,7 +23,7 @@ postgresql94 = factories.postgresql_proc(pg_ctl.format(ver='9.4'), port=None)
 ))
 def test_postgresql_proc(request, postgres):
     """Test different postgresql versions."""
-    postgresql_proc = request.getfuncargvalue(postgres)
+    postgresql_proc = request.getfixturevalue(postgres)
     assert postgresql_proc.running() is True
 
 

@@ -256,7 +256,7 @@ def postgresql(process_fixture_name, db='tests'):
         :rtype: psycopg2.connection
         :returns: postgresql client
         """
-        proc_fixture = request.getfuncargvalue(process_fixture_name)
+        proc_fixture = request.getfixturevalue(process_fixture_name)
 
         # _, config = try_import('psycopg2', request)
         pg_host = proc_fixture.host
