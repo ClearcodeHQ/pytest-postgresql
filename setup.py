@@ -42,7 +42,7 @@ def read(fname):
 
 requirements = [
     'psycopg2',
-    'pytest',
+    'pytest>=3.0.0',
     'port-for',
     'path.py>=4.2',
     'mirakuru'
