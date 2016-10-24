@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-unreleased
+1.1.0
 -------
 
 - [feature] - migrate usage of getfuncargvalue to getfixturevalue. require at least pytest 3.0.0
