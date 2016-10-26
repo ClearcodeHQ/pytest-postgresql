@@ -3,6 +3,7 @@ pytest-postgresql
 
 .. image:: https://img.shields.io/pypi/v/pytest-postgresql.svg
     :target: https://pypi.python.org/pypi/pytest-postgresql/
+    :alt: Latest PyPI version
 
 .. image:: https://img.shields.io/pypi/wheel/pytest-postgresql.svg
     :target: https://pypi.python.org/pypi/pytest-postgresql/
@@ -112,7 +113,7 @@ Example usage:
         py.test tests --postgresql-port=8888
 
 
-* specify your directory as ``postgresql_port`` in your ``pytest.ini`` file.
+* specify your port as ``postgresql_port`` in your ``pytest.ini`` file.
 
     To do so, put a line like the following under the ``[pytest]`` section of your ``pytest.ini``:
 
