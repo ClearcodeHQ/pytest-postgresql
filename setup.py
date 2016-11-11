@@ -19,15 +19,9 @@
 """pytest-postgresql setup.py module."""
 
 import os
-import re
 from setuptools import setup, find_packages
 
 here = os.path.dirname(__file__)
-with open(
-        os.path.join(here, 'src', 'pytest_postgresql', '__init__.py')
-) as v_file:
-    package_version = re.compile(
-        r".*__version__ = '(.*?)'", re.S).match(v_file.read()).group(1)
 
 
 def read(fname):
@@ -39,6 +33,7 @@ def read(fname):
     :rtype: str
     """
     return open(os.path.join(here, fname)).read()
+
 
 requirements = [
     'psycopg2',
@@ -60,7 +55,7 @@ extras_require = {
 
 setup(
     name='pytest-postgresql',
-    version=package_version,
+    version='1.1.0',
     description='Postgresql fixtures and fixture factories for Pytest.',
     long_description=(
         read('README.rst') + '\n\n' + read('CHANGES.rst')
