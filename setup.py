@@ -40,6 +40,7 @@ def read(fname):
     """
     return open(os.path.join(here, fname)).read()
 
+
 requirements = [
     'psycopg2',
     'pytest>=3.0.0',
