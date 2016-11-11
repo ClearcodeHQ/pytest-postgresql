@@ -47,7 +47,7 @@ How to use
 
 Plugin contains two fixtures
 
-* **postgresql** - it's a client fixture that has functional scope. After each test it ends all lefover connections, and drops test database from PostgreSQL ensuirng repeatability.
+* **postgresql** - it's a client fixture that has functional scope. After each test it ends all leftover connections, and drops test database from PostgreSQL ensuring repeatability.
 * **postgresql_proc** - session scoped fixture, that starts PostgreSQL instance at it's first use and stops at the end of the tests.
 
 Simply include one of these fixtures into your tests fixture list.
