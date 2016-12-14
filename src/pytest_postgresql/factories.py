@@ -189,7 +189,7 @@ def postgresql_proc(
             pg_bindir = subprocess.check_output(
                 ['pg_config', '--bindir'], universal_newlines=True
             ).strip()
-            postgresql_ctl = os.path.join(pg_bindir, 'executable')
+            postgresql_ctl = os.path.join(pg_bindir, 'pg_ctl')
 
         pg_host = host or config['host']
         pg_port = get_port(port) or get_port(config['port'])
