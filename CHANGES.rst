@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+unreleased
+-------
+
+* [bugfix] - Fixing the default pg_ctl path creation
+
 1.1.0
 -------
 
