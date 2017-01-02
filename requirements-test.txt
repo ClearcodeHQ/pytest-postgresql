@@ -11,4 +11,4 @@ pytest==3.0.5
 psycopg2==2.6.2
 port-for==0.3.1
 mirakuru==0.8.2
-path.py==9.1
+path.py==10.0
