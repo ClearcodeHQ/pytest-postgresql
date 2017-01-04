@@ -61,7 +61,7 @@ You can also create additional postgresql client and process fixtures if you'd n
 
     postgresql_my_proc = factories.postgresql_proc(
         port=None, logsdir='/tmp')
-    postgresql_my = factories.postgreesql('postgresql_my_proc')
+    postgresql_my = factories.postgresql('postgresql_my_proc')
 
 .. note::
 
