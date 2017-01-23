@@ -17,7 +17,7 @@
 # along with pytest-dbfixtures.  If not, see <http://www.gnu.org/licenses/>.
 """Fixture factories for postgresql fixtures."""
 
-import os
+import os.path
 import time
 import shutil
 import platform
@@ -26,7 +26,6 @@ from tempfile import gettempdir
 
 import pytest
 import psycopg2
-from path import Path
 
 from pytest_postgresql.executor import PostgreSQLExecutor
 from pytest_postgresql.port import get_port
@@ -193,15 +192,17 @@ def postgresql_proc(
 
         pg_host = host or config['host']
         pg_port = get_port(port) or get_port(config['port'])
-        datadir = Path(gettempdir()) / 'postgresqldata.{0}'.format(pg_port)
+        datadir = os.path.join(
+            gettempdir(), 'postgresqldata.{0}'.format(pg_port))
         pg_user = user or config['user']
         pg_unixsocketdir = unixsocketdir or config['unixsocketdir']
         pg_startparams = startparams or config['startparams']
-        pg_logsdir = Path(logsdir or config['logsdir'])
-        logfile_path = pg_logsdir / '{prefix}postgresql.{port}.log'.format(
-            prefix=logs_prefix,
-            port=pg_port
-        )
+        pg_logsdir = logsdir or config['logsdir']
+        logfile_path = os.path.join(
+            pg_logsdir, '{prefix}postgresql.{port}.log'.format(
+                prefix=logs_prefix,
+                port=pg_port
+            ))
 
         init_postgresql_directory(
             postgresql_ctl, pg_user, datadir

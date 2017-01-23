@@ -17,10 +17,9 @@
 # along with pytest-dbfixtures.  If not, see <http://www.gnu.org/licenses/>.
 """PostgreSQL executor crafter around pg_ctl."""
 
+import os.path
 import re
 import subprocess
-
-from path import Path
 
 from mirakuru import TCPExecutor
 
@@ -60,7 +59,7 @@ class PostgreSQLExecutor(TCPExecutor):
         self.executable = executable
         self.user = user
         self.version = self.version()
-        self.datadir = Path(datadir)
+        self.datadir = datadir
         self.unixsocketdir = unixsocketdir
         command = self.proc_start_command().format(
             executable=self.executable,
@@ -90,7 +89,7 @@ class PostgreSQLExecutor(TCPExecutor):
 
     def running(self):
         """Check if server is still running."""
-        if not self.datadir.exists():
+        if not os.path.exists(self.datadir):
             return False
 
         output = subprocess.check_output(
