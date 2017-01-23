@@ -1,10 +1,21 @@
 CHANGELOG
 =========
 
+unreleased
+-------
+
+- [bugfix] - disallow connection to database before it gets dropped.
+
+    .. note::
+
+        Otherwise it caused random test subprocess to connect again and this the drop was unsucessfull which resulted in many more test failes on setup.
+
+- [cleanup] - removed path.py dependency
+
 1.1.1
 -------
 
-* [bugfix] - Fixing the default pg_ctl path creation
+- [bugfix] - Fixing the default pg_ctl path creation
 
 1.1.0
 -------
