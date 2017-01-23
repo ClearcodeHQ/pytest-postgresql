@@ -132,11 +132,14 @@ def drop_postgresql_database(user, host, port, db, version):
     conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
     cur = conn.cursor()
     # We cannot drop the database while there are connections to it, so we
-    # terminate all connections first.
+    # terminate all connections first while not allowing new connections.
     if float(version) >= 9.2:
         pid_column = 'pid'
     else:
         pid_column = 'procpid'
+    cur.execute(
+        'UPDATE pg_database SET datallowconn=false WHERE datname = %s;',
+        (db,))
     cur.execute(
         'SELECT pg_terminate_backend(pg_stat_activity.{0})'
         'FROM pg_stat_activity WHERE pg_stat_activity.datname = %s;'.format(
