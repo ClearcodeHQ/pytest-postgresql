@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-unreleased
+1.2.0
 -------
 
 - [bugfix] - disallow connection to database before it gets dropped.
