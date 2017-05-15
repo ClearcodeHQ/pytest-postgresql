@@ -8,6 +8,10 @@ python:
 env:
 - INSTALLATION="python setup.py develop" XDIST=1
 - INSTALLATION="pip install ." XDIST=0
+# blocklist branches
+branches:
+  except:
+  - requires-io-master
 install:
 - pip install -r requirements-test.txt
 - "$INSTALLATION"
