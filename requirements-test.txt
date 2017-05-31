@@ -7,7 +7,7 @@ pycodestyle==2.3.1
 pep8==1.7.0
 mccabe==0.6.1
 pyroma==2.2
-pytest==3.1.0
+pytest==3.1.1
 psycopg2==2.7.1
 port-for==0.3.1
 mirakuru==0.8.2
