@@ -13,6 +13,7 @@ branches:
   except:
   - requires-io-master
 install:
+- python -c 'import setuptools; print setuptools.__version__'
 - pip install -r requirements-test.txt
 - "$INSTALLATION"
 - pip install pytest-postgresql[tests] coveralls wheel
