@@ -5,6 +5,7 @@ python:
 - '3.4'
 - '3.5'
 - '3.6'
+- 'pypy-5.3.1'
 env:
 - INSTALLATION="python setup.py develop" XDIST=1
 - INSTALLATION="pip install ." XDIST=0
@@ -13,6 +14,8 @@ branches:
   except:
   - requires-io-master
 install:
+- pip install 'setuptools>=21.0.0'
+- pip install 'pip>=9'
 - pip install -r requirements-test.txt
 - "$INSTALLATION"
 - pip install pytest-postgresql[tests] coveralls wheel

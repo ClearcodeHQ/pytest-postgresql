@@ -49,9 +49,15 @@ test_requires = [
 extras_require = {
     'docs': ['sphinx'],
     'tests': test_requires,
-    ': implementation_name != "pypy"': ['psycopg2'],
-    ': implementation_name == "pypy"': ['psycopg2cffi'],
+    ': platform_python_implementation != "PyPy"': ['psycopg2'],
+    ': platform_python_implementation == "PyPy"': ['psycopg2cffi'],
 }
+
+setup_requires = [
+    'setuptools>=21',
+    'pip>=9'
+]
+
 
 setup(
     name='pytest-postgresql',
@@ -87,6 +93,7 @@ setup(
     packages=find_packages('src'),
     install_requires=requirements,
     tests_require=test_requires,
+    setup_requires=setup_requires,
     test_suite='tests',
     entry_points={
         'pytest11': [
