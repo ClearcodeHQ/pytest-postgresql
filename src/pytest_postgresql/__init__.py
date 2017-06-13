@@ -19,8 +19,14 @@
 """Main module for pytest-postgresql."""
 
 import logging
+import sys
 
 __version__ = '1.2.0'
 
 
 logger = logging.getLogger(__name__)
+
+
+if sys.implementation.name == "pypy":
+    import psycopg2cffi.compat
+    psycopg2cffi.compat.register()

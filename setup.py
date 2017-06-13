@@ -36,7 +36,6 @@ def read(fname):
 
 
 requirements = [
-    'psycopg2',
     'pytest>=3.0.0',
     'port-for',
     'mirakuru'
@@ -49,7 +48,9 @@ test_requires = [
 
 extras_require = {
     'docs': ['sphinx'],
-    'tests': test_requires
+    'tests': test_requires,
+    ': implementation_name != "pypy"': ['psycopg2'],
+    ': implementation_name == "pypy"': ['psycopg2cffi'],
 }
 
 setup(
