@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-unreleased
+1.3.0
 -------
 
 - [feature] pypy compatibility
