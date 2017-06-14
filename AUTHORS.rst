@@ -14,3 +14,4 @@ of pytest-postgresql along its history.
 * Paweł Wilczyński
 * Georg Walther
 * François Scala
+* Donald Stufft

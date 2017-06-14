@@ -36,7 +36,6 @@ def read(fname):
 
 
 requirements = [
-    'psycopg2',
     'pytest>=3.0.0',
     'port-for',
     'mirakuru'
@@ -49,8 +48,16 @@ test_requires = [
 
 extras_require = {
     'docs': ['sphinx'],
-    'tests': test_requires
+    'tests': test_requires,
+    ': platform_python_implementation != "PyPy"': ['psycopg2'],
+    ': platform_python_implementation == "PyPy"': ['psycopg2cffi'],
 }
+
+setup_requires = [
+    'setuptools>=21',
+    'pip>=9'
+]
+
 
 setup(
     name='pytest-postgresql',
@@ -86,6 +93,7 @@ setup(
     packages=find_packages('src'),
     install_requires=requirements,
     tests_require=test_requires,
+    setup_requires=setup_requires,
     test_suite='tests',
     entry_points={
         'pytest11': [
