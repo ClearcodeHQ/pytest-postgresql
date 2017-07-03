@@ -244,7 +244,7 @@ def postgresql_proc(
 
 def postgresql(process_fixture_name, db='tests'):
     """
-    Connection fixture factory for PostgreSQL.
+    Return connection fixture factory for PostgreSQL.
 
     :param str process_fixture_name: name of the process fixture
     :param str db: database name
