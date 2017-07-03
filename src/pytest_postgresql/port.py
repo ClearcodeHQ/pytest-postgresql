@@ -25,11 +25,11 @@ class InvalidPortsDefinition(ValueError):
     """Exception raised if ports definition is not a valid string."""
 
     def __init__(self, ports):
-        """Constructor for InvalidPortsDefinition exception."""
+        """Construct InvalidPortsDefinition exception."""
         self.ports = ports
 
     def __str__(self):
-        """String representation."""
+        """Return string representation."""
         return (
             'Unknown format of ports: {0}.\n'
             'You should provide a ports range "[(4000,5000)]"'
