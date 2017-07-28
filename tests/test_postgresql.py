@@ -9,17 +9,19 @@ query = "CREATE TABLE test (id serial PRIMARY KEY, num integer, data varchar);"
 
 pg_ctl = '/usr/lib/postgresql/{ver}/bin/pg_ctl'
 
-postgresql91 = factories.postgresql_proc(pg_ctl.format(ver='9.1'), port=None)
 postgresql92 = factories.postgresql_proc(pg_ctl.format(ver='9.2'), port=None)
 postgresql93 = factories.postgresql_proc(pg_ctl.format(ver='9.3'), port=None)
 postgresql94 = factories.postgresql_proc(pg_ctl.format(ver='9.4'), port=None)
+postgresql95 = factories.postgresql_proc(pg_ctl.format(ver='9.5'), port=None)
+postgresql96 = factories.postgresql_proc(pg_ctl.format(ver='9.6'), port=None)
 
 
 @pytest.mark.parametrize('postgres', (
-    'postgresql91',
     'postgresql92',
     'postgresql93',
     'postgresql94',
+    'postgresql95',
+    'postgresql96',
 ))
 def test_postgresql_proc(request, postgres):
     """Test different postgresql versions."""
