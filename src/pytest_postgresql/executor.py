@@ -32,9 +32,12 @@ class PostgreSQLExecutor(TCPExecutor):
     <http://www.postgresql.org/docs/9.1/static/app-pg-ctl.html>`_
     """
 
-    BASE_PROC_START_COMMAND = """{executable} start -D {datadir}
-    -o "-F -p {port} -c log_destination='stderr' -c %s='{unixsocketdir}'"
-    -l {logfile} {startparams}"""
+    BASE_PROC_START_COMMAND = ' '.join((
+        "{executable} start -D {datadir}",
+        "-o \"-F -p {port} -c log_destination='stderr'",
+        "-c logging_collector=off -c %s='{unixsocketdir}'\"",
+        "-l {logfile} {startparams}"
+    ))
 
     def __init__(self, executable, host, port,
                  datadir, unixsocketdir, logfile, startparams,
