@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-unreleased
+1.3.1
 -------
 
 - [enhancement] explicitly turn off logging_collector
