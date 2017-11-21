@@ -39,6 +39,8 @@ class PostgreSQLExecutor(TCPExecutor):
         "-l {logfile} {startparams}"
     ))
 
+    VERSION_RE = re.compile('.* (?P<version>\d+\.\d)')
+
     def __init__(self, executable, host, port,
                  datadir, unixsocketdir, logfile, startparams,
                  shell=False, timeout=60, sleep=0.1, user='postgres'):
@@ -87,7 +89,7 @@ class PostgreSQLExecutor(TCPExecutor):
         """Detect postgresql version."""
         version_string = subprocess.check_output(
             [self.executable, '--version']).decode('utf-8')
-        matches = re.search('.* (?P<version>\d\.\d)', version_string)
+        matches = self.VERSION_RE.search(version_string)
         return matches.groupdict()['version']
 
     def running(self):
