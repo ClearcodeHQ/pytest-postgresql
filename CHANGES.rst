@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+unreleased
+-------
+
+- [bugfix] version regexp to correctly catch postgresql 10
+
 1.3.1
 -------
 
