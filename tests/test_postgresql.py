@@ -14,6 +14,9 @@ postgresql93 = factories.postgresql_proc(pg_ctl.format(ver='9.3'), port=None)
 postgresql94 = factories.postgresql_proc(pg_ctl.format(ver='9.4'), port=None)
 postgresql95 = factories.postgresql_proc(pg_ctl.format(ver='9.5'), port=None)
 postgresql96 = factories.postgresql_proc(pg_ctl.format(ver='9.6'), port=None)
+postgresql10 = factories.postgresql_proc(pg_ctl.format(ver='9.6'), port=None)
+postgresql10 = factories.postgresql_proc(pg_ctl.format(ver='10'), port=None)
+postgresql101 = factories.postgresql_proc(pg_ctl.format(ver='10.1'), port=None)
 
 
 @pytest.mark.parametrize('postgres', (
@@ -22,6 +25,8 @@ postgresql96 = factories.postgresql_proc(pg_ctl.format(ver='9.6'), port=None)
     'postgresql94',
     'postgresql95',
     'postgresql96',
+    pytest.param('postgresql10', marks=pytest.mark.xfail),
+    pytest.param('postgresql101', marks=pytest.mark.xfail),
 ))
 def test_postgresql_proc(request, postgres):
     """Test different postgresql versions."""
