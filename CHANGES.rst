@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-unreleased
+1.3.3
 -------
 
 - [enhancement] use executor's context manager to start/stop postrgesql server in a fixture
