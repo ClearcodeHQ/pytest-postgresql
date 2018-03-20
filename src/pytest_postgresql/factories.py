@@ -226,18 +226,14 @@ def postgresql_proc(
             startparams=pg_startparams,
         )
 
-        def stop_server_and_remove_directory():
-            postgresql_executor.stop()
-            remove_postgresql_directory(datadir)
-
-        request.addfinalizer(stop_server_and_remove_directory)
-
         # start server
-        postgresql_executor.start()
-        if '-w' in pg_startparams:
-            wait_for_postgres(logfile_path, START_INFO)
+        with postgresql_executor:
+            if '-w' in pg_startparams:
+                wait_for_postgres(logfile_path, START_INFO)
 
-        return postgresql_executor
+            yield postgresql_executor
+
+        remove_postgresql_directory(datadir)
 
     return postgresql_proc_fixture
 
