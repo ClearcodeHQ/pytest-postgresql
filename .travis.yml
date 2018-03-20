@@ -34,4 +34,5 @@ deploy:
     tags: true
     all_branches: true
     repo: ClearcodeHQ/pytest-postgresql
+    python: 3.6
   distributions: sdist bdist_wheel
