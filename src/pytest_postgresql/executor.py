@@ -97,13 +97,19 @@ class PostgreSQLExecutor(TCPExecutor):
         if not os.path.exists(self.datadir):
             return False
 
-        output = subprocess.check_output(
-            '{pg_ctl} status -D {datadir}'.format(
-                pg_ctl=self.executable,
-                datadir=self.datadir
-            ),
-            shell=True
-        ).decode('utf-8')
+        try:
+            output = subprocess.check_output(
+                '{pg_ctl} status -D {datadir}'.format(
+                    pg_ctl=self.executable,
+                    datadir=self.datadir
+                ),
+                shell=True
+            ).decode('utf-8')
+        except subprocess.CalledProcessError as e:
+            if b'pg_ctl: no server running' in e.output:
+                return False
+            raise
+
         return "pg_ctl: server is running" in output
 
     def stop(self):
@@ -116,3 +122,4 @@ class PostgreSQLExecutor(TCPExecutor):
                 unixsocketdir=self.unixsocketdir
             ),
             shell=True)
+        super(PostgreSQLExecutor, self).stop()
