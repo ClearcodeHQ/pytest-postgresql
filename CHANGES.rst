@@ -1,6 +1,16 @@
 CHANGELOG
 =========
 
+unreleased
+-------
+
+- [bugfix] properly detect if executor running and clean after executor is being stopped
+
+    .. note::
+
+        Previously if a test failed, there was a possibility of the executor being removed when python was closing,
+        causing it to print ignored errors on already unloaded modules.
+
 1.3.3
 -------
 
