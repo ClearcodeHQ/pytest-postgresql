@@ -21,7 +21,7 @@
 import logging
 import platform
 
-__version__ = '1.3.3'
+__version__ = '1.3.4'
 
 
 logger = logging.getLogger(__name__)
