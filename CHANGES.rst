@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-unreleased
+1.3.4
 -------
 
 - [bugfix] properly detect if executor running and clean after executor is being stopped
