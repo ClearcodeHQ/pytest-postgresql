@@ -3,7 +3,6 @@ import psycopg2
 import pytest
 
 from pytest_postgresql import factories
-from pytest_postgresql.factories import init_postgresql_database
 
 query = "CREATE TABLE test (id serial PRIMARY KEY, num integer, data varchar);"
 
@@ -71,7 +70,9 @@ def test_rand_postgres_port(postgresql_rand):
 def test_postgres_terminate_connection(
         postgresql, run):
     """
-    Test that PostgreSQL connections are terminated between tests and only one exists.
+    Test that connections are terminated between tests.
+
+    And check that only one exists at a time.
     """
     cur = postgresql.cursor()
     cur.execute('SELECT * FROM pg_stat_activity;')
