@@ -1,3 +1,4 @@
+
 # Copyright (C) 2013 by Clearcode <http://clearcode.cc>
 # and associates (see AUTHORS).
 
@@ -39,7 +40,7 @@ class PostgreSQLExecutor(TCPExecutor):
         "-l {logfile} {startparams}"
     ))
 
-    VERSION_RE = re.compile('.* (?P<version>\d+\.\d)')
+    VERSION_RE = re.compile(r'.* (?P<version>\d+\.\d)')
 
     def __init__(self, executable, host, port,
                  datadir, unixsocketdir, logfile, startparams,
