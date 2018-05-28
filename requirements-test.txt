@@ -8,7 +8,7 @@ pydocstyle==2.1.1
 pycodestyle==2.4.0
 pep8==1.7.1
 mccabe==0.6.1
-pyroma==2.3
+pyroma==2.3.1
 pytest==3.6.0
 psycopg2==2.7.4; platform_python_implementation != "PyPy"
 psycopg2cffi==2.7.7; platform_python_implementation == "PyPy"
