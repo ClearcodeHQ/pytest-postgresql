@@ -35,7 +35,7 @@ def get_config(request):
     """Return a dictionary with config options."""
     config = {}
     options = [
-        'exec', 'host', 'port', 'user', 'startparams', 'logsdir',
+        'exec', 'host', 'port', 'user', 'options', 'startparams', 'logsdir',
         'logsprefix', 'unixsocketdir'
     ]
     for option in options:
@@ -151,7 +151,7 @@ def drop_postgresql_database(user, host, port, db, version):
 
 
 def postgresql_proc(
-        executable=None, host=None, port=-1, user=None,
+        executable=None, host=None, port=-1, user=None, options='',
         startparams=None, unixsocketdir=None, logsdir=None, logs_prefix='',
 ):
     """
@@ -198,6 +198,7 @@ def postgresql_proc(
         datadir = os.path.join(
             gettempdir(), 'postgresqldata.{0}'.format(pg_port))
         pg_user = user or config['user']
+        pg_options = options or config['options']
         pg_unixsocketdir = unixsocketdir or config['unixsocketdir']
         pg_startparams = startparams or config['startparams']
         pg_logsdir = logsdir or config['logsdir']
@@ -220,6 +221,7 @@ def postgresql_proc(
             host=pg_host,
             port=pg_port,
             user=pg_user,
+            options=pg_options,
             datadir=datadir,
             unixsocketdir=pg_unixsocketdir,
             logfile=logfile_path,
@@ -262,6 +264,7 @@ def postgresql(process_fixture_name, db='tests'):
         pg_host = proc_fixture.host
         pg_port = proc_fixture.port
         pg_user = proc_fixture.user
+        pg_options = proc_fixture.options
         pg_db = db
 
         init_postgresql_database(
@@ -271,7 +274,8 @@ def postgresql(process_fixture_name, db='tests'):
             dbname=pg_db,
             user=pg_user,
             host=pg_host,
-            port=pg_port
+            port=pg_port,
+            options=pg_options
         )
 
         def drop_database():
