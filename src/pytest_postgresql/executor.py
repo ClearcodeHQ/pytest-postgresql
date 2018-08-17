@@ -44,7 +44,8 @@ class PostgreSQLExecutor(TCPExecutor):
 
     def __init__(self, executable, host, port,
                  datadir, unixsocketdir, logfile, startparams,
-                 shell=False, timeout=60, sleep=0.1, user='postgres'):
+                 shell=False, timeout=60, sleep=0.1, user='postgres',
+                 options=''):
         """
         Initialize PostgreSQLExecutor executor.
 
@@ -64,6 +65,7 @@ class PostgreSQLExecutor(TCPExecutor):
         """
         self.executable = executable
         self.user = user
+        self.options = options
         self.version = self.version()
         self.datadir = datadir
         self.unixsocketdir = unixsocketdir
