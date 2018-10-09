@@ -2,7 +2,7 @@
 pip>=9  # minimum installation requirements
 setuptools>=21  # minimum installation requirements
 coverage==4.5.1 # pytest-cov
-pylama==7.6.2
+pylama==7.6.4
 pyflakes==2.0.0
 pydocstyle==2.1.1
 pycodestyle==2.4.0
