@@ -4,7 +4,7 @@ setuptools>=21  # minimum installation requirements
 coverage==4.5.1 # pytest-cov
 pylama==7.6.5
 pyflakes==2.0.0
-pydocstyle==2.1.1
+pydocstyle==3.0.0
 pycodestyle==2.4.0
 pep8==1.7.1
 mccabe==0.6.1
