@@ -21,6 +21,7 @@ from tempfile import gettempdir
 from pytest_postgresql import factories
 
 
+# pylint:disable=invalid-name
 _help_executable = 'Path to PostgreSQL executable'
 _help_host = 'Host at which PostgreSQL will accept connections'
 _help_port = 'Port at which PostgreSQL will accept connections'

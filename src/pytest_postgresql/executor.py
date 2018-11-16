@@ -66,7 +66,6 @@ class PostgreSQLExecutor(TCPExecutor):
         self.executable = executable
         self.user = user
         self.options = options
-        self.version = self.version()
         self.datadir = datadir
         self.unixsocketdir = unixsocketdir
         command = self.proc_start_command().format(
@@ -88,6 +87,7 @@ class PostgreSQLExecutor(TCPExecutor):
             unix_socket_dir_arg_name = 'unix_socket_directory'
         return self.BASE_PROC_START_COMMAND % unix_socket_dir_arg_name
 
+    @property
     def version(self):
         """Detect postgresql version."""
         version_string = subprocess.check_output(
@@ -108,21 +108,19 @@ class PostgreSQLExecutor(TCPExecutor):
                 ),
                 shell=True
             ).decode('utf-8')
-        except subprocess.CalledProcessError as e:
-            if b'pg_ctl: no server running' in e.output:
+        except subprocess.CalledProcessError as ex:
+            if b'pg_ctl: no server running' in ex.output:
                 return False
             raise
 
         return "pg_ctl: server is running" in output
 
-    def stop(self):
+    def stop(self, sig=None):
         """Issue a stop request to executable."""
         subprocess.check_output(
             '{pg_ctl} stop -D {datadir} -m f'.format(
                 pg_ctl=self.executable,
                 datadir=self.datadir,
-                port=self.port,
-                unixsocketdir=self.unixsocketdir
             ),
             shell=True)
-        super(PostgreSQLExecutor, self).stop()
+        super(PostgreSQLExecutor, self).stop(sig)

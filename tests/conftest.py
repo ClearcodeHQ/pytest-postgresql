@@ -2,7 +2,26 @@
 import sys
 import warnings
 
-major, minor = sys.version_info[:2]
+from pytest_postgresql import factories
 
-if not (major >= 3 and minor >= 5):
+if not sys.version_info >= (3, 5):
     warnings.simplefilter("error", category=DeprecationWarning)
+
+
+PG_CTL = '/usr/lib/postgresql/{ver}/bin/pg_ctl'
+
+# pylint:disable=invalid-name
+postgresql92 = factories.postgresql_proc(PG_CTL.format(ver='9.2'), port=None)
+postgresql93 = factories.postgresql_proc(PG_CTL.format(ver='9.3'), port=None)
+postgresql94 = factories.postgresql_proc(PG_CTL.format(ver='9.4'), port=None)
+postgresql95 = factories.postgresql_proc(PG_CTL.format(ver='9.5'), port=None)
+postgresql96 = factories.postgresql_proc(PG_CTL.format(ver='9.6'), port=None)
+postgresql10 = factories.postgresql_proc(PG_CTL.format(ver='10'), port=None)
+postgresql101 = factories.postgresql_proc(PG_CTL.format(ver='10.1'), port=None)
+
+postgresql_proc2 = factories.postgresql_proc(port=9876)
+postgresql2 = factories.postgresql('postgresql_proc2')
+
+postgresql_rand_proc = factories.postgresql_proc(port=None)
+postgresql_rand = factories.postgresql('postgresql_rand_proc')
+# pylint:enable=invalid-name
