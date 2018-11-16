@@ -26,17 +26,14 @@ class InvalidPortsDefinition(ValueError):
 
     def __init__(self, ports):
         """Construct InvalidPortsDefinition exception."""
-        self.ports = ports
-
-    def __str__(self):
-        """Return string representation."""
-        return (
-            'Unknown format of ports: {0}.\n'
-            'You should provide a ports range "[(4000,5000)]"'
-            'or "(4000,5000)" or a comma-separated ports set'
-            '"[{4000,5000,6000}]" or list of ints "[400,5000,6000,8000]"'
-            'or all of them "[(20000, 30000), {48889, 50121}, 4000, 4004]"'
-        ).format(self.ports)
+        super(InvalidPortsDefinition, self).__init__(
+            'Unknown format of ports: {0}.\n'.format(ports) + (
+                'You should provide a ports range "[(4000,5000)]"'
+                'or "(4000,5000)" or a comma-separated ports set'
+                '"[{4000,5000,6000}]" or list of ints "[400,5000,6000,8000]"'
+                'or all of them "[(20000, 30000), {48889, 50121}, 4000, 4004]"'
+            )
+        )
 
 
 def get_port(ports):
@@ -60,7 +57,7 @@ def get_port(ports):
     """
     if ports == -1:
         return None
-    elif not ports:
+    if not ports:
         return port_for.select_random(None)
 
     try:

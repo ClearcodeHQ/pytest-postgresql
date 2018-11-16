@@ -101,31 +101,31 @@ def init_postgresql_directory(postgresql_ctl, user, datadir):
     subprocess.check_output(' '.join(init_directory), shell=True)
 
 
-def init_postgresql_database(user, host, port, db):
+def init_postgresql_database(user, host, port, db_name):
     """
     Create database in postgresql.
 
     :param str user: postgresql username
     :param str host: postgresql host
     :param str port: postgresql port
-    :param str db: database name
+    :param str db_name: database name
     """
     conn = psycopg2.connect(user=user, host=host, port=port)
     conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
     cur = conn.cursor()
-    cur.execute('CREATE DATABASE {0};'.format(db))
+    cur.execute('CREATE DATABASE {0};'.format(db_name))
     cur.close()
     conn.close()
 
 
-def drop_postgresql_database(user, host, port, db, version):
+def drop_postgresql_database(user, host, port, db_name, version):
     """
     Drop databse in postgresql.
 
     :param str user: postgresql username
     :param str host: postgresql host
     :param str port: postgresql port
-    :param str db: database name
+    :param str db_name: database name
     :param str version: postgresql version number
     """
     conn = psycopg2.connect(user=user, host=host, port=port)
@@ -139,13 +139,13 @@ def drop_postgresql_database(user, host, port, db, version):
         pid_column = 'procpid'
     cur.execute(
         'UPDATE pg_database SET datallowconn=false WHERE datname = %s;',
-        (db,))
+        (db_name,))
     cur.execute(
         'SELECT pg_terminate_backend(pg_stat_activity.{0})'
         'FROM pg_stat_activity WHERE pg_stat_activity.datname = %s;'.format(
             pid_column),
-        (db,))
-    cur.execute('DROP DATABASE IF EXISTS {0};'.format(db))
+        (db_name,))
+    cur.execute('DROP DATABASE IF EXISTS {0};'.format(db_name))
     cur.close()
     conn.close()
 
@@ -212,9 +212,9 @@ def postgresql_proc(
             postgresql_ctl, pg_user, datadir
         )
 
-        if 'FreeBSD' == platform.system():
-            with (datadir / 'pg_hba.conf').open(mode='a') as f:
-                f.write('host all all 0.0.0.0/0 trust\n')
+        if platform.system() == 'FreeBSD':
+            with (datadir / 'pg_hba.conf').open(mode='a') as conf_file:
+                conf_file.write('host all all 0.0.0.0/0 trust\n')
 
         postgresql_executor = PostgreSQLExecutor(
             executable=postgresql_ctl,
@@ -240,12 +240,12 @@ def postgresql_proc(
     return postgresql_proc_fixture
 
 
-def postgresql(process_fixture_name, db='tests'):
+def postgresql(process_fixture_name, db_name='tests'):
     """
     Return connection fixture factory for PostgreSQL.
 
     :param str process_fixture_name: name of the process fixture
-    :param str db: database name
+    :param str db_name: database name
     :rtype: func
     :returns: function which makes a connection to postgresql
     """
@@ -265,11 +265,9 @@ def postgresql(process_fixture_name, db='tests'):
         pg_port = proc_fixture.port
         pg_user = proc_fixture.user
         pg_options = proc_fixture.options
-        pg_db = db
+        pg_db = db_name
 
-        init_postgresql_database(
-            pg_user, pg_host, pg_port, pg_db
-        )
+        init_postgresql_database(pg_user, pg_host, pg_port, pg_db)
         connection = psycopg2.connect(
             dbname=pg_db,
             user=pg_user,
@@ -281,8 +279,7 @@ def postgresql(process_fixture_name, db='tests'):
         def drop_database():
             connection.close()
             drop_postgresql_database(
-                pg_user, pg_host, pg_port, pg_db,
-                proc_fixture.version
+                pg_user, pg_host, pg_port, pg_db, proc_fixture.version
             )
 
         request.addfinalizer(drop_database)

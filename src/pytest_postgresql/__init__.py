@@ -17,15 +17,10 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with pytest-postgresql. If not, see <http://www.gnu.org/licenses/>.
 """Main module for pytest-postgresql."""
-
-import logging
 import platform
 
 __version__ = '1.3.4'
 
-
-logger = logging.getLogger(__name__)
-
 if platform.python_implementation() == "PyPy":
-    import psycopg2cffi.compat
+    import psycopg2cffi.compat  # pylint:disable=import-error
     psycopg2cffi.compat.register()
