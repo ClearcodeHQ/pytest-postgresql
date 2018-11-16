@@ -1,11 +1,11 @@
 language: python
 python:
-- '2.7'
-- '3.4'
-- '3.5'
-- '3.6'
-- 'pypy-5.3.1'
-- 'pypy3.5-5.8.0'
+- 2.7
+- 3.4
+- 3.5
+- 3.6
+- pypy-5.3.1
+- pypy3.5-5.8.0
 # blocklist branches
 branches:
   except:
@@ -15,8 +15,6 @@ install:
 - pip install -e .[tests] coveralls wheel
 script:
 - py.test -n 0 --cov src/pytest_postgresql
-- pylama
-- pyroma .
 after_success:
 - coveralls
 jobs:
@@ -24,6 +22,17 @@ jobs:
     - stage: xdist
       python: 3.6
       script: py.test -n 1 --cov src/pytest_postgresql tests
+    - stage: linters
+      python: 3.6
+      install:
+      - pip install -r requirements-lint.txt
+      - pip install .[tests]
+      script:
+      - pycodestyle
+      - pydocstyle
+      - pylint pytest_postgresql tests
+      - pyroma .
+      after_success: skip
     - stage: deploy
       python: 3.6
       if: tag IS present
