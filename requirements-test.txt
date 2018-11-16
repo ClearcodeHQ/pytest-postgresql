@@ -2,13 +2,6 @@
 pip>=9  # minimum installation requirements
 setuptools>=21  # minimum installation requirements
 coverage==4.5.2 # pytest-cov
-pylama==7.6.6
-pyflakes==2.0.0
-pydocstyle==3.0.0
-pycodestyle==2.4.0
-pep8==1.7.1
-mccabe==0.6.1
-pyroma==2.4
 pytest==4.0.0
 psycopg2==2.7.6.1; platform_python_implementation != "PyPy"
 psycopg2cffi==2.8.1; platform_python_implementation == "PyPy"
