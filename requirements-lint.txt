@@ -1,6 +1,6 @@
 # linters
 pycodestyle==2.4.0
 pydocstyle==3.0.0
-pylint==2.2.0; python_version>'3.3'
+pylint==2.2.1; python_version>'3.3'
 pygments==2.3.0
 pyroma==2.4
