@@ -1,5 +1,5 @@
 # linters
-pycodestyle==2.4.0
+pycodestyle==2.5.0
 pydocstyle==3.0.0
 pylint==2.2.2; python_version>'3.3'
 pygments
