@@ -1,7 +1,7 @@
 # test runs requirements (versions we'll be testing against) - automatically updated by requires.io
 pip>=9  # minimum installation requirements
 setuptools>=21  # minimum installation requirements
-coverage==4.5.2 # pytest-cov
+coverage==4.5.3 # pytest-cov
 pytest==4.3.0
 psycopg2==2.7.7; platform_python_implementation != "PyPy"
 psycopg2cffi==2.8.1; platform_python_implementation == "PyPy"
