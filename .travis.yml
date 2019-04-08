@@ -1,9 +1,9 @@
 language: python
 python:
 - 2.7
-- 3.4
 - 3.5
 - 3.6
+- 3.7
 - pypy
 - pypy3.5
 # blocklist branches
@@ -20,10 +20,10 @@ after_success:
 jobs:
   include:
     - stage: xdist
-      python: 3.6
+      python: 3.7
       script: py.test -n 1 --cov src/pytest_postgresql tests
     - stage: linters
-      python: 3.6
+      python: 3.7
       install:
       - pip install -r requirements-lint.txt
       - pip install .[tests]
@@ -34,7 +34,7 @@ jobs:
       - pyroma .
       after_success: skip
     - stage: deploy
-      python: 3.6
+      python: 3.7
       if: tag IS present
       script: skip
       deploy:
