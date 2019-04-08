@@ -25,7 +25,10 @@ import subprocess
 from tempfile import gettempdir
 
 import pytest
-import psycopg2
+try:
+    import psycopg2
+except ImportError:
+    psycopg2 = False
 
 from pytest_postgresql.executor import PostgreSQLExecutor
 from pytest_postgresql.port import get_port
@@ -258,6 +261,10 @@ def postgresql(process_fixture_name, db_name='tests'):
         :rtype: psycopg2.connection
         :returns: postgresql client
         """
+        if not psycopg2:
+            raise ImportError(
+                'Please install psycopg2 or psycopg2-binary for Cpython or psycopg2cffi for Pypy.'
+            )
         proc_fixture = request.getfixturevalue(process_fixture_name)
 
         # _, config = try_import('psycopg2', request)
