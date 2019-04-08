@@ -6,13 +6,11 @@ QUERY = "CREATE TABLE test (id serial PRIMARY KEY, num integer, data varchar);"
 
 
 @pytest.mark.parametrize('postgres', (
-    'postgresql92',
-    'postgresql93',
     'postgresql94',
     'postgresql95',
     'postgresql96',
-    pytest.param('postgresql10', marks=pytest.mark.xfail),
-    pytest.param('postgresql101', marks=pytest.mark.xfail),
+    'postgresql10',
+    pytest.param('postgresql11', marks=pytest.mark.xfail),
 ))
 def test_postgresql_proc(request, postgres):
     """Test different postgresql versions."""
