@@ -1,5 +1,7 @@
 """All tests for pytest-postgresql."""
+import psycopg2
 import pytest
+
 
 QUERY = "CREATE TABLE test (id serial PRIMARY KEY, num integer, data varchar);"
 
@@ -42,7 +44,6 @@ def test_two_postgreses(postgresql, postgresql2):
 
 def test_rand_postgres_port(postgresql_rand):
     """Check if postgres fixture can be started on random port."""
-    import psycopg2
     assert postgresql_rand.status == psycopg2.extensions.STATUS_READY
 
 
