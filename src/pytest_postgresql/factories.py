@@ -263,7 +263,8 @@ def postgresql(process_fixture_name, db_name='tests'):
         """
         if not psycopg2:
             raise ImportError(
-                'Please install psycopg2 or psycopg2-binary for CPython '
+                'No module named psycopg2. Please install either '
+                'psycopg2 or psycopg2-binary package for CPython '
                 'or psycopg2cffi for Pypy.'
             )
         proc_fixture = request.getfixturevalue(process_fixture_name)
