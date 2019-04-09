@@ -7,6 +7,7 @@ unreleased
 - [enhancements] Ability to configure additional options for postgresql process and connection
 - [bugfix] - removed hard dependency on ``psycopg2``, allowing any of its alternative packages, like
   ``psycopg2-binary``, to be used.
+- [maintenance] Drop support for python 3.4 and use 3.7 instead
 
 1.3.4
 -------
