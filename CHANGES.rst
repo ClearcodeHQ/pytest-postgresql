@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-unreleased
+1.4.0
 -------
 
 - [enhancements] Ability to configure additional options for postgresql process and connection
