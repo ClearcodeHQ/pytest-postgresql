@@ -49,8 +49,6 @@ test_requires = [
 extras_require = {
     'docs': ['sphinx'],
     'tests': test_requires,
-    ': platform_python_implementation != "PyPy"': ['psycopg2'],
-    ': platform_python_implementation == "PyPy"': ['psycopg2cffi'],
 }
 
 setup_requires = [

@@ -2,6 +2,7 @@
 import psycopg2
 import pytest
 
+
 QUERY = "CREATE TABLE test (id serial PRIMARY KEY, num integer, data varchar);"
 
 

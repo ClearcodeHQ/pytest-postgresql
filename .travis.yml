@@ -26,7 +26,7 @@ jobs:
       python: 3.6
       install:
       - pip install -r requirements-lint.txt
-      - pip install .[tests]
+      - pip install .[tests] psycopg2-binary
       script:
       - pycodestyle
       - pydocstyle
