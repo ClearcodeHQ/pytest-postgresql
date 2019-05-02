@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-unreleased
+1.4.1
 -------
 
 - [bugfix] Allow creating test databse with hyphens 
