@@ -20,7 +20,7 @@ postgresql10 = factories.postgresql_proc(PG_CTL.format(ver='10'), port=None)
 postgresql101 = factories.postgresql_proc(PG_CTL.format(ver='10.1'), port=None)
 
 postgresql_proc2 = factories.postgresql_proc(port=9876)
-postgresql2 = factories.postgresql('postgresql_proc2')
+postgresql2 = factories.postgresql('postgresql_proc2', db_name='test-db')
 
 postgresql_rand_proc = factories.postgresql_proc(port=None)
 postgresql_rand = factories.postgresql('postgresql_rand_proc')
