@@ -116,7 +116,7 @@ def init_postgresql_database(user, host, port, db_name):
     conn = psycopg2.connect(user=user, host=host, port=port)
     conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
     cur = conn.cursor()
-    cur.execute('CREATE DATABASE {0};'.format(db_name))
+    cur.execute('CREATE DATABASE "{0}";'.format(db_name))
     cur.close()
     conn.close()
 
@@ -148,7 +148,7 @@ def drop_postgresql_database(user, host, port, db_name, version):
         'FROM pg_stat_activity WHERE pg_stat_activity.datname = %s;'.format(
             pid_column),
         (db_name,))
-    cur.execute('DROP DATABASE IF EXISTS {0};'.format(db_name))
+    cur.execute('DROP DATABASE IF EXISTS "{0}";'.format(db_name))
     cur.close()
     conn.close()
 
