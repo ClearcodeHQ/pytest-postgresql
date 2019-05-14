@@ -39,7 +39,7 @@ def get_config(request):
     config = {}
     options = [
         'exec', 'host', 'port', 'user', 'options', 'startparams', 'logsdir',
-        'logsprefix', 'unixsocketdir'
+        'logsprefix', 'unixsocketdir', 'dbname'
     ]
     for option in options:
         option_name = 'postgresql_' + option
@@ -243,7 +243,7 @@ def postgresql_proc(
     return postgresql_proc_fixture
 
 
-def postgresql(process_fixture_name, db_name='tests'):
+def postgresql(process_fixture_name, db_name=None):
     """
     Return connection fixture factory for PostgreSQL.
 
@@ -261,6 +261,7 @@ def postgresql(process_fixture_name, db_name='tests'):
         :rtype: psycopg2.connection
         :returns: postgresql client
         """
+        config = get_config(request)
         if not psycopg2:
             raise ImportError(
                 'No module named psycopg2. Please install either '
@@ -274,7 +275,7 @@ def postgresql(process_fixture_name, db_name='tests'):
         pg_port = proc_fixture.port
         pg_user = proc_fixture.user
         pg_options = proc_fixture.options
-        pg_db = db_name
+        pg_db = db_name or config['dbname']
 
         init_postgresql_database(pg_user, pg_host, pg_port, pg_db)
         connection = psycopg2.connect(
