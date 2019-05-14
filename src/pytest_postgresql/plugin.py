@@ -31,6 +31,7 @@ _help_startparams = "Starting parameters for the PostgreSQL"
 _help_logsdir = "Logs directory location"
 _help_logsprefix = "Prefix for the log files"
 _help_unixsocketdir = "Location of the socket directory"
+_help_dbname = "Default database name"
 
 
 def pytest_addoption(parser):
@@ -87,6 +88,12 @@ def pytest_addoption(parser):
         name='postgresql_unixsocketdir',
         help=_help_unixsocketdir,
         default=gettempdir()
+    )
+
+    parser.addini(
+        name='postgresql_dbname',
+        help=_help_dbname,
+        default='tests'
     )
 
     parser.addoption(
@@ -151,6 +158,13 @@ def pytest_addoption(parser):
         action='store',
         dest='postgresql_unixsocketdir',
         help=_help_unixsocketdir
+    )
+
+    parser.addoption(
+        '--postgresql-dbname',
+        action='store',
+        dest='postgresql_dbname',
+        help=_help_dbname
     )
 
 

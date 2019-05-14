@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+Unreleased
+-------
+
+- [feature] Ability to configure database name through plugin options
+
 1.4.1
 -------
 
