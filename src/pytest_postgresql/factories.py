@@ -116,7 +116,7 @@ def init_postgresql_database(user, host, port, db_name):
     conn = psycopg2.connect(user=user, host=host, port=port)
     conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
     cur = conn.cursor()
-    cur.execute('CREATE DATABASE "{0}";'.format(db_name))
+    cur.execute('CREATE DATABASE "{}";'.format(db_name))
     cur.close()
     conn.close()
 
@@ -144,11 +144,11 @@ def drop_postgresql_database(user, host, port, db_name, version):
         'UPDATE pg_database SET datallowconn=false WHERE datname = %s;',
         (db_name,))
     cur.execute(
-        'SELECT pg_terminate_backend(pg_stat_activity.{0})'
+        'SELECT pg_terminate_backend(pg_stat_activity.{})'
         'FROM pg_stat_activity WHERE pg_stat_activity.datname = %s;'.format(
             pid_column),
         (db_name,))
-    cur.execute('DROP DATABASE IF EXISTS "{0}";'.format(db_name))
+    cur.execute('DROP DATABASE IF EXISTS "{}";'.format(db_name))
     cur.close()
     conn.close()
 
@@ -199,7 +199,7 @@ def postgresql_proc(
         pg_host = host or config['host']
         pg_port = get_port(port) or get_port(config['port'])
         datadir = os.path.join(
-            gettempdir(), 'postgresqldata.{0}'.format(pg_port))
+            gettempdir(), 'postgresqldata.{}'.format(pg_port))
         pg_user = user or config['user']
         pg_options = options or config['options']
         pg_unixsocketdir = unixsocketdir or config['unixsocketdir']
