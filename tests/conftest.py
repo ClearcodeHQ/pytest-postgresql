@@ -1,11 +1,5 @@
 """Tests main conftest file."""
-import sys
-import warnings
-
 from pytest_postgresql import factories
-
-if not sys.version_info >= (3, 5):
-    warnings.simplefilter("error", category=DeprecationWarning)
 
 
 PG_CTL = '/usr/lib/postgresql/{ver}/bin/pg_ctl'
