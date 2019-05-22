@@ -76,7 +76,7 @@ class PostgreSQLExecutor(TCPExecutor):
             logfile=logfile,
             startparams=startparams,
         )
-        super(PostgreSQLExecutor, self).__init__(
+        super().__init__(
             command, host, port, shell=shell, timeout=timeout, sleep=sleep)
 
     def proc_start_command(self):
@@ -123,4 +123,4 @@ class PostgreSQLExecutor(TCPExecutor):
                 datadir=self.datadir,
             ),
             shell=True)
-        super(PostgreSQLExecutor, self).stop(sig)
+        super().stop(sig)

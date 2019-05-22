@@ -55,10 +55,10 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'pytest-postgresql'
+project = 'pytest-postgresql'
 basename = ''.join(project.split('.'))
-author = u'Clearcode - The A Room'
-copyright = u'2016, ' + author
+author = 'Clearcode - The A Room'
+copyright = '2016, ' + author
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -232,7 +232,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', basename, project + u' Documentation',
+    ('index', basename, project + ' Documentation',
      [author], 1)
 ]
 
@@ -246,7 +246,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    ('index', basename, project + u' Documentation',
+    ('index', basename, project + ' Documentation',
      author, basename, 'One line description of project.',
      'Miscellaneous'),
 ]
@@ -267,7 +267,7 @@ texinfo_documents = [
 epub_title = project
 epub_author = author
 epub_publisher = author
-epub_copyright = u'2016, ' + author
+epub_copyright = '2016, ' + author
 
 # The language of the text. It defaults to the language option
 # or en if the language is not set.
