@@ -4,6 +4,7 @@ CHANGELOG
 Unreleased
 -------
 
+- [feature] Drop support for python 2.7. From now on, only suuport python 3.5 and up.
 - [feature] Ability to configure database name through plugin options
 
 1.4.1
