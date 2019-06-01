@@ -3,4 +3,4 @@ pycodestyle==2.5.0
 pydocstyle==3.0.0
 pylint==2.3.1
 pygments
-pyroma==2.4
+pyroma==2.5
