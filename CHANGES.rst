@@ -4,6 +4,8 @@ CHANGELOG
 Unreleased
 -------
 
+- [bugfix] Always start postgresql with LC_ALL, LC_TYPE and LANG set to C.UTF-8.
+  It makes postgresql start in english.
 - [feature] Drop support for python 2.7. From now on, only suuport python 3.5 and up.
 - [feature] Ability to configure database name through plugin options
 
