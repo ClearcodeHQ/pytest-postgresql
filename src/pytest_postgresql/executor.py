@@ -77,7 +77,18 @@ class PostgreSQLExecutor(TCPExecutor):
             startparams=startparams,
         )
         super().__init__(
-            command, host, port, shell=shell, timeout=timeout, sleep=sleep)
+            command,
+            host,
+            port,
+            shell=shell,
+            timeout=timeout,
+            sleep=sleep,
+            envvars={
+                'LC_ALL': 'C.UTF-8',
+                'LC_CTYPE': 'C.UTF-8',
+                'LANG': 'C.UTF-8',
+            }
+        )
 
     def proc_start_command(self):
         """Based on postgres version return proper start command."""
