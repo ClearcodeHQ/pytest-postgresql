@@ -60,7 +60,9 @@ def wait_for_postgres(logfile, awaited_msg):
     :param str awaited_msg: awaited message
     """
     # wait until logfile is created
-    while not os.path.isfile(logfile):
+    # Cast to str. Since Python 3.6 it's possible to pass a A Pathlike object.
+    # Python 3.5 however still needs string
+    while not os.path.isfile(str(logfile)):
         time.sleep(1)
 
     # wait for expected message.
