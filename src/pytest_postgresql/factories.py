@@ -38,7 +38,7 @@ def get_config(request):
     """Return a dictionary with config options."""
     config = {}
     options = [
-        'exec', 'host', 'port', 'user', 'options', 'startparams', 'logsdir',
+        'exec', 'host', 'port', 'user', 'options', 'startparams',
         'logsprefix', 'unixsocketdir', 'dbname'
     ]
     for option in options:
@@ -155,7 +155,7 @@ def drop_postgresql_database(user, host, port, db_name, version):
 
 def postgresql_proc(
         executable=None, host=None, port=-1, user=None, options='',
-        startparams=None, unixsocketdir=None, logsdir=None, logs_prefix='',
+        startparams=None, unixsocketdir=None, logs_prefix='',
 ):
     """
     Postgresql process factory.
@@ -172,13 +172,12 @@ def postgresql_proc(
     :param str user: postgresql username
     :param str startparams: postgresql starting parameters
     :param str unixsocketdir: directory to create postgresql's unixsockets
-    :param str logsdir: location for logs
     :param str logs_prefix: prefix for log filename
     :rtype: func
     :returns: function which makes a postgresql process
     """
     @pytest.fixture(scope='session')
-    def postgresql_proc_fixture(request):
+    def postgresql_proc_fixture(request, tmpdir_factory):
         """
         Process fixture for PostgreSQL.
 
@@ -204,12 +203,12 @@ def postgresql_proc(
         pg_options = options or config['options']
         pg_unixsocketdir = unixsocketdir or config['unixsocketdir']
         pg_startparams = startparams or config['startparams']
-        pg_logsdir = logsdir or config['logsdir']
-        logfile_path = os.path.join(
-            pg_logsdir, '{prefix}postgresql.{port}.log'.format(
+        logfile_path = tmpdir_factory.mktemp("data").join(
+            '{prefix}postgresql.{port}.log'.format(
                 prefix=logs_prefix,
                 port=pg_port
-            ))
+            )
+        )
 
         init_postgresql_directory(
             postgresql_ctl, pg_user, datadir

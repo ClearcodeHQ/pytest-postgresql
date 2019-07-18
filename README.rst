@@ -69,7 +69,7 @@ You can also create additional postgresql client and process fixtures if you'd n
     from pytest_postgresql import factories
 
     postgresql_my_proc = factories.postgresql_proc(
-        port=None, logsdir='/tmp')
+        port=None, unixsocketdir='/var/run')
     postgresql_my = factories.postgresql('postgresql_my_proc')
 
 .. note::
@@ -120,11 +120,6 @@ You can pick which you prefer, but remember that these settings are handled in t
      - --postgresql-startparams
      - postgresql_startparams
      - -w
-   * - Log directory location
-     - logsdir
-     - --postgresql-logsdir
-     - postgresql_logsdir
-     - $TMPDIR
    * - Log filename's prefix
      - logsprefix
      - --postgresql-logsprefix

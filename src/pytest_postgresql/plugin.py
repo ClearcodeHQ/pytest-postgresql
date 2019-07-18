@@ -28,7 +28,6 @@ _help_port = 'Port at which PostgreSQL will accept connections'
 _help_user = "PostgreSQL username"
 _help_options = "PostgreSQL connection options"
 _help_startparams = "Starting parameters for the PostgreSQL"
-_help_logsdir = "Logs directory location"
 _help_logsprefix = "Prefix for the log files"
 _help_unixsocketdir = "Location of the socket directory"
 _help_dbname = "Default database name"
@@ -70,12 +69,6 @@ def pytest_addoption(parser):
         name='postgresql_startparams',
         help=_help_startparams,
         default='-w'
-    )
-
-    parser.addini(
-        name='postgresql_logsdir',
-        help=_help_logsdir,
-        default=gettempdir()
     )
 
     parser.addini(
@@ -137,13 +130,6 @@ def pytest_addoption(parser):
         action='store',
         dest='postgresql_startparams',
         help=_help_startparams
-    )
-
-    parser.addoption(
-        '--postgresql-logsdir',
-        action='store',
-        dest='postgresql_logsdir',
-        help=_help_logsdir
     )
 
     parser.addoption(
