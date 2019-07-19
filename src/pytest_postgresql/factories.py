@@ -49,7 +49,6 @@ def get_config(request):
     return config
 
 
-
 def init_postgresql_database(user, host, port, db_name):
     """
     Create database in postgresql.

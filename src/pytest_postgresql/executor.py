@@ -33,7 +33,7 @@ class PostgreSQLUnsupported(Exception):
     """Exception raised when postgresql<9.0 would be detected."""
 
 
-class PostgreSQLExecutor(TCPExecutor):
+class PostgreSQLExecutor(TCPExecutor):  # pylint:disable=too-many-instance-attributes
     """
     PostgreSQL executor running on pg_ctl.
 
@@ -143,8 +143,8 @@ class PostgreSQLExecutor(TCPExecutor):
         """Wait for postgresql being started."""
         if '-w' not in self.startparams:
             return
-        # Cast to str. Since Python 3.6 it's possible to pass a A Pathlike object.
-        # Python 3.5 however still needs string
+        # Cast to str since Python 3.5 however still needs string.
+        # Python 3.6 it's possible to pass a A Pathlike object.
         logfile_path = str(self.logfile)
         # wait until logfile is created
         while not os.path.isfile(logfile_path):
