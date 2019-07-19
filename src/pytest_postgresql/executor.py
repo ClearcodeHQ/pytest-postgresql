@@ -113,7 +113,7 @@ class PostgreSQLExecutor(TCPExecutor):
         self.init_directory()
         return super().start()
 
-    def remove_directory(self):
+    def clean_directory(self):
         """Remove directory created for postgresql run."""
         if os.path.isdir(self.datadir):
             shutil.rmtree(self.datadir)
@@ -205,9 +205,9 @@ class PostgreSQLExecutor(TCPExecutor):
             shell=True)
         super().stop(sig)
 
-    def __del__(self):
+    def _clear_process(self):
         """Make sure the directories are properly removed at the end."""
         try:
-            super().__del__()
+            super()._clear_process()
         finally:
             self.remove_directory()
