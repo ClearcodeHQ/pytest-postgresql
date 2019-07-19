@@ -130,7 +130,7 @@ class PostgreSQLExecutor(TCPExecutor):
         if self._directory_initialised:
             return
         # remove old one if exists first.
-        self.remove_directory()
+        self.clean_directory()
         init_directory = (
             self.executable, 'initdb',
             '-o "--auth=trust --username=%s"' % self.user,
@@ -210,4 +210,4 @@ class PostgreSQLExecutor(TCPExecutor):
         try:
             super()._clear_process()
         finally:
-            self.remove_directory()
+            self.clean_directory()
