@@ -79,7 +79,7 @@ class PostgreSQLExecutor(TCPExecutor):
         self.datadir = datadir
         self.unixsocketdir = unixsocketdir
         self.logfile = logfile
-        self.startparms = startparams
+        self.startparams = startparams
         command = self.proc_start_command().format(
             executable=self.executable,
             datadir=self.datadir,
@@ -141,7 +141,7 @@ class PostgreSQLExecutor(TCPExecutor):
 
     def wait_for_postgres(self):
         """Wait for postgresql being started."""
-        if '-w' not in self.startparms:
+        if '-w' not in self.startparams:
             return
         # Cast to str. Since Python 3.6 it's possible to pass a A Pathlike object.
         # Python 3.5 however still needs string
