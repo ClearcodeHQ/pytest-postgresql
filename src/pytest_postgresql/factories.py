@@ -19,7 +19,6 @@
 
 import os.path
 import time
-import shutil
 import platform
 import subprocess
 from tempfile import gettempdir
@@ -75,38 +74,6 @@ def wait_for_postgres(logfile, awaited_msg):
             if awaited_msg in content:
                 break
         time.sleep(1)
-
-
-def remove_postgresql_directory(datadir):
-    """
-    Remove directory created for postgresql run.
-
-    :param str datadir: datadir path
-    """
-    if os.path.isdir(datadir):
-        shutil.rmtree(datadir)
-
-
-def init_postgresql_directory(postgresql_ctl, user, datadir):
-    """
-    Initialize postgresql data directory.
-
-    See `Initialize postgresql data directory
-        <www.postgresql.org/docs/9.5/static/app-initdb.html>`_
-
-    :param str postgresql_ctl: ctl path
-    :param str user: postgresql username
-    :param str datadir: datadir path
-
-    """
-    # remove old one if exists first.
-    remove_postgresql_directory(datadir)
-    init_directory = (
-        postgresql_ctl, 'initdb',
-        '-o "--auth=trust --username=%s"' % user,
-        '-D %s' % datadir,
-    )
-    subprocess.check_output(' '.join(init_directory), shell=True)
 
 
 def init_postgresql_database(user, host, port, db_name):
@@ -215,10 +182,6 @@ def postgresql_proc(
             )
         )
 
-        init_postgresql_directory(
-            postgresql_ctl, pg_user, datadir
-        )
-
         if platform.system() == 'FreeBSD':
             with (datadir / 'pg_hba.conf').open(mode='a') as conf_file:
                 conf_file.write('host all all 0.0.0.0/0 trust\n')
@@ -234,6 +197,7 @@ def postgresql_proc(
             logfile=logfile_path,
             startparams=pg_startparams,
         )
+        postgresql_executor.init_directory()
 
         # start server
         with postgresql_executor:

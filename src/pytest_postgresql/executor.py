@@ -20,6 +20,7 @@
 
 import os.path
 import re
+import shutil
 import subprocess
 
 from mirakuru import TCPExecutor
@@ -105,6 +106,27 @@ class PostgreSQLExecutor(TCPExecutor):
                 'The currently installed version of PostgreSQL: {1}.'
                 .format(self.MIN_SUPPORTED_VERSION, self.version))
         super().start()
+
+    def remove_directory(self):
+        """Remove directory created for postgresql run."""
+        if os.path.isdir(self.datadir):
+            shutil.rmtree(self.datadir)
+
+    def init_directory(self, datadir):
+        """
+        Initialize postgresql data directory.
+
+        See `Initialize postgresql data directory
+            <www.postgresql.org/docs/9.5/static/app-initdb.html>`_
+        """
+        # remove old one if exists first.
+        self.remove_directory()
+        init_directory = (
+            self.executable, 'initdb',
+            '-o "--auth=trust --username=%s"' % self.user,
+            '-D %s' % self.datadir,
+        )
+        subprocess.check_output(' '.join(init_directory), shell=True)
 
     def proc_start_command(self):
         """Based on postgres version return proper start command."""
