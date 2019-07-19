@@ -4,10 +4,11 @@ CHANGELOG
 Unreleased
 -------
 
+- [feature] Drop support for python 2.7. From now on, only support python 3.5 and up.
+- [feature] Ability to configure database name through plugin options
+- [enhancement] Use tmpdir_factory. Drop `logsdir` parameter
 - [bugfix] Always start postgresql with LC_ALL, LC_TYPE and LANG set to C.UTF-8.
   It makes postgresql start in english.
-- [feature] Drop support for python 2.7. From now on, only suuport python 3.5 and up.
-- [feature] Ability to configure database name through plugin options
 
 1.4.1
 -------
