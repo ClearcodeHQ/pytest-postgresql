@@ -25,6 +25,8 @@ import subprocess
 from tempfile import gettempdir
 
 import pytest
+from pkg_resources import parse_version
+
 try:
     import psycopg2
 except ImportError:
@@ -132,14 +134,14 @@ def drop_postgresql_database(user, host, port, db_name, version):
     :param str host: postgresql host
     :param str port: postgresql port
     :param str db_name: database name
-    :param str version: postgresql version number
+    :param packaging.version.Version version: postgresql version number
     """
     conn = psycopg2.connect(user=user, host=host, port=port)
     conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
     cur = conn.cursor()
     # We cannot drop the database while there are connections to it, so we
     # terminate all connections first while not allowing new connections.
-    if float(version) >= 9.2:
+    if version >= parse_version('9.2'):
         pid_column = 'pid'
     else:
         pid_column = 'procpid'
