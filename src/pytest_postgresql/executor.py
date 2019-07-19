@@ -23,6 +23,11 @@ import re
 import subprocess
 
 from mirakuru import TCPExecutor
+from pkg_resources import parse_version
+
+
+class PostgreSQLUnsupported(Exception):
+    """Exception raised when postgresql<9.0 would be detected."""
 
 
 class PostgreSQLExecutor(TCPExecutor):
@@ -41,6 +46,7 @@ class PostgreSQLExecutor(TCPExecutor):
     ))
 
     VERSION_RE = re.compile(r'.* (?P<version>\d+\.\d)')
+    MIN_SUPPORTED_VERSION = parse_version('9.0')
 
     def __init__(self, executable, host, port,
                  datadir, unixsocketdir, logfile, startparams,
@@ -90,9 +96,19 @@ class PostgreSQLExecutor(TCPExecutor):
             }
         )
 
+    def start(self):
+        """Add check for postgresql version before starting process."""
+        if self.version < self.MIN_SUPPORTED_VERSION:
+            raise PostgreSQLUnsupported(
+                'Your version of PostgreSQL is not supported. '
+                'Consider updating to PostgreSQL {0} at least. '
+                'The currently installed version of PostgreSQL: {1}.'
+                .format(self.MIN_SUPPORTED_VERSION, self.version))
+        super().start()
+
     def proc_start_command(self):
         """Based on postgres version return proper start command."""
-        if float(self.version) > 9.2:
+        if self.version > parse_version('9.2'):
             unix_socket_dir_arg_name = 'unix_socket_directories'
         else:
             unix_socket_dir_arg_name = 'unix_socket_directory'
@@ -104,7 +120,7 @@ class PostgreSQLExecutor(TCPExecutor):
         version_string = subprocess.check_output(
             [self.executable, '--version']).decode('utf-8')
         matches = self.VERSION_RE.search(version_string)
-        return matches.groupdict()['version']
+        return parse_version(matches.groupdict()['version'])
 
     def running(self):
         """Check if server is still running."""
