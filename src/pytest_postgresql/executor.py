@@ -205,9 +205,9 @@ class PostgreSQLExecutor(TCPExecutor):
             shell=True)
         super().stop(sig)
 
-    def _clear_process(self):
+    def __del__(self):
         """Make sure the directories are properly removed at the end."""
         try:
-            super()._clear_process()
+            super().__del__()
         finally:
             self.clean_directory()
