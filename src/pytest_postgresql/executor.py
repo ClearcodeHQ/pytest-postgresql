@@ -207,5 +207,7 @@ class PostgreSQLExecutor(TCPExecutor):
 
     def __del__(self):
         """Make sure the directories are properly removed at the end."""
-        self.remove_directory()
-        super().__del__()
+        try:
+            super().__del__()
+        finally:
+            self.remove_directory()
