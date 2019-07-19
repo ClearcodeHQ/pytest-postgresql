@@ -171,15 +171,11 @@ def postgresql_proc(
             logfile=logfile_path,
             startparams=pg_startparams,
         )
-        postgresql_executor.init_directory()
-
         # start server
         with postgresql_executor:
             postgresql_executor.wait_for_postgres()
 
             yield postgresql_executor
-
-        postgresql_executor.remove_directory()
 
     return postgresql_proc_fixture
 

@@ -24,8 +24,9 @@ import shutil
 import subprocess
 import time
 
-from mirakuru import TCPExecutor
 from pkg_resources import parse_version
+from mirakuru import TCPExecutor
+from mirakuru.base import ExecutorType
 
 
 class PostgreSQLUnsupported(Exception):
@@ -71,6 +72,7 @@ class PostgreSQLExecutor(TCPExecutor):
         :param str user: [default] postgresql's username used to manage
             and access PostgreSQL
         """
+        self._directory_initialised = False
         self.executable = executable
         self.user = user
         self.options = options
@@ -100,7 +102,7 @@ class PostgreSQLExecutor(TCPExecutor):
             }
         )
 
-    def start(self):
+    def start(self: ExecutorType) -> ExecutorType:
         """Add check for postgresql version before starting process."""
         if self.version < self.MIN_SUPPORTED_VERSION:
             raise PostgreSQLUnsupported(
@@ -108,20 +110,25 @@ class PostgreSQLExecutor(TCPExecutor):
                 'Consider updating to PostgreSQL {0} at least. '
                 'The currently installed version of PostgreSQL: {1}.'
                 .format(self.MIN_SUPPORTED_VERSION, self.version))
-        super().start()
+        self.init_directory()
+        return super().start()
 
     def remove_directory(self):
         """Remove directory created for postgresql run."""
         if os.path.isdir(self.datadir):
             shutil.rmtree(self.datadir)
+        self._directory_initialised = False
 
-    def init_directory(self, datadir):
+    def init_directory(self):
         """
         Initialize postgresql data directory.
 
         See `Initialize postgresql data directory
             <www.postgresql.org/docs/9.5/static/app-initdb.html>`_
         """
+        # only make sure it's removed if it's handled by this exact process
+        if self._directory_initialised:
+            return
         # remove old one if exists first.
         self.remove_directory()
         init_directory = (
@@ -130,6 +137,7 @@ class PostgreSQLExecutor(TCPExecutor):
             '-D %s' % self.datadir,
         )
         subprocess.check_output(' '.join(init_directory), shell=True)
+        self._directory_initialised = True
 
     def wait_for_postgres(self):
         """Wait for postgresql being started."""
@@ -196,3 +204,8 @@ class PostgreSQLExecutor(TCPExecutor):
             ),
             shell=True)
         super().stop(sig)
+
+    def __del__(self):
+        """Make sure the directories are properly removed at the end."""
+        self.remove_directory()
+        super().__del__()
