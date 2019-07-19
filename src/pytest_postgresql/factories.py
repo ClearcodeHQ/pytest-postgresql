@@ -18,7 +18,6 @@
 """Fixture factories for postgresql fixtures."""
 
 import os.path
-import time
 import platform
 import subprocess
 from tempfile import gettempdir
@@ -49,31 +48,6 @@ def get_config(request):
         config[option] = conf
     return config
 
-
-START_INFO = 'database system is ready to accept connections'
-
-
-def wait_for_postgres(logfile, awaited_msg):
-    """
-    Wait for postgresql being started.
-
-    :param str logfile: logfile path
-    :param str awaited_msg: awaited message
-    """
-    # Cast to str. Since Python 3.6 it's possible to pass a A Pathlike object.
-    # Python 3.5 however still needs string
-    logfile_path = str(logfile)
-    # wait until logfile is created
-    while not os.path.isfile(logfile_path):
-        time.sleep(1)
-
-    # wait for expected message.
-    while 1:
-        with open(logfile_path, 'r') as content_file:
-            content = content_file.read()
-            if awaited_msg in content:
-                break
-        time.sleep(1)
 
 
 def init_postgresql_database(user, host, port, db_name):
@@ -201,12 +175,11 @@ def postgresql_proc(
 
         # start server
         with postgresql_executor:
-            if '-w' in pg_startparams:
-                wait_for_postgres(logfile_path, START_INFO)
+            postgresql_executor.wait_for_postgres()
 
             yield postgresql_executor
 
-        remove_postgresql_directory(datadir)
+        postgresql_executor.remove_directory()
 
     return postgresql_proc_fixture
 

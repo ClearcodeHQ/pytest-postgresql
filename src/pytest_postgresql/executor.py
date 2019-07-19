@@ -22,6 +22,7 @@ import os.path
 import re
 import shutil
 import subprocess
+import time
 
 from mirakuru import TCPExecutor
 from pkg_resources import parse_version
@@ -61,7 +62,7 @@ class PostgreSQLExecutor(TCPExecutor):
         :param int port: port under which process is accessible
         :param str datadir: path to postgresql datadir
         :param str unixsocketdir: path to socket directory
-        :param str logfile: path to logfile for postgresql
+        :param pathlib.Path logfile: path to logfile for postgresql
         :param str startparams: additional start parameters
         :param bool shell: see `subprocess.Popen`
         :param int timeout: time to wait for process to start or stop.
@@ -75,13 +76,15 @@ class PostgreSQLExecutor(TCPExecutor):
         self.options = options
         self.datadir = datadir
         self.unixsocketdir = unixsocketdir
+        self.logfile = logfile
+        self.startparms = startparams
         command = self.proc_start_command().format(
             executable=self.executable,
             datadir=self.datadir,
             port=port,
             unixsocketdir=self.unixsocketdir,
-            logfile=logfile,
-            startparams=startparams,
+            logfile=self.logfile,
+            startparams=self.startparams,
         )
         super().__init__(
             command,
@@ -127,6 +130,26 @@ class PostgreSQLExecutor(TCPExecutor):
             '-D %s' % self.datadir,
         )
         subprocess.check_output(' '.join(init_directory), shell=True)
+
+    def wait_for_postgres(self):
+        """Wait for postgresql being started."""
+        if '-w' not in self.startparms:
+            return
+        # Cast to str. Since Python 3.6 it's possible to pass a A Pathlike object.
+        # Python 3.5 however still needs string
+        logfile_path = str(self.logfile)
+        # wait until logfile is created
+        while not os.path.isfile(logfile_path):
+            time.sleep(1)
+
+        start_info = 'database system is ready to accept connections'
+        # wait for expected message.
+        while 1:
+            with open(logfile_path, 'r') as content_file:
+                content = content_file.read()
+                if start_info in content:
+                    break
+            time.sleep(1)
 
     def proc_start_command(self):
         """Based on postgres version return proper start command."""
