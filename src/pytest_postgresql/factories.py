@@ -18,8 +18,6 @@
 """Fixture factories for postgresql fixtures."""
 
 import os.path
-import time
-import shutil
 import platform
 import subprocess
 from tempfile import gettempdir
@@ -49,64 +47,6 @@ def get_config(request):
             request.config.getini(option_name)
         config[option] = conf
     return config
-
-
-START_INFO = 'database system is ready to accept connections'
-
-
-def wait_for_postgres(logfile, awaited_msg):
-    """
-    Wait for postgresql being started.
-
-    :param str logfile: logfile path
-    :param str awaited_msg: awaited message
-    """
-    # Cast to str. Since Python 3.6 it's possible to pass a A Pathlike object.
-    # Python 3.5 however still needs string
-    logfile_path = str(logfile)
-    # wait until logfile is created
-    while not os.path.isfile(logfile_path):
-        time.sleep(1)
-
-    # wait for expected message.
-    while 1:
-        with open(logfile_path, 'r') as content_file:
-            content = content_file.read()
-            if awaited_msg in content:
-                break
-        time.sleep(1)
-
-
-def remove_postgresql_directory(datadir):
-    """
-    Remove directory created for postgresql run.
-
-    :param str datadir: datadir path
-    """
-    if os.path.isdir(datadir):
-        shutil.rmtree(datadir)
-
-
-def init_postgresql_directory(postgresql_ctl, user, datadir):
-    """
-    Initialize postgresql data directory.
-
-    See `Initialize postgresql data directory
-        <www.postgresql.org/docs/9.5/static/app-initdb.html>`_
-
-    :param str postgresql_ctl: ctl path
-    :param str user: postgresql username
-    :param str datadir: datadir path
-
-    """
-    # remove old one if exists first.
-    remove_postgresql_directory(datadir)
-    init_directory = (
-        postgresql_ctl, 'initdb',
-        '-o "--auth=trust --username=%s"' % user,
-        '-D %s' % datadir,
-    )
-    subprocess.check_output(' '.join(init_directory), shell=True)
 
 
 def init_postgresql_database(user, host, port, db_name):
@@ -215,10 +155,6 @@ def postgresql_proc(
             )
         )
 
-        init_postgresql_directory(
-            postgresql_ctl, pg_user, datadir
-        )
-
         if platform.system() == 'FreeBSD':
             with (datadir / 'pg_hba.conf').open(mode='a') as conf_file:
                 conf_file.write('host all all 0.0.0.0/0 trust\n')
@@ -234,15 +170,11 @@ def postgresql_proc(
             logfile=logfile_path,
             startparams=pg_startparams,
         )
-
         # start server
         with postgresql_executor:
-            if '-w' in pg_startparams:
-                wait_for_postgres(logfile_path, START_INFO)
+            postgresql_executor.wait_for_postgres()
 
             yield postgresql_executor
-
-        remove_postgresql_directory(datadir)
 
     return postgresql_proc_fixture
 

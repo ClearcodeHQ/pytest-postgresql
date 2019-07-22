@@ -20,16 +20,20 @@
 
 import os.path
 import re
+import shutil
 import subprocess
+import time
 
-from mirakuru import TCPExecutor
 from pkg_resources import parse_version
+from mirakuru import TCPExecutor
+from mirakuru.base import ExecutorType
 
 
 class PostgreSQLUnsupported(Exception):
     """Exception raised when postgresql<9.0 would be detected."""
 
 
+# pylint:disable=too-many-instance-attributes
 class PostgreSQLExecutor(TCPExecutor):
     """
     PostgreSQL executor running on pg_ctl.
@@ -60,7 +64,7 @@ class PostgreSQLExecutor(TCPExecutor):
         :param int port: port under which process is accessible
         :param str datadir: path to postgresql datadir
         :param str unixsocketdir: path to socket directory
-        :param str logfile: path to logfile for postgresql
+        :param pathlib.Path logfile: path to logfile for postgresql
         :param str startparams: additional start parameters
         :param bool shell: see `subprocess.Popen`
         :param int timeout: time to wait for process to start or stop.
@@ -69,18 +73,21 @@ class PostgreSQLExecutor(TCPExecutor):
         :param str user: [default] postgresql's username used to manage
             and access PostgreSQL
         """
+        self._directory_initialised = False
         self.executable = executable
         self.user = user
         self.options = options
         self.datadir = datadir
         self.unixsocketdir = unixsocketdir
+        self.logfile = logfile
+        self.startparams = startparams
         command = self.proc_start_command().format(
             executable=self.executable,
             datadir=self.datadir,
             port=port,
             unixsocketdir=self.unixsocketdir,
-            logfile=logfile,
-            startparams=startparams,
+            logfile=self.logfile,
+            startparams=self.startparams,
         )
         super().__init__(
             command,
@@ -96,7 +103,7 @@ class PostgreSQLExecutor(TCPExecutor):
             }
         )
 
-    def start(self):
+    def start(self: ExecutorType) -> ExecutorType:
         """Add check for postgresql version before starting process."""
         if self.version < self.MIN_SUPPORTED_VERSION:
             raise PostgreSQLUnsupported(
@@ -104,7 +111,54 @@ class PostgreSQLExecutor(TCPExecutor):
                 'Consider updating to PostgreSQL {0} at least. '
                 'The currently installed version of PostgreSQL: {1}.'
                 .format(self.MIN_SUPPORTED_VERSION, self.version))
-        super().start()
+        self.init_directory()
+        return super().start()
+
+    def clean_directory(self):
+        """Remove directory created for postgresql run."""
+        if os.path.isdir(self.datadir):
+            shutil.rmtree(self.datadir)
+        self._directory_initialised = False
+
+    def init_directory(self):
+        """
+        Initialize postgresql data directory.
+
+        See `Initialize postgresql data directory
+            <www.postgresql.org/docs/9.5/static/app-initdb.html>`_
+        """
+        # only make sure it's removed if it's handled by this exact process
+        if self._directory_initialised:
+            return
+        # remove old one if exists first.
+        self.clean_directory()
+        init_directory = (
+            self.executable, 'initdb',
+            '-o "--auth=trust --username=%s"' % self.user,
+            '-D %s' % self.datadir,
+        )
+        subprocess.check_output(' '.join(init_directory), shell=True)
+        self._directory_initialised = True
+
+    def wait_for_postgres(self):
+        """Wait for postgresql being started."""
+        if '-w' not in self.startparams:
+            return
+        # Cast to str since Python 3.5 however still needs string.
+        # Python 3.6 it's possible to pass a A Pathlike object.
+        logfile_path = str(self.logfile)
+        # wait until logfile is created
+        while not os.path.isfile(logfile_path):
+            time.sleep(1)
+
+        start_info = 'database system is ready to accept connections'
+        # wait for expected message.
+        while 1:
+            with open(logfile_path, 'r') as content_file:
+                content = content_file.read()
+                if start_info in content:
+                    break
+            time.sleep(1)
 
     def proc_start_command(self):
         """Based on postgres version return proper start command."""
@@ -151,3 +205,10 @@ class PostgreSQLExecutor(TCPExecutor):
             ),
             shell=True)
         super().stop(sig)
+
+    def __del__(self):
+        """Make sure the directories are properly removed at the end."""
+        try:
+            super().__del__()
+        finally:
+            self.clean_directory()
