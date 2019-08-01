@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-Unreleased
+2.0.0
 -------
 
 - [feature] Drop support for python 2.7. From now on, only support python 3.5 and up
