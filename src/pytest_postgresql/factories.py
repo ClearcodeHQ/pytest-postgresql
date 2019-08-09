@@ -32,15 +32,13 @@ from pkg_resources import parse_version
 
 try:
     import psycopg2
-except ImportError:
-    psycopg2 = False
-    cursor = Any  # if there's no postgres, just go with the flow.
-
-if psycopg2:
     try:
         from psycopg2._psycopg import cursor
     except ImportError:
-            from psycopg2cffi._impl.cursor import Cursor as cursor
+        from psycopg2cffi._impl.cursor import Cursor as cursor
+except ImportError:
+    psycopg2 = False
+    cursor = Any  # pylint:disable=invalid-name # if there's no postgres, just go with the flow.
 
 from pytest_postgresql.executor import PostgreSQLExecutor
 from pytest_postgresql.port import get_port
@@ -72,8 +70,8 @@ class DatabaseJanitor:
             user: str,
             host: str,
             port: str,
-            db_name:str,
-            version:Union[str, float, Version]
+            db_name: str,
+            version: Union[str, float, Version]
     ) -> None:
         """
         Initialize janitor.
