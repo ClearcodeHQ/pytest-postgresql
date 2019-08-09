@@ -45,10 +45,8 @@ class DatabaseJanitor:
         self.port = port
         self.db_name = db_name
         if not isinstance(version, Version):
-            import pdb; pdb.set_trace()
             self.version = parse_version(str(version))
         else:
-            import pdb; pdb.set_trace()
             self.version = version
 
     def init(self) -> None:
