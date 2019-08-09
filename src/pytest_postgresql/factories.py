@@ -22,11 +22,14 @@ import platform
 import subprocess
 from contextlib import contextmanager
 from tempfile import gettempdir
+from types import TracebackType
+from typing import Union, Type, Optional, TypeVar
 from warnings import warn
 
 import pytest
 from packaging.version import Version
 from pkg_resources import parse_version
+from psycopg2._psycopg import cursor
 
 try:
     import psycopg2
@@ -35,6 +38,9 @@ except ImportError:
 
 from pytest_postgresql.executor import PostgreSQLExecutor
 from pytest_postgresql.port import get_port
+
+
+DatabaseJanitorType = TypeVar("DatabaseJanitorType", bound="DatabaseJanitor")
 
 
 def get_config(request):
@@ -55,15 +61,22 @@ def get_config(request):
 class DatabaseJanitor:
     """Manage database state for specific tasks."""
 
-    def __init__(self, user, host, port, db_name, version):
+    def __init__(
+            self: DatabaseJanitorType,
+            user: str,
+            host: str,
+            port: str,
+            db_name:str,
+            version:Union[str, float, Version]
+    ) -> None:
         """
         Initialize janitor.
 
-        :param str user: postgresql username
-        :param str host: postgresql host
-        :param str port: postgresql port
-        :param str db_name: database name
-        :param packaging.version.Version version: postgresql version number
+        :param user: postgresql username
+        :param host: postgresql host
+        :param port: postgresql port
+        :param db_name: database name
+        :param version: postgresql version number
         """
         self.user = user
         self.host = host
@@ -74,12 +87,12 @@ class DatabaseJanitor:
         else:
             self.version = version
 
-    def init(self):
+    def init(self: DatabaseJanitorType) -> None:
         """Create database in postgresql."""
         with self.cursor() as cur:
             cur.execute('CREATE DATABASE "{}";'.format(self.db_name))
 
-    def drop(self):
+    def drop(self: DatabaseJanitorType) -> None:
         """Drop database in postgresql."""
         # We cannot drop the database while there are connections to it, so we
         # terminate all connections first while not allowing new connections.
@@ -99,7 +112,7 @@ class DatabaseJanitor:
             cur.execute('DROP DATABASE IF EXISTS "{}";'.format(self.db_name))
 
     @contextmanager
-    def cursor(self):
+    def cursor(self: DatabaseJanitorType) -> cursor:
         """Return postgresql cursor."""
         conn = psycopg2.connect(user=self.user, host=self.host, port=self.port)
         conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
@@ -108,10 +121,15 @@ class DatabaseJanitor:
         cur.close()
         conn.close()
 
-    def __enter__(self):
+    def __enter__(self: DatabaseJanitorType) -> DatabaseJanitorType:
         self.init()
+        return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(
+            self: DatabaseJanitorType,
+            exc_type: Optional[Type[BaseException]],
+            exc_val: Optional[BaseException],
+            exc_tb: Optional[TracebackType]) -> None:
         self.drop()
 
 
