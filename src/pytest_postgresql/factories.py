@@ -23,18 +23,24 @@ import subprocess
 from contextlib import contextmanager
 from tempfile import gettempdir
 from types import TracebackType
-from typing import Union, Type, Optional, TypeVar
+from typing import Union, Type, Optional, TypeVar, Any
 from warnings import warn
 
 import pytest
 from packaging.version import Version
 from pkg_resources import parse_version
-from psycopg2._psycopg import cursor
 
 try:
     import psycopg2
 except ImportError:
     psycopg2 = False
+    cursor = Any  # if there's no postgres, just go with the flow.
+
+if psycopg2:
+    try:
+        from psycopg2._psycopg import cursor
+    except ImportError:
+            from psycopg2cffi._impl import Cursor as cursor
 
 from pytest_postgresql.executor import PostgreSQLExecutor
 from pytest_postgresql.port import get_port
