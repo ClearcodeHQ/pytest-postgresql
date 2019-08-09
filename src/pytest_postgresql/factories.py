@@ -20,32 +20,14 @@
 import os.path
 import platform
 import subprocess
-from contextlib import contextmanager
 from tempfile import gettempdir
-from types import TracebackType
-from typing import Union, Type, Optional, TypeVar, Any
 from warnings import warn
 
 import pytest
-from packaging.version import Version
-from pkg_resources import parse_version
 
-try:
-    import psycopg2
-    try:
-        from psycopg2._psycopg import cursor
-    except ImportError:
-        from psycopg2cffi._impl.cursor import Cursor as cursor
-except ImportError:
-    psycopg2 = False
-    # if there's no postgres, just go with the flow.
-    cursor = Any  # pylint:disable=invalid-name
-
+from pytest_postgresql.janitor import DatabaseJanitor, psycopg2
 from pytest_postgresql.executor import PostgreSQLExecutor
 from pytest_postgresql.port import get_port
-
-
-DatabaseJanitorType = TypeVar("DatabaseJanitorType", bound="DatabaseJanitor")
 
 
 def get_config(request):
@@ -61,81 +43,6 @@ def get_config(request):
             request.config.getini(option_name)
         config[option] = conf
     return config
-
-
-class DatabaseJanitor:
-    """Manage database state for specific tasks."""
-
-    def __init__(
-            self,
-            user: str,
-            host: str,
-            port: str,
-            db_name: str,
-            version: Union[str, float, Version]
-    ) -> None:
-        """
-        Initialize janitor.
-
-        :param user: postgresql username
-        :param host: postgresql host
-        :param port: postgresql port
-        :param db_name: database name
-        :param version: postgresql version number
-        """
-        self.user = user
-        self.host = host
-        self.port = port
-        self.db_name = db_name
-        if not isinstance(version, Version):
-            self.version = parse_version(str(version))
-        else:
-            self.version = version
-
-    def init(self) -> None:
-        """Create database in postgresql."""
-        with self.cursor() as cur:
-            cur.execute('CREATE DATABASE "{}";'.format(self.db_name))
-
-    def drop(self) -> None:
-        """Drop database in postgresql."""
-        # We cannot drop the database while there are connections to it, so we
-        # terminate all connections first while not allowing new connections.
-        if self.version >= parse_version('9.2'):
-            pid_column = 'pid'
-        else:
-            pid_column = 'procpid'
-        with self.cursor() as cur:
-            cur.execute(
-                'UPDATE pg_database SET datallowconn=false WHERE datname = %s;',
-                (self.db_name,))
-            cur.execute(
-                'SELECT pg_terminate_backend(pg_stat_activity.{})'
-                'FROM pg_stat_activity '
-                'WHERE pg_stat_activity.datname = %s;'.format(pid_column),
-                (self.db_name,))
-            cur.execute('DROP DATABASE IF EXISTS "{}";'.format(self.db_name))
-
-    @contextmanager
-    def cursor(self) -> cursor:
-        """Return postgresql cursor."""
-        conn = psycopg2.connect(user=self.user, host=self.host, port=self.port)
-        conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
-        cur = conn.cursor()
-        yield cur
-        cur.close()
-        conn.close()
-
-    def __enter__(self: DatabaseJanitorType) -> DatabaseJanitorType:
-        self.init()
-        return self
-
-    def __exit__(
-            self: DatabaseJanitorType,
-            exc_type: Optional[Type[BaseException]],
-            exc_val: Optional[BaseException],
-            exc_tb: Optional[TracebackType]) -> None:
-        self.drop()
 
 
 def init_postgresql_database(user, host, port, db_name):
