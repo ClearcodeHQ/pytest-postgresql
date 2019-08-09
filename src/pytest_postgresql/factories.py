@@ -20,9 +20,12 @@
 import os.path
 import platform
 import subprocess
+from contextlib import contextmanager
 from tempfile import gettempdir
+from warnings import warn
 
 import pytest
+from packaging.version import Version
 from pkg_resources import parse_version
 
 try:
@@ -49,6 +52,68 @@ def get_config(request):
     return config
 
 
+class DatabaseJanitor:
+    """Manage database state for specific tasks."""
+
+    def __init__(self, user, host, port, db_name, version):
+        """
+        Initialize janitor.
+
+        :param str user: postgresql username
+        :param str host: postgresql host
+        :param str port: postgresql port
+        :param str db_name: database name
+        :param packaging.version.Version version: postgresql version number
+        """
+        self.user = user
+        self.host = host
+        self.port = port
+        self.db_name = db_name
+        if not isinstance(version, Version):
+            self.version = parse_version(str(version))
+        else:
+            self.version = version
+
+    def init(self):
+        """Create database in postgresql."""
+        with self.cursor() as cur:
+            cur.execute('CREATE DATABASE "{}";'.format(self.db_name))
+
+    def drop(self):
+        """Drop database in postgresql."""
+        # We cannot drop the database while there are connections to it, so we
+        # terminate all connections first while not allowing new connections.
+        if self.version >= parse_version('9.2'):
+            pid_column = 'pid'
+        else:
+            pid_column = 'procpid'
+        with self.cursor() as cur:
+            cur.execute(
+                'UPDATE pg_database SET datallowconn=false WHERE datname = %s;',
+                (self.db_name,))
+            cur.execute(
+                'SELECT pg_terminate_backend(pg_stat_activity.{})'
+                'FROM pg_stat_activity WHERE pg_stat_activity.datname = %s;'.format(
+                    pid_column),
+                (self.db_name,))
+            cur.execute('DROP DATABASE IF EXISTS "{}";'.format(self.db_name))
+
+    @contextmanager
+    def cursor(self):
+        conn = psycopg2.connect(user=self.user, host=self.host, port=self.port)
+        conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
+        cur = conn.cursor()
+        yield cur
+        cur.close()
+        conn.close()
+
+    def __enter__(self):
+        self.init()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.drop()
+
+
 def init_postgresql_database(user, host, port, db_name):
     """
     Create database in postgresql.
@@ -58,12 +123,12 @@ def init_postgresql_database(user, host, port, db_name):
     :param str port: postgresql port
     :param str db_name: database name
     """
-    conn = psycopg2.connect(user=user, host=host, port=port)
-    conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
-    cur = conn.cursor()
-    cur.execute('CREATE DATABASE "{}";'.format(db_name))
-    cur.close()
-    conn.close()
+    warn(
+        'init_postgresql_database is deprecated, '
+        'use DatabaseJanitor.init istead.',
+        DeprecationWarning
+    )
+    DatabaseJanitor(user, host, port, db_name, 0.0).init()
 
 
 def drop_postgresql_database(user, host, port, db_name, version):
@@ -76,26 +141,12 @@ def drop_postgresql_database(user, host, port, db_name, version):
     :param str db_name: database name
     :param packaging.version.Version version: postgresql version number
     """
-    conn = psycopg2.connect(user=user, host=host, port=port)
-    conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
-    cur = conn.cursor()
-    # We cannot drop the database while there are connections to it, so we
-    # terminate all connections first while not allowing new connections.
-    if version >= parse_version('9.2'):
-        pid_column = 'pid'
-    else:
-        pid_column = 'procpid'
-    cur.execute(
-        'UPDATE pg_database SET datallowconn=false WHERE datname = %s;',
-        (db_name,))
-    cur.execute(
-        'SELECT pg_terminate_backend(pg_stat_activity.{})'
-        'FROM pg_stat_activity WHERE pg_stat_activity.datname = %s;'.format(
-            pid_column),
-        (db_name,))
-    cur.execute('DROP DATABASE IF EXISTS "{}";'.format(db_name))
-    cur.close()
-    conn.close()
+    warn(
+        'drop_postgresql_database is deprecated, '
+        'use DatabaseJanitor.drop istead.',
+        DeprecationWarning
+    )
+    DatabaseJanitor(user, host, port, db_name, version).init()
 
 
 def postgresql_proc(
@@ -213,24 +264,17 @@ def postgresql(process_fixture_name, db_name=None):
         pg_options = proc_fixture.options
         pg_db = db_name or config['dbname']
 
-        init_postgresql_database(pg_user, pg_host, pg_port, pg_db)
-        connection = psycopg2.connect(
-            dbname=pg_db,
-            user=pg_user,
-            host=pg_host,
-            port=pg_port,
-            options=pg_options
-        )
-
-        def drop_database():
-            connection.close()
-            drop_postgresql_database(
-                pg_user, pg_host, pg_port, pg_db, proc_fixture.version
+        with DatabaseJanitor(pg_user, pg_host, pg_port, pg_db, proc_fixture.version):
+            init_postgresql_database(pg_user, pg_host, pg_port, pg_db)
+            connection = psycopg2.connect(
+                dbname=pg_db,
+                user=pg_user,
+                host=pg_host,
+                port=pg_port,
+                options=pg_options
             )
-
-        request.addfinalizer(drop_database)
-
-        return connection
+            yield connection
+            connection.close()
 
     return postgresql_factory
 
