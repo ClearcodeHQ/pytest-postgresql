@@ -40,7 +40,7 @@ if psycopg2:
     try:
         from psycopg2._psycopg import cursor
     except ImportError:
-            from psycopg2cffi._impl import Cursor as cursor
+            from psycopg2cffi._impl.cursor import Cursor as cursor
 
 from pytest_postgresql.executor import PostgreSQLExecutor
 from pytest_postgresql.port import get_port
