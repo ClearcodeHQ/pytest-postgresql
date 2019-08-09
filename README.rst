@@ -163,6 +163,39 @@ Example usage:
         [pytest]
         postgresql_port = 8888
 
+Maintaining database state outside of the fixtures
+--------------------------------------------------
+
+It is possible and appears it's used in other libraries for tests,
+to maintain database state with the use of the ``pytest-postgresql`` database
+managing functionality:
+
+For this import DatabaseJanitor and use it's init and drop methods:
+
+
+.. code-block:: python
+
+    from pytest_postgresql.factories import DatabaseJanitor
+
+    # variable definition
+
+    janitor = DatabaseJanitor(user, host, port, db_name, version)
+    janitor.init()
+    # your code, or yield
+    janitor.drop()
+    # at this moment you'll have clean database step
+
+or use it as a context manager:
+
+.. code-block:: python
+
+    from pytest_postgresql.factories import DatabaseJanitor
+
+    # variable definition
+
+    with DatabaseJanitor(user, host, port, db_name, version):
+        # do something here
+
 Package resources
 -----------------
 

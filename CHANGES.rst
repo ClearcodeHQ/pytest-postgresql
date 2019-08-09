@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+unreleased
+-------
+
+- [enhancement] Gather helper functions maintaining postgresql database in DatabaseJanitor class.
+- [deprecate] Deprecate ``init_postgresql_database`` in favour of ``DatabaseJanitor.init``
+- [deprecate] Deprecate ``drop_postgresql_database`` in favour of ``DatabaseJanitor.drop``
+
 2.0.0
 -------
 
