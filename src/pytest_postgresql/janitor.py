@@ -4,7 +4,7 @@ from types import TracebackType
 from typing import TypeVar, Union, Optional, Type, Any
 
 from pkg_resources import parse_version
-from pkg_resources.extern.packaging.version import Version
+Version = type(parse_version('1'))  # pylint:disable=invalid-name
 
 try:
     import psycopg2
