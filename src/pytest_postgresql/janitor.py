@@ -80,9 +80,11 @@ class DatabaseJanitor:
         conn = psycopg2.connect(user=self.user, host=self.host, port=self.port)
         conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
         cur = conn.cursor()
-        yield cur
-        cur.close()
-        conn.close()
+        try:
+            yield cur
+        finally:
+            cur.close()
+            conn.close()
 
     def __enter__(self: DatabaseJanitorType) -> DatabaseJanitorType:
         self.init()
