@@ -38,7 +38,8 @@ try:
         from psycopg2cffi._impl.cursor import Cursor as cursor
 except ImportError:
     psycopg2 = False
-    cursor = Any  # pylint:disable=invalid-name # if there's no postgres, just go with the flow.
+    # if there's no postgres, just go with the flow.
+    cursor = Any  # pylint:disable=invalid-name
 
 from pytest_postgresql.executor import PostgreSQLExecutor
 from pytest_postgresql.port import get_port
