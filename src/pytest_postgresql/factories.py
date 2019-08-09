@@ -93,13 +93,14 @@ class DatabaseJanitor:
                 (self.db_name,))
             cur.execute(
                 'SELECT pg_terminate_backend(pg_stat_activity.{})'
-                'FROM pg_stat_activity WHERE pg_stat_activity.datname = %s;'.format(
-                    pid_column),
+                'FROM pg_stat_activity '
+                'WHERE pg_stat_activity.datname = %s;'.format(pid_column),
                 (self.db_name,))
             cur.execute('DROP DATABASE IF EXISTS "{}";'.format(self.db_name))
 
     @contextmanager
     def cursor(self):
+        """Return postgresql cursor."""
         conn = psycopg2.connect(user=self.user, host=self.host, port=self.port)
         conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
         cur = conn.cursor()
@@ -264,7 +265,9 @@ def postgresql(process_fixture_name, db_name=None):
         pg_options = proc_fixture.options
         pg_db = db_name or config['dbname']
 
-        with DatabaseJanitor(pg_user, pg_host, pg_port, pg_db, proc_fixture.version):
+        with DatabaseJanitor(
+                pg_user, pg_host, pg_port, pg_db, proc_fixture.version
+        ):
             connection = psycopg2.connect(
                 dbname=pg_db,
                 user=pg_user,
