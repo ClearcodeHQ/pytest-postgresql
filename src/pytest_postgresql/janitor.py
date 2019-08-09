@@ -3,9 +3,8 @@ from contextlib import contextmanager
 from types import TracebackType
 from typing import TypeVar, Union, Optional, Type, Any
 
-from packaging.version import Version
 from pkg_resources import parse_version
-
+from pkg_resources.extern.packaging.version import Version
 
 try:
     import psycopg2
@@ -46,8 +45,10 @@ class DatabaseJanitor:
         self.port = port
         self.db_name = db_name
         if not isinstance(version, Version):
+            import pdb; pdb.set_trace()
             self.version = parse_version(str(version))
         else:
+            import pdb; pdb.set_trace()
             self.version = version
 
     def init(self) -> None:
