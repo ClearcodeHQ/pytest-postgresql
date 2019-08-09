@@ -66,7 +66,7 @@ class DatabaseJanitor:
     """Manage database state for specific tasks."""
 
     def __init__(
-            self: DatabaseJanitorType,
+            self,
             user: str,
             host: str,
             port: str,
@@ -91,12 +91,12 @@ class DatabaseJanitor:
         else:
             self.version = version
 
-    def init(self: DatabaseJanitorType) -> None:
+    def init(self) -> None:
         """Create database in postgresql."""
         with self.cursor() as cur:
             cur.execute('CREATE DATABASE "{}";'.format(self.db_name))
 
-    def drop(self: DatabaseJanitorType) -> None:
+    def drop(self) -> None:
         """Drop database in postgresql."""
         # We cannot drop the database while there are connections to it, so we
         # terminate all connections first while not allowing new connections.
@@ -116,7 +116,7 @@ class DatabaseJanitor:
             cur.execute('DROP DATABASE IF EXISTS "{}";'.format(self.db_name))
 
     @contextmanager
-    def cursor(self: DatabaseJanitorType) -> cursor:
+    def cursor(self) -> cursor:
         """Return postgresql cursor."""
         conn = psycopg2.connect(user=self.user, host=self.host, port=self.port)
         conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
