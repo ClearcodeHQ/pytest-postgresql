@@ -60,5 +60,7 @@ def test_postgres_terminate_connection(
     """
     cur = postgresql.cursor()
     cur.execute('SELECT * FROM pg_stat_activity;')
-    assert len(cur.fetchall()) == 1, 'there is always only one connection'
+    existing_connections = cur.fetchall()
+    print(existing_connections)
+    assert len(existing_connections) == 1, 'there is always only one connection'
     cur.close()
