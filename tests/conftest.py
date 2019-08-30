@@ -11,7 +11,7 @@ postgresql94 = factories.postgresql_proc(PG_CTL.format(ver='9.4'), port=None)
 postgresql95 = factories.postgresql_proc(PG_CTL.format(ver='9.5'), port=None)
 postgresql96 = factories.postgresql_proc(PG_CTL.format(ver='9.6'), port=None)
 postgresql10 = factories.postgresql_proc(PG_CTL.format(ver='10'), port=None)
-postgresql101 = factories.postgresql_proc(PG_CTL.format(ver='10.1'), port=None)
+postgresql11 = factories.postgresql_proc(PG_CTL.format(ver='11'), port=None)
 
 postgresql_proc2 = factories.postgresql_proc(port=9876)
 postgresql2 = factories.postgresql('postgresql_proc2', db_name='test-db')
