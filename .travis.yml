@@ -13,14 +13,14 @@ install:
 - pip install -r requirements-test.txt
 - pip install coveralls wheel
 script:
-- py.test -n 0 --cov src/pytest_postgresql --cov tests
+- py.test -n 0
 after_success:
 - coveralls
 jobs:
   include:
     - stage: xdist
       python: 3.7
-      script: py.test -n 1 --cov src/pytest_postgresql tests
+      script: py.test -n 1
     - stage: linters
       python: 3.7
       install:
