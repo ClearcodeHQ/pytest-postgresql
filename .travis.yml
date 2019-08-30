@@ -13,7 +13,7 @@ install:
 - pip install -r requirements-test.txt
 - pip install coveralls wheel
 script:
-- py.test -n 0 --cov src/pytest_postgresql
+- py.test -n 0 --cov src/pytest_postgresql tests
 after_success:
 - coveralls
 jobs:
