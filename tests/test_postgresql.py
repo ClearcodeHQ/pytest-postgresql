@@ -59,7 +59,7 @@ def test_postgres_terminate_connection(
     And check that only one exists at a time.
     """
     cur = postgresql.cursor()
-    cur.execute('SELECT * FROM pg_stat_activity backend_type = \'client backend\';')
+    cur.execute('SELECT * FROM pg_stat_activity WHERE backend_type = \'client backend\';')
     existing_connections = cur.fetchall()
     assert len(existing_connections) == 1, 'there is always only one connection'
     cur.close()
