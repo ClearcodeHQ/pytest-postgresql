@@ -7,7 +7,10 @@ import pytest
 QUERY = "CREATE TABLE test (id serial PRIMARY KEY, num integer, data varchar);"
 
 
-@pytest.mark.skipif(platform.system() == 'Darwin')
+@pytest.mark.skipif(
+    platform.system() == 'Darwin',
+    reason='These fixtures are only for linux'
+)
 @pytest.mark.parametrize('postgres', (
     'postgresql94',
     'postgresql95',
