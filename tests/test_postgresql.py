@@ -1,4 +1,5 @@
 """All tests for pytest-postgresql."""
+import platform
 import psycopg2
 import pytest
 
@@ -6,6 +7,7 @@ import pytest
 QUERY = "CREATE TABLE test (id serial PRIMARY KEY, num integer, data varchar);"
 
 
+@pytest.mark.skipif(platform.system() == 'Darwin')
 @pytest.mark.parametrize('postgres', (
     'postgresql94',
     'postgresql95',
