@@ -40,15 +40,6 @@ jobs:
       - source venv/bin/activate
       script:
       - py.test -n 0
-    - stage: osx
-      language: generic
-      os: osx
-      before_install:
-      - pip3 install virtualenv
-      - virtualenv venv -p python3
-      - source venv/bin/activate
-      script:
-      - py.test -n 0
     - stage: deploy
       python: 3.7
       if: tag IS present
