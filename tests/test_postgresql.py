@@ -1,4 +1,5 @@
 """All tests for pytest-postgresql."""
+import platform
 import psycopg2
 import pytest
 
@@ -6,6 +7,10 @@ import pytest
 QUERY = "CREATE TABLE test (id serial PRIMARY KEY, num integer, data varchar);"
 
 
+@pytest.mark.skipif(
+    platform.system() == 'Darwin',
+    reason='These fixtures are only for linux'
+)
 @pytest.mark.parametrize('postgres', (
     'postgresql94',
     'postgresql95',
@@ -54,6 +59,10 @@ def test_postgres_terminate_connection(
     And check that only one exists at a time.
     """
     cur = postgresql.cursor()
-    cur.execute('SELECT * FROM pg_stat_activity;')
-    assert len(cur.fetchall()) == 1, 'there is always only one connection'
+    cur.execute(
+        'SELECT * FROM pg_stat_activity '
+        'WHERE backend_type = \'client backend\';'
+    )
+    existing_connections = cur.fetchall()
+    assert len(existing_connections) == 1, 'there is always only one connection'
     cur.close()
