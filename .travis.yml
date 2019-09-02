@@ -9,6 +9,7 @@ python:
 branches:
   except:
   - requires-io-master
+  - /^dependabot.*$/
 install:
 - pip install -r requirements-test.txt
 - pip install coveralls wheel
