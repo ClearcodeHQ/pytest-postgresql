@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-unreleased
+2.1.0
 -------
 
 - [enhancement] Gather helper functions maintaining postgresql database in DatabaseJanitor class.
