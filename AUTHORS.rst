@@ -17,3 +17,4 @@ of pytest-postgresql along its history.
 * Donald Stufft
 * Will Vaughn
 * Hugo (hugovk)
+* Damian Skrzypczak
