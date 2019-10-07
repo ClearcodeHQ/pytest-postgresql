@@ -1,4 +1,4 @@
-.. image:: logo.svg
+.. image:: https://raw.githubusercontent.com/ClearcodeHQ/pytest-postgresql/master/logo.svg
     :width: 100px
     :height: 100px
     
