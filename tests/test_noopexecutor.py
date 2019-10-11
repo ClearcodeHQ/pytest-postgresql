@@ -22,6 +22,6 @@ def test_nooproc_cached_version(postgresql_proc):
         postgresql_proc.user,
         postgresql_proc.options
     )
-    v = postgresql_nooproc.version
+    ver = postgresql_nooproc.version
     with postgresql_proc.stopped():
-        assert v == postgresql_nooproc.version
+        assert ver == postgresql_nooproc.version
