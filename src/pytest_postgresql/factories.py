@@ -54,7 +54,7 @@ class NoopExecutor:
             version = str(connection.server_version)
 
         self._version = parse_version(
-            '.'.join([version[i: i+2] for i in range(0, len(version), 2)] )
+            '.'.join([version[i: i+2] for i in range(0, len(version), 2) if int(version[i: i+2])] )
         )
         return self._version
 
