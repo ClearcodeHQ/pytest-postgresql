@@ -20,14 +20,39 @@
 import os.path
 import platform
 import subprocess
+from collections import namedtuple
 from tempfile import gettempdir
 from warnings import warn
 
 import pytest
+from pkg_resources import parse_version
 
 from pytest_postgresql.janitor import DatabaseJanitor, psycopg2
 from pytest_postgresql.executor import PostgreSQLExecutor
 from pytest_postgresql.port import get_port
+
+
+class NoopExecutor:
+    def __init__(self, host, port, user, options):
+        self.host = host
+        self.port = int(port)
+        self.user = user
+        self.options = options
+        self._version = None
+
+    @property
+    def version(self):
+        if self._version:
+            return self._version
+        connection = psycopg2.connect(
+            dbname='pg_catalog',
+            user=self.user,
+            host=self.host,
+            port=self.port,
+            options=self.options
+        )
+        self._version = parse_version(connection.server_version)
+        return self._version
 
 
 def get_config(request):
@@ -159,6 +184,43 @@ def postgresql_proc(
             yield postgresql_executor
 
     return postgresql_proc_fixture
+
+
+def postgresql_noproc(host=None, port=5432, user=None, options=''):
+    """
+    Postgresql noprocess factory.
+
+    :param str host: hostname
+    :param str|int port: exact port (e.g. '8000', 8000)
+    :param str user: postgresql username
+    :rtype: func
+    :returns: function which makes a postgresql process
+    """
+    @pytest.fixture(scope='session')
+    def postgresql_noproc_fixture(request):
+        """
+        Noop Process fixture for PostgreSQL.
+
+        :param FixtureRequest request: fixture request object
+        :rtype: pytest_dbfixtures.executors.TCPExecutor
+        :returns: tcp executor-like object
+        """
+        config = get_config(request)
+        pg_host = host or config['host']
+        pg_port = port or config['port']
+        pg_user = user or config['user']
+        pg_options = options or config['options']
+
+        noop_exec = NoopExecutor(
+            host=pg_host,
+            port=pg_port,
+            user=pg_user,
+            options=pg_options,
+        )
+
+        yield noop_exec
+
+    return postgresql_noproc_fixture
 
 
 def postgresql(process_fixture_name, db_name=None):
