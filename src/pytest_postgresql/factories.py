@@ -24,10 +24,54 @@ from tempfile import gettempdir
 from warnings import warn
 
 import pytest
+from pkg_resources import parse_version
 
 from pytest_postgresql.janitor import DatabaseJanitor, psycopg2
 from pytest_postgresql.executor import PostgreSQLExecutor
 from pytest_postgresql.port import get_port
+
+
+class NoopExecutor:  # pylint: disable=too-few-public-methods
+    """Nooperator executor."""
+
+    def __init__(self, host, port, user, options):
+        """
+        Initialize nooperator executor mock.
+
+        :param str host: Postgresql hostname
+        :param str|int port: Postrgesql port
+        :param str user: Postgresql username
+        :param str options: Additional connection options
+        """
+        self.host = host
+        self.port = int(port)
+        self.user = user
+        self.options = options
+        self._version = None
+
+    @property
+    def version(self):
+        """Get postgresql's version."""
+        if self._version:
+            return self._version
+        try:
+            connection = psycopg2.connect(
+                dbname='postgres',
+                user=self.user,
+                host=self.host,
+                port=self.port,
+                options=self.options
+            )
+            version = str(connection.server_version)
+            self._version = parse_version(
+                '.'.join([
+                    version[i: i+2] for i in range(0, len(version), 2)
+                    if int(version[i: i+2])
+                ])
+            )
+            return self._version
+        finally:
+            connection.close()
 
 
 def get_config(request):
@@ -97,6 +141,7 @@ def postgresql_proc(
         [{4002,4003}] or {4002,4003} - random of 4002 or 4003 ports
         [(2000,3000), {4002,4003}] - random of given range and set
     :param str user: postgresql username
+    :param str options: Postgresql connection options
     :param str startparams: postgresql starting parameters
     :param str unixsocketdir: directory to create postgresql's unixsockets
     :param str logs_prefix: prefix for log filename
@@ -159,6 +204,44 @@ def postgresql_proc(
             yield postgresql_executor
 
     return postgresql_proc_fixture
+
+
+def postgresql_noproc(host=None, port=None, user=None, options=''):
+    """
+    Postgresql noprocess factory.
+
+    :param str host: hostname
+    :param str|int port: exact port (e.g. '8000', 8000)
+    :param str user: postgresql username
+    :param str options: Postgresql connection options
+    :rtype: func
+    :returns: function which makes a postgresql process
+    """
+    @pytest.fixture(scope='session')
+    def postgresql_noproc_fixture(request):
+        """
+        Noop Process fixture for PostgreSQL.
+
+        :param FixtureRequest request: fixture request object
+        :rtype: pytest_dbfixtures.executors.TCPExecutor
+        :returns: tcp executor-like object
+        """
+        config = get_config(request)
+        pg_host = host or config['host']
+        pg_port = port or config['port'] or 5432
+        pg_user = user or config['user']
+        pg_options = options or config['options']
+
+        noop_exec = NoopExecutor(
+            host=pg_host,
+            port=pg_port,
+            user=pg_user,
+            options=pg_options,
+        )
+
+        yield noop_exec
+
+    return postgresql_noproc_fixture
 
 
 def postgresql(process_fixture_name, db_name=None):
