@@ -44,19 +44,21 @@ class NoopExecutor:
     def version(self):
         if self._version:
             return self._version
-        with psycopg2.connect(
-            dbname='postgres',
-            user=self.user,
-            host=self.host,
-            port=self.port,
-            options=self.options
-        ) as connection:
+        try:
+            connection = psycopg2.connect(
+                dbname='postgres',
+                user=self.user,
+                host=self.host,
+                port=self.port,
+                options=self.options
+            )
             version = str(connection.server_version)
-
-        self._version = parse_version(
-            '.'.join([version[i: i+2] for i in range(0, len(version), 2) if int(version[i: i+2])] )
-        )
-        return self._version
+            self._version = parse_version(
+                '.'.join([version[i: i+2] for i in range(0, len(version), 2) if int(version[i: i+2])] )
+            )
+            return self._version
+        finally:
+            connection.close()
 
 
 def get_config(request):
