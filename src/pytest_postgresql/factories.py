@@ -45,7 +45,7 @@ class NoopExecutor:
         if self._version:
             return self._version
         connection = psycopg2.connect(
-            dbname='pg_database',
+            dbname='postgres',
             user=self.user,
             host=self.host,
             port=self.port,
