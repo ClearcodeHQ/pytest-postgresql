@@ -51,7 +51,11 @@ class NoopExecutor:
             port=self.port,
             options=self.options
         )
-        self._version = parse_version(connection.server_version)
+        version = str(connection.server_version)
+
+        self._version = parse_version(
+            '.'.join([version[i: i+2] for i in range(0, len(version), 2)] )
+        )
         return self._version
 
 
