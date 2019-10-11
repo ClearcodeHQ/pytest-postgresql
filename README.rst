@@ -24,12 +24,12 @@ pytest-postgresql
 Package status
 --------------
 
-.. image:: https://travis-ci.org/ClearcodeHQ/pytest-postgresql.svg?branch=v2.1.0
+.. image:: https://travis-ci.org/ClearcodeHQ/pytest-postgresql.svg?branch=v2.2.0
     :target: https://travis-ci.org/ClearcodeHQ/pytest-postgresql
     :alt: Tests
 
-.. image:: https://coveralls.io/repos/ClearcodeHQ/pytest-postgresql/badge.png?branch=v2.1.0
-    :target: https://coveralls.io/r/ClearcodeHQ/pytest-postgresql?branch=v2.1.0
+.. image:: https://coveralls.io/repos/ClearcodeHQ/pytest-postgresql/badge.png?branch=v2.2.0
+    :target: https://coveralls.io/r/ClearcodeHQ/pytest-postgresql?branch=v2.2.0
     :alt: Coverage Status
 
 What is this?
