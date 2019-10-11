@@ -20,7 +20,6 @@
 import os.path
 import platform
 import subprocess
-from collections import namedtuple
 from tempfile import gettempdir
 from warnings import warn
 
@@ -32,8 +31,18 @@ from pytest_postgresql.executor import PostgreSQLExecutor
 from pytest_postgresql.port import get_port
 
 
-class NoopExecutor:
+class NoopExecutor:  # pylint: disable=too-few-public-methods
+    """Nooperator executor."""
+
     def __init__(self, host, port, user, options):
+        """
+        Initialize nooperator executor mock.
+
+        :param str host: Postgresql hostname
+        :param str|int port: Postrgesql port
+        :param str user: Postgresql username
+        :param str options: Additional connection options
+        """
         self.host = host
         self.port = int(port)
         self.user = user
@@ -42,6 +51,7 @@ class NoopExecutor:
 
     @property
     def version(self):
+        """Get postgresql's version."""
         if self._version:
             return self._version
         try:
@@ -54,7 +64,10 @@ class NoopExecutor:
             )
             version = str(connection.server_version)
             self._version = parse_version(
-                '.'.join([version[i: i+2] for i in range(0, len(version), 2) if int(version[i: i+2])] )
+                '.'.join([
+                    version[i: i+2] for i in range(0, len(version), 2)
+                    if int(version[i: i+2])
+                ])
             )
             return self._version
         finally:
