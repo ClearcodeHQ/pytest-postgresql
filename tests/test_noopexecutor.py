@@ -8,4 +8,4 @@ def test_nooproc_version(postgresql_proc):
         postgresql_proc.user,
         postgresql_proc.options
     )
-    assert postgresql_proc == postgresql_nooproc.version
+    assert postgresql_proc.version == postgresql_nooproc.version
