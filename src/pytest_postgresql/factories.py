@@ -141,6 +141,7 @@ def postgresql_proc(
         [{4002,4003}] or {4002,4003} - random of 4002 or 4003 ports
         [(2000,3000), {4002,4003}] - random of given range and set
     :param str user: postgresql username
+    :param str options: Postgresql connection options
     :param str startparams: postgresql starting parameters
     :param str unixsocketdir: directory to create postgresql's unixsockets
     :param str logs_prefix: prefix for log filename
@@ -205,13 +206,14 @@ def postgresql_proc(
     return postgresql_proc_fixture
 
 
-def postgresql_noproc(host=None, port=5432, user=None, options=''):
+def postgresql_noproc(host=None, port=None, user=None, options=''):
     """
     Postgresql noprocess factory.
 
     :param str host: hostname
     :param str|int port: exact port (e.g. '8000', 8000)
     :param str user: postgresql username
+    :param str options: Postgresql connection options
     :rtype: func
     :returns: function which makes a postgresql process
     """
@@ -226,7 +228,7 @@ def postgresql_noproc(host=None, port=5432, user=None, options=''):
         """
         config = get_config(request)
         pg_host = host or config['host']
-        pg_port = port or config['port']
+        pg_port = port or config['port'] or 5432
         pg_user = user or config['user']
         pg_options = options or config['options']
 

@@ -32,10 +32,6 @@ Package status
     :target: https://coveralls.io/r/ClearcodeHQ/pytest-postgresql?branch=v2.1.0
     :alt: Coverage Status
 
-.. image:: https://requires.io/github/ClearcodeHQ/pytest-postgresql/requirements.svg?tag=v2.1.0
-     :target: https://requires.io/github/ClearcodeHQ/pytest-postgresql/requirements/?tag=v2.1.0
-     :alt: Requirements Status
-
 What is this?
 =============
 
@@ -80,6 +76,20 @@ You can also create additional postgresql client and process fixtures if you'd n
 
     Each PostgreSQL process fixture can be configured in a different way than the others through the fixture factory arguments.
 
+Connecting to already existing postgresql database
+--------------------------------------------------
+
+Some projects are using already running postgresql servers (ie on docker instances).
+In order to connect to them, one would be using the ``postgresql_nooproc`` fixture.
+
+.. code-block:: python
+
+    postgresql_external = factories.postgresql('postgresql_nooproc')
+
+By default the  ``postgresql_nooproc`` fixture would connect to postgresql instance using **5432** port. Standard configuration options apply to it.
+
+These are the configuration options that are working on all levels with the ``postgresql_nooproc`` fixture:
+
 Configuration
 =============
 
@@ -98,48 +108,62 @@ You can pick which you prefer, but remember that these settings are handled in t
      - Fixture factory argument
      - Command line option
      - pytest.ini option
+     - Noop process fixrture
      - Default
    * - Path to executable
      - executable
      - --postgresql-exec
      - postgresql_exec
+     - -
      - /usr/lib/postgresql/9.1/bin/pg_ctl
    * - host
      - host
      - --postgresql-host
      - postgresql_host
+     - yes
      - 127.0.0.1
    * - port
      - port
      - --postgresql-port
      - postgresql_port
+     - yes (5436)
      - random
    * - postgresql user
      - user
      - --postgresql-user
      - postgresql_user
+     - yes
      - postgres
    * - Starting parameters
      - startparams
      - --postgresql-startparams
      - postgresql_startparams
+     - -
      - -w
    * - Log filename's prefix
      - logsprefix
      - --postgresql-logsprefix
      - postgresql_logsprefix
+     - -
      -
    * - Location for unixsockets
      - unixsocket
      - --postgresql-unixsocketdir
      - postgresql_unixsocketdir
+     - -
      - $TMPDIR
    * - Database name
      - db_name
      - --postgresql-dbname
      - postgresql_dbname
+     - -
      - test
-
+   * - PostgreSQL connection options
+     - options
+     - --postgresql-options
+     - postgresql_options
+     - yes
+     -
 
 
 Example usage:
