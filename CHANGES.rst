@@ -4,7 +4,7 @@ CHANGELOG
 2.2.0
 -------
 
-- [feature] ability to properly connect to already existing postgresql server using ``postgresql_noproc`` fixture.
+- [feature] ability to properly connect to already existing postgresql server using ``postgresql_nooproc`` fixture.
 
 2.1.0
 -------

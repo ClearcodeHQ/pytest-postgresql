@@ -54,10 +54,11 @@ Install with:
 You will also need to install ``psycopg2``, or one of its alternative packagings such as ``psycopg2-binary``
 (pre-compiled wheels) or ``psycopg2cffi`` (CFFI based, useful on PyPy).
 
-Plugin contains two fixtures:
+Plugin contains three fixtures:
 
 * **postgresql** - it's a client fixture that has functional scope. After each test it ends all leftover connections, and drops test database from PostgreSQL ensuring repeatability.
 * **postgresql_proc** - session scoped fixture, that starts PostgreSQL instance at it's first use and stops at the end of the tests.
+* **postgresql_nooproc** - a nooprocess fixture, that's connecting to already running postgresql
 
 Simply include one of these fixtures into your tests fixture list.
 
@@ -108,7 +109,7 @@ You can pick which you prefer, but remember that these settings are handled in t
      - Fixture factory argument
      - Command line option
      - pytest.ini option
-     - Noop process fixrture
+     - Noop process fixture
      - Default
    * - Path to executable
      - executable
