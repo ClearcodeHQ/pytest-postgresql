@@ -54,7 +54,7 @@ Install with:
 You will also need to install ``psycopg2``, or one of its alternative packagings such as ``psycopg2-binary``
 (pre-compiled wheels) or ``psycopg2cffi`` (CFFI based, useful on PyPy).
 
-Plugin contains two fixtures:
+Plugin contains three fixtures:
 
 * **postgresql** - it's a client fixture that has functional scope. After each test it ends all leftover connections, and drops test database from PostgreSQL ensuring repeatability.
 * **postgresql_proc** - session scoped fixture, that starts PostgreSQL instance at it's first use and stops at the end of the tests.
