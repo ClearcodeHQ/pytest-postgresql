@@ -121,7 +121,7 @@ def drop_postgresql_database(user, host, port, db_name, version):
         'use DatabaseJanitor.drop istead.',
         DeprecationWarning
     )
-    DatabaseJanitor(user, host, port, db_name, version).init()
+    DatabaseJanitor(user, host, port, db_name, version).drop()
 
 
 def postgresql_proc(
