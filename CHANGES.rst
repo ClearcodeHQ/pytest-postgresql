@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+unreleased
+-------
+
+- [bugifx] Fix drop_postgresql_database to actually use DatabaseJanitor.drop instead of an init
+
 2.2.0
 -------
 
