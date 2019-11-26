@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+unreleased
+-------
+
+- [bugfix] NoopExecutor connects to read version by context manager to proerly handle cases
+  where it can't connect to the server.
+
 2.2.1
 -------
 

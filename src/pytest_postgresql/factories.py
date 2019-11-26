@@ -54,14 +54,14 @@ class NoopExecutor:  # pylint: disable=too-few-public-methods
         """Get postgresql's version."""
         if self._version:
             return self._version
-        try:
-            connection = psycopg2.connect(
-                dbname='postgres',
-                user=self.user,
-                host=self.host,
-                port=self.port,
-                options=self.options
-            )
+
+        with psycopg2.connect(
+            dbname='postgres',
+            user=self.user,
+            host=self.host,
+            port=self.port,
+            options=self.options
+        ) as connection:
             version = str(connection.server_version)
             self._version = parse_version(
                 '.'.join([
@@ -69,9 +69,7 @@ class NoopExecutor:  # pylint: disable=too-few-public-methods
                     if int(version[i: i+2])
                 ])
             )
-            return self._version
-        finally:
-            connection.close()
+            return self._versio
 
 
 def get_config(request):
