@@ -127,7 +127,7 @@ You can pick which you prefer, but remember that these settings are handled in t
      - port
      - --postgresql-port
      - postgresql_port
-     - yes (5436)
+     - yes (5432)
      - random
    * - postgresql user
      - user
