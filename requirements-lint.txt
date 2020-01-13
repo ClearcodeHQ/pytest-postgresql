@@ -1,6 +1,6 @@
 # linters
 pycodestyle==2.5.0
-pydocstyle==5.0.1
+pydocstyle==5.0.2
 pylint==2.4.4
 pygments
 pyroma==2.6
