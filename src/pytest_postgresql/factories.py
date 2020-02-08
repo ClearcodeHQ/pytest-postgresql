@@ -96,7 +96,7 @@ def init_postgresql_database(user, host, port, db_name):
     """
     warn(
         'init_postgresql_database is deprecated, '
-        'use DatabaseJanitor.init istead.',
+        'use DatabaseJanitor.init instead.',
         DeprecationWarning
     )
     DatabaseJanitor(user, host, port, db_name, 0.0).init()
@@ -114,7 +114,7 @@ def drop_postgresql_database(user, host, port, db_name, version):
     """
     warn(
         'drop_postgresql_database is deprecated, '
-        'use DatabaseJanitor.drop istead.',
+        'use DatabaseJanitor.drop instead.',
         DeprecationWarning
     )
     DatabaseJanitor(user, host, port, db_name, version).drop()
