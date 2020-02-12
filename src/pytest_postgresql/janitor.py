@@ -41,6 +41,7 @@ class DatabaseJanitor:
         :param version: postgresql version number
         """
         self.user = user
+        self.password = None
         self.host = host
         self.port = port
         self.db_name = db_name
@@ -48,6 +49,14 @@ class DatabaseJanitor:
             self.version = parse_version(str(version))
         else:
             self.version = version
+
+    def set_password(self, password) -> None:
+        """
+        Set a password for the database user.
+
+        :param password: postgresql password
+        """
+        self.password = password
 
     def init(self) -> None:
         """Create database in postgresql."""
@@ -79,6 +88,7 @@ class DatabaseJanitor:
         conn = psycopg2.connect(
             dbname='postgres',
             user=self.user,
+            password=self.password,
             host=self.host,
             port=self.port,
         )

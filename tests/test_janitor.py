@@ -23,6 +23,22 @@ def test_cursor_selects_postgres_database(connect_mock):
         connect_mock.assert_called_once_with(
             dbname='postgres',
             user='user',
+            password=None,
+            host='host',
+            port='1234'
+        )
+
+
+@patch('pytest_postgresql.janitor.psycopg2.connect')
+def test_cursor_connects_with_password(connect_mock):
+    """Test that the cursor requests the postgres database."""
+    janitor = DatabaseJanitor('user', 'host', '1234', 'database_name', 9.0)
+    janitor.set_password('some_password')
+    with janitor.cursor():
+        connect_mock.assert_called_once_with(
+            dbname='postgres',
+            user='user',
+            password='some_password',
             host='host',
             port='1234'
         )
