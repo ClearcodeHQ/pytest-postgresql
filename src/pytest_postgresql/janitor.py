@@ -76,7 +76,12 @@ class DatabaseJanitor:
     @contextmanager
     def cursor(self) -> cursor:
         """Return postgresql cursor."""
-        conn = psycopg2.connect(user=self.user, host=self.host, port=self.port)
+        conn = psycopg2.connect(
+            dbname='postgres',
+            user=self.user,
+            host=self.host,
+            port=self.port,
+        )
         conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
         cur = conn.cursor()
         try:
