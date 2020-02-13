@@ -4,6 +4,8 @@ CHANGELOG
 unreleased
 -------
 
+- [bugfix] Default Janitor's connections to postgres database. When using custom users, 
+  postgres attempts to use user's database and it might not exists.
 - [bugfix] NoopExecutor connects to read version by context manager to proerly handle cases
   where it can't connect to the server.
 
