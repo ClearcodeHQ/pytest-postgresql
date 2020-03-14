@@ -135,6 +135,12 @@ You can pick which you prefer, but remember that these settings are handled in t
      - postgresql_user
      - yes
      - postgres
+   * - password
+     - password
+     - --postgresql-password
+     - postgresql_password
+     - yes
+     -
    * - Starting parameters
      - startparams
      - --postgresql-startparams
