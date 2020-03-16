@@ -34,7 +34,7 @@ from pytest_postgresql.port import get_port
 class NoopExecutor:  # pylint: disable=too-few-public-methods
     """Nooperator executor."""
 
-    def __init__(self, host, port, user, options, password = None):
+    def __init__(self, host, port, user, options, password=None):
         """
         Initialize nooperator executor mock.
 
@@ -88,7 +88,7 @@ def get_config(request):
     return config
 
 
-def init_postgresql_database(user, host, port, db_name, password = None):
+def init_postgresql_database(user, host, port, db_name, password=None):
     """
     Create database in postgresql.
 
@@ -106,7 +106,7 @@ def init_postgresql_database(user, host, port, db_name, password = None):
     DatabaseJanitor(user, host, port, db_name, 0.0, password).init()
 
 
-def drop_postgresql_database(user, host, port, db_name, version, password = None):
+def drop_postgresql_database(user, host, port, db_name, version, password=None):
     """
     Drop databse in postgresql.
 
