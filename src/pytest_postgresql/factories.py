@@ -126,8 +126,8 @@ def drop_postgresql_database(user, host, port, db_name, version, password=None):
 
 
 def postgresql_proc(
-        executable=None, host=None, port=-1, user=None, password=None, options='',
-        startparams=None, unixsocketdir=None, logs_prefix='',
+        executable=None, host=None, port=-1, user=None, password=None,
+        options='', startparams=None, unixsocketdir=None, logs_prefix='',
 ):
     """
     Postgresql process factory.
@@ -202,7 +202,9 @@ def postgresql_proc(
     return postgresql_proc_fixture
 
 
-def postgresql_noproc(host=None, port=None, user=None, password=None, options=''):
+def postgresql_noproc(
+        host=None, port=None, user=None, password=None, options='',
+):
     """
     Postgresql noprocess factory.
 
