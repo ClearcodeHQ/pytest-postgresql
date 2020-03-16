@@ -167,16 +167,9 @@ def postgresql_proc(
                 ['pg_config', '--bindir'], universal_newlines=True
             ).strip()
             postgresql_ctl = os.path.join(pg_bindir, 'pg_ctl')
-
-        pg_host = host or config['host']
         pg_port = get_port(port) or get_port(config['port'])
         datadir = os.path.join(
             gettempdir(), 'postgresqldata.{}'.format(pg_port))
-        pg_user = user or config['user']
-        pg_password = password or config['password']
-        pg_options = options or config['options']
-        pg_unixsocketdir = unixsocketdir or config['unixsocketdir']
-        pg_startparams = startparams or config['startparams']
         logfile_path = tmpdir_factory.mktemp("data").join(
             '{prefix}postgresql.{port}.log'.format(
                 prefix=logs_prefix,
@@ -190,15 +183,15 @@ def postgresql_proc(
 
         postgresql_executor = PostgreSQLExecutor(
             executable=postgresql_ctl,
-            host=pg_host,
+            host=host or config['host'],
             port=pg_port,
-            user=pg_user,
-            password=pg_password,
-            options=pg_options,
+            user=user or config['user'],
+            password=password or config['password'],
+            options=options or config['options'],
             datadir=datadir,
-            unixsocketdir=pg_unixsocketdir,
+            unixsocketdir=unixsocketdir or config['unixsocketdir'],
             logfile=logfile_path,
-            startparams=pg_startparams,
+            startparams=startparams or config['startparams'],
         )
         # start server
         with postgresql_executor:
