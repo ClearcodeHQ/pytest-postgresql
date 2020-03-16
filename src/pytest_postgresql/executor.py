@@ -34,7 +34,7 @@ class PostgreSQLUnsupported(Exception):
     """Exception raised when postgresql<9.0 would be detected."""
 
 
-# pylint:disable=too-many-instance-attributes
+# pylint:disable=too-many-arguments,too-many-instance-attributes
 class PostgreSQLExecutor(TCPExecutor):
     """
     PostgreSQL executor running on pg_ctl.
