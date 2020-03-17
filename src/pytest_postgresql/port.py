@@ -38,7 +38,7 @@ class InvalidPortsDefinition(ValueError):
 
 def get_port(ports):
     """
-    Retun a random available port.
+    Return a random available port.
 
     If there's only one port passed (e.g. 5000 or '5000') function
     does not check if port is available.

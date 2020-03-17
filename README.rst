@@ -199,7 +199,7 @@ It is possible and appears it's used in other libraries for tests,
 to maintain database state with the use of the ``pytest-postgresql`` database
 managing functionality:
 
-For this import DatabaseJanitor and use it's init and drop methods:
+For this import DatabaseJanitor and use its init and drop methods:
 
 
 .. code-block:: python
