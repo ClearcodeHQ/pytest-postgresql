@@ -34,19 +34,21 @@ from pytest_postgresql.port import get_port
 class NoopExecutor:  # pylint: disable=too-few-public-methods
     """Nooperator executor."""
 
-    def __init__(self, host, port, user, options):
+    def __init__(self, host, port, user, options, password=None):
         """
         Initialize nooperator executor mock.
 
         :param str host: Postgresql hostname
         :param str|int port: Postrgesql port
         :param str user: Postgresql username
+        :param str user: Postgresql password
         :param str options: Additional connection options
         """
         self.host = host
         self.port = int(port)
         self.user = user
         self.options = options
+        self.password = password
         self._version = None
 
     @property
@@ -58,6 +60,7 @@ class NoopExecutor:  # pylint: disable=too-few-public-methods
                     user=self.user,
                     host=self.host,
                     port=self.port,
+                    password=self.password,
                     options=self.options
             ) as connection:
                 version = str(connection.server_version)
@@ -74,7 +77,7 @@ def get_config(request):
     """Return a dictionary with config options."""
     config = {}
     options = [
-        'exec', 'host', 'port', 'user', 'options', 'startparams',
+        'exec', 'host', 'port', 'user', 'password', 'options', 'startparams',
         'logsprefix', 'unixsocketdir', 'dbname'
     ]
     for option in options:
@@ -85,7 +88,7 @@ def get_config(request):
     return config
 
 
-def init_postgresql_database(user, host, port, db_name):
+def init_postgresql_database(user, host, port, db_name, password=None):
     """
     Create database in postgresql.
 
@@ -93,16 +96,17 @@ def init_postgresql_database(user, host, port, db_name):
     :param str host: postgresql host
     :param str port: postgresql port
     :param str db_name: database name
+    :param str password: optional postgresql password
     """
     warn(
         'init_postgresql_database is deprecated, '
         'use DatabaseJanitor.init instead.',
         DeprecationWarning
     )
-    DatabaseJanitor(user, host, port, db_name, 0.0).init()
+    DatabaseJanitor(user, host, port, db_name, 0.0, password).init()
 
 
-def drop_postgresql_database(user, host, port, db_name, version):
+def drop_postgresql_database(user, host, port, db_name, version, password=None):
     """
     Drop databse in postgresql.
 
@@ -111,18 +115,19 @@ def drop_postgresql_database(user, host, port, db_name, version):
     :param str port: postgresql port
     :param str db_name: database name
     :param packaging.version.Version version: postgresql version number
+    :param str password: optional postgresql password
     """
     warn(
         'drop_postgresql_database is deprecated, '
         'use DatabaseJanitor.drop instead.',
         DeprecationWarning
     )
-    DatabaseJanitor(user, host, port, db_name, version).drop()
+    DatabaseJanitor(user, host, port, db_name, version, password).drop()
 
 
 def postgresql_proc(
-        executable=None, host=None, port=-1, user=None, options='',
-        startparams=None, unixsocketdir=None, logs_prefix='',
+        executable=None, host=None, port=-1, user=None, password=None,
+        options='', startparams=None, unixsocketdir=None, logs_prefix='',
 ):
     """
     Postgresql process factory.
@@ -162,15 +167,9 @@ def postgresql_proc(
                 ['pg_config', '--bindir'], universal_newlines=True
             ).strip()
             postgresql_ctl = os.path.join(pg_bindir, 'pg_ctl')
-
-        pg_host = host or config['host']
         pg_port = get_port(port) or get_port(config['port'])
         datadir = os.path.join(
             gettempdir(), 'postgresqldata.{}'.format(pg_port))
-        pg_user = user or config['user']
-        pg_options = options or config['options']
-        pg_unixsocketdir = unixsocketdir or config['unixsocketdir']
-        pg_startparams = startparams or config['startparams']
         logfile_path = tmpdir_factory.mktemp("data").join(
             '{prefix}postgresql.{port}.log'.format(
                 prefix=logs_prefix,
@@ -184,14 +183,15 @@ def postgresql_proc(
 
         postgresql_executor = PostgreSQLExecutor(
             executable=postgresql_ctl,
-            host=pg_host,
+            host=host or config['host'],
             port=pg_port,
-            user=pg_user,
-            options=pg_options,
+            user=user or config['user'],
+            password=password or config['password'],
+            options=options or config['options'],
             datadir=datadir,
-            unixsocketdir=pg_unixsocketdir,
+            unixsocketdir=unixsocketdir or config['unixsocketdir'],
             logfile=logfile_path,
-            startparams=pg_startparams,
+            startparams=startparams or config['startparams'],
         )
         # start server
         with postgresql_executor:
@@ -202,7 +202,9 @@ def postgresql_proc(
     return postgresql_proc_fixture
 
 
-def postgresql_noproc(host=None, port=None, user=None, options=''):
+def postgresql_noproc(
+        host=None, port=None, user=None, password=None, options='',
+):
     """
     Postgresql noprocess factory.
 
@@ -226,12 +228,14 @@ def postgresql_noproc(host=None, port=None, user=None, options=''):
         pg_host = host or config['host']
         pg_port = port or config['port'] or 5432
         pg_user = user or config['user']
+        pg_password = password or config['password']
         pg_options = options or config['options']
 
         noop_exec = NoopExecutor(
             host=pg_host,
             port=pg_port,
             user=pg_user,
+            password=pg_password,
             options=pg_options,
         )
 
@@ -271,6 +275,7 @@ def postgresql(process_fixture_name, db_name=None):
         pg_host = proc_fixture.host
         pg_port = proc_fixture.port
         pg_user = proc_fixture.user
+        pg_password = proc_fixture.password
         pg_options = proc_fixture.options
         pg_db = db_name or config['dbname']
 
@@ -280,6 +285,7 @@ def postgresql(process_fixture_name, db_name=None):
             connection = psycopg2.connect(
                 dbname=pg_db,
                 user=pg_user,
+                password=pg_password,
                 host=pg_host,
                 port=pg_port,
                 options=pg_options

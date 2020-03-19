@@ -22,6 +22,7 @@ import os.path
 import re
 import shutil
 import subprocess
+import tempfile
 import time
 
 from pkg_resources import parse_version
@@ -33,7 +34,7 @@ class PostgreSQLUnsupported(Exception):
     """Exception raised when postgresql<9.0 would be detected."""
 
 
-# pylint:disable=too-many-instance-attributes
+# pylint:disable=too-many-arguments,too-many-instance-attributes
 class PostgreSQLExecutor(TCPExecutor):
     """
     PostgreSQL executor running on pg_ctl.
@@ -55,7 +56,7 @@ class PostgreSQLExecutor(TCPExecutor):
     def __init__(self, executable, host, port,
                  datadir, unixsocketdir, logfile, startparams,
                  shell=False, timeout=60, sleep=0.1, user='postgres',
-                 options=''):
+                 password='', options=''):
         """
         Initialize PostgreSQLExecutor executor.
 
@@ -72,10 +73,12 @@ class PostgreSQLExecutor(TCPExecutor):
         :param float sleep: how often to check for start/stop condition
         :param str user: [default] postgresql's username used to manage
             and access PostgreSQL
+        :param str password: optional password for the user
         """
         self._directory_initialised = False
         self.executable = executable
         self.user = user
+        self.password = password
         self.options = options
         self.datadir = datadir
         self.unixsocketdir = unixsocketdir
@@ -137,7 +140,17 @@ class PostgreSQLExecutor(TCPExecutor):
             '-o "--auth=trust --username=%s"' % self.user,
             '-D %s' % self.datadir,
         )
-        subprocess.check_output(' '.join(init_directory), shell=True)
+
+        if self.password:
+            with tempfile.NamedTemporaryFile() as password_file:
+                init_directory += (
+                    '--pwfile "%s"' % password_file.name
+                )
+                password_file.write(self.password)
+                subprocess.check_output(' '.join(init_directory), shell=True)
+        else:
+            subprocess.check_output(' '.join(init_directory), shell=True)
+
         self._directory_initialised = True
 
     def wait_for_postgres(self):

@@ -29,7 +29,8 @@ class DatabaseJanitor:
             host: str,
             port: str,
             db_name: str,
-            version: Union[str, float, Version]
+            version: Union[str, float, Version],
+            password: str = None
     ) -> None:
         """
         Initialize janitor.
@@ -39,8 +40,10 @@ class DatabaseJanitor:
         :param port: postgresql port
         :param db_name: database name
         :param version: postgresql version number
+        :param password: optional postgresql password
         """
         self.user = user
+        self.password = password
         self.host = host
         self.port = port
         self.db_name = db_name
@@ -79,6 +82,7 @@ class DatabaseJanitor:
         conn = psycopg2.connect(
             dbname='postgres',
             user=self.user,
+            password=self.password,
             host=self.host,
             port=self.port,
         )
