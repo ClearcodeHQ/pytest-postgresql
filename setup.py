@@ -59,7 +59,7 @@ setup_requires = [
 
 setup(
     name='pytest-postgresql',
-    version='2.2.1',
+    version='2.3.0',
     description='Postgresql fixtures and fixture factories for Pytest.',
     long_description=(
         read('README.rst') + '\n\n' + read('CHANGES.rst')

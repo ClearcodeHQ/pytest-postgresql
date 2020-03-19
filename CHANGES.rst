@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-unreleased
+2.3.0
 ----------
 
 - [feature] Allow to set password for postgresql. Use it throughout the flow.
