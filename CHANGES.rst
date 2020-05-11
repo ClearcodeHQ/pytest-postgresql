@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+unreleased
+----------
+
+- [bug] pass password to DatabaseJanitor in client's factory
+
 2.3.0
 ----------
 

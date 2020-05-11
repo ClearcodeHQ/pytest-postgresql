@@ -280,7 +280,8 @@ def postgresql(process_fixture_name, db_name=None):
         pg_db = db_name or config['dbname']
 
         with DatabaseJanitor(
-                pg_user, pg_host, pg_port, pg_db, proc_fixture.version
+                pg_user, pg_host, pg_port, pg_db, proc_fixture.version,
+                pg_password
         ):
             connection = psycopg2.connect(
                 dbname=pg_db,
