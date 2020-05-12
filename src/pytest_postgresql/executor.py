@@ -157,17 +157,14 @@ class PostgreSQLExecutor(TCPExecutor):
         """Wait for postgresql being started."""
         if '-w' not in self.startparams:
             return
-        # Cast to str since Python 3.5 however still needs string.
-        # Python 3.6 it's possible to pass a A Pathlike object.
-        logfile_path = str(self.logfile)
         # wait until logfile is created
-        while not os.path.isfile(logfile_path):
+        while not os.path.isfile(self.logfile):
             time.sleep(1)
 
         start_info = 'database system is ready to accept connections'
         # wait for expected message.
         while 1:
-            with open(logfile_path, 'r') as content_file:
+            with open(self.logfile, 'r') as content_file:
                 content = content_file.read()
                 if start_info in content:
                     break
