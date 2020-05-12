@@ -38,7 +38,7 @@ def read(fname):
 requirements = [
     'pytest>=3.0.0',
     'port-for',
-    'mirakuru>=2.0.0'
+    'mirakuru>=2.3.0'
 ]
 
 test_requires = [
@@ -69,7 +69,7 @@ setup(
     author_email='thearoom@clearcode.cc',
     url='https://github.com/ClearcodeHQ/pytest-postgresql',
     license='LGPLv3+',
-    python_requires='>=3.5',
+    python_requires='>=3.6',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
@@ -80,7 +80,6 @@ setup(
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
