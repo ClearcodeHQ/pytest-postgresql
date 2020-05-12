@@ -1,5 +1,5 @@
 # linters
-pycodestyle==2.5.0
+pycodestyle==2.6.0
 pydocstyle==5.0.2
 pylint==2.5.2
 pygments
