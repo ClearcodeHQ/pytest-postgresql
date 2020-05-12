@@ -1,4 +1,3 @@
-
 # Copyright (C) 2013 by Clearcode <http://clearcode.cc>
 # and associates (see AUTHORS).
 
@@ -113,7 +112,8 @@ class PostgreSQLExecutor(TCPExecutor):
                 'Your version of PostgreSQL is not supported. '
                 'Consider updating to PostgreSQL {0} at least. '
                 'The currently installed version of PostgreSQL: {1}.'
-                .format(self.MIN_SUPPORTED_VERSION, self.version))
+                .format(self.MIN_SUPPORTED_VERSION, self.version)
+            )
         self.init_directory()
         return super().start()
 
@@ -209,7 +209,10 @@ class PostgreSQLExecutor(TCPExecutor):
 
         return "pg_ctl: server is running" in output
 
-    def stop(self, sig=None):
+    def stop(self,
+             sig: int = None,
+             exp_sig: int = None
+             ):
         """Issue a stop request to executable."""
         subprocess.check_output(
             '{pg_ctl} stop -D {datadir} -m f'.format(
@@ -217,7 +220,7 @@ class PostgreSQLExecutor(TCPExecutor):
                 datadir=self.datadir,
             ),
             shell=True)
-        super().stop(sig)
+        super().stop(sig, exp_sig)
 
     def __del__(self):
         """Make sure the directories are properly removed at the end."""

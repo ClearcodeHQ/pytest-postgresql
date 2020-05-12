@@ -271,7 +271,6 @@ def postgresql(process_fixture_name, db_name=None):
             )
         proc_fixture = request.getfixturevalue(process_fixture_name)
 
-        # _, config = try_import('psycopg2', request)
         pg_host = proc_fixture.host
         pg_port = proc_fixture.port
         pg_user = proc_fixture.user

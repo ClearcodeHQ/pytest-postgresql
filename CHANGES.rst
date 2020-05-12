@@ -4,6 +4,7 @@ CHANGELOG
 unreleased
 ----------
 
+- [enhancement] require at least mirakuru 2.3.0 (executor's stop method parameter's change)
 - [bug] pass password to DatabaseJanitor in client's factory
 
 2.3.0
