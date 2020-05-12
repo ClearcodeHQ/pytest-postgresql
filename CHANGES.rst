@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-unreleased
+2.4.0
 ----------
 
 - [feature] Drop support for pyhon 3.5
