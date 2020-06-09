@@ -20,6 +20,8 @@ script:
 after_success:
 - coveralls
 jobs:
+  allow_failures:
+    - python: nightly
   include:
     - stage: xdist
       script: py.test -n 1
