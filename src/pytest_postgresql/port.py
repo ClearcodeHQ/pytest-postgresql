@@ -72,7 +72,7 @@ def get_port(ports):
             ports = [ports]
         ranges = port_for.utils.ranges_to_set(filter_by_type(ports, tuple))
         nums = set(filter_by_type(ports, int))
-        sets = set(chain(*filter_by_type(ports, (set, frozenset))))
+        sets = set(chain.from_iterable(filter_by_type(ports, (set, frozenset))))
         ports_set = ports_set.union(ranges, sets, nums)
     except ValueError:
         raise InvalidPortsDefinition
