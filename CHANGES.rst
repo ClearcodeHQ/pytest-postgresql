@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+unreleased
+----------
+
+- [bugfix] Fix version detection, to allow for two-digit minor version part
+
 2.4.0
 ----------
 

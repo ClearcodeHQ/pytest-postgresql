@@ -10,6 +10,7 @@ from pytest_postgresql.executor import PostgreSQLExecutor
     ('pg_ctl (PostgreSQL) 9.4.1', '9.4'),
     ('pg_ctl (PostgreSQL) 10.0', '10.0'),
     ('pg_ctl (PostgreSQL) 10.1', '10.1'),
+    ('pg_ctl (PostgreSQL) 10.13', '10.13'),
 ))
 def test_versions(ctl_input, version):
     """Check correctness of the version regexp."""

@@ -49,7 +49,7 @@ class PostgreSQLExecutor(TCPExecutor):
         "-l {logfile} {startparams}"
     ))
 
-    VERSION_RE = re.compile(r'.* (?P<version>\d+\.\d)')
+    VERSION_RE = re.compile(r'.* (?P<version>\d+\.\d+)')
     MIN_SUPPORTED_VERSION = parse_version('9.0')
 
     def __init__(self, executable, host, port,
