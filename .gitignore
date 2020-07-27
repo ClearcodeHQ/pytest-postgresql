@@ -19,6 +19,7 @@ lib
 lib64
 .cache
 .pytest_cache
+venv/
 
 # Installer logs
 pip-log.txt
