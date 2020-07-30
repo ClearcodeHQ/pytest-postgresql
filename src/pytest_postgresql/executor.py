@@ -144,7 +144,7 @@ class PostgreSQLExecutor(TCPExecutor):
         if self.password:
             with tempfile.NamedTemporaryFile() as password_file:
                 init_directory += (
-                    '--pwfile "%s"' % password_file.name
+                    '--pwfile "%s"' % password_file.name,
                 )
                 password_file.write(self.password)
                 subprocess.check_output(' '.join(init_directory), shell=True)
