@@ -1,7 +1,7 @@
-# Copyright (C) 2013 by Clearcode <http://clearcode.cc>
+# Copyright (C) 2016-2020 by Clearcode <http://clearcode.cc>
 # and associates (see AUTHORS).
 
-# This file is part of pytest-dbfixtures.
+# This file is part of pytest-postgresql.
 
 # pytest-dbfixtures is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
