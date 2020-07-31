@@ -18,4 +18,6 @@ postgresql2 = factories.postgresql('postgresql_proc2', db_name='test-db')
 
 postgresql_rand_proc = factories.postgresql_proc(port=None)
 postgresql_rand = factories.postgresql('postgresql_rand_proc')
+postgresql_password_proc = factories.postgresql_proc(password='test')
+postgresql_password = factories.postgresql('postgresql_password_proc')
 # pylint:enable=invalid-name
