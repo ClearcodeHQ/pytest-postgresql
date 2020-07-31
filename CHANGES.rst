@@ -5,6 +5,8 @@ unreleased
 ----------
 
 - [enhancement] extract NoopExecutor into it's own submodule
+- [bugfix] Ignore occasional `ProcessFinishedWithError` error on executor exit.
+- [bugfix] Fixed setting custom password for process fixture
 - [bugfix] Fix version detection, to allow for two-digit minor version part
 
 2.4.0

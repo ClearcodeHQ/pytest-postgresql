@@ -27,6 +27,7 @@ import time
 from pkg_resources import parse_version
 from mirakuru import TCPExecutor
 from mirakuru.base import ExecutorType
+from mirakuru.exceptions import ProcessFinishedWithError
 
 
 class PostgreSQLUnsupported(Exception):
@@ -221,7 +222,11 @@ class PostgreSQLExecutor(TCPExecutor):
                 datadir=self.datadir,
             ),
             shell=True)
-        super().stop(sig, exp_sig)
+        try:
+            super().stop(sig, exp_sig)
+        except ProcessFinishedWithError:
+            # Finished, leftovers ought to be cleaned afterwards anyway
+            pass
 
     def __del__(self):
         """Make sure the directories are properly removed at the end."""

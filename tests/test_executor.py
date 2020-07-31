@@ -1,7 +1,10 @@
 """Test various executor behaviours."""
+import sys
+
+from pkg_resources import parse_version
+
 import psycopg2
 import pytest
-from pkg_resources import parse_version
 
 from pytest_postgresql.executor import PostgreSQLExecutor, PostgreSQLUnsupported
 from pytest_postgresql.factories import postgresql_proc
@@ -34,6 +37,42 @@ def test_unsupported_version(request):
 
     with pytest.raises(PostgreSQLUnsupported):
         executor.start()
+
+
+@pytest.mark.skipif(
+    sys.platform == "darwin",
+    reason="Mac Os has completely different path for the executable"
+           " than linux, and the default config."
+)
+def test_executor_init_with_password(request):
+    """Test whether the executor initializes properly."""
+    config = get_config(request)
+    executor = PostgreSQLExecutor(
+        executable=config['exec'],
+        host=config['host'],
+        port=get_port(config['port']),
+        datadir='/tmp/error',
+        unixsocketdir=config['unixsocketdir'],
+        logfile='/tmp/version.error.log',
+        startparams=config['startparams'],
+        password="somepassword",
+    )
+    with executor:
+        assert executor.running()
+        psycopg2.connect(
+            dbname=executor.user,
+            user=executor.user,
+            password=executor.password,
+            host=executor.host,
+            port=executor.port)
+        with pytest.raises(psycopg2.OperationalError):
+            psycopg2.connect(
+                dbname=executor.user,
+                user=executor.user,
+                password='bogus',
+                host=executor.host,
+                port=executor.port)
+    assert not executor.running()
 
 
 postgres_with_password = postgresql_proc(password='hunter2')
