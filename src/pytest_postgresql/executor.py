@@ -135,21 +135,25 @@ class PostgreSQLExecutor(TCPExecutor):
             return
         # remove old one if exists first.
         self.clean_directory()
-        init_directory = (
-            self.executable, 'initdb',
-            '-o "--auth=trust --username=%s"' % self.user,
-            '-D %s' % self.datadir,
-        )
+        init_directory = [self.executable, 'initdb', '--pgdata', self.datadir]
+        options = ['--username=%s' % self.user]
 
         if self.password:
             with tempfile.NamedTemporaryFile() as password_file:
-                init_directory += (
-                    '--pwfile "%s"' % password_file.name,
-                )
-                password_file.write(self.password)
-                subprocess.check_output(' '.join(init_directory), shell=True)
+                options += ['--auth=password',
+                            '--pwfile=%s' % password_file.name]
+                if hasattr(self.password, 'encode'):
+                    password = self.password.encode('utf-8')
+                else:
+                    password = self.password
+                password_file.write(password)
+                password_file.flush()
+                init_directory += ['-o', ' '.join(options)]
+                subprocess.check_output(init_directory)
         else:
-            subprocess.check_output(' '.join(init_directory), shell=True)
+            options += ['--auth=trust']
+            init_directory += ['-o', ' '.join(options)]
+            subprocess.check_output(init_directory)
 
         self._directory_initialised = True
 
