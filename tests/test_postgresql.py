@@ -50,7 +50,7 @@ def test_rand_postgres_port(postgresql_rand):
     assert postgresql_rand.status == psycopg2.extensions.STATUS_READY
 
 
-def test_rand_postgres_port(postgresql_password):
+def test_postgres_password(postgresql_password):
     """Check if postgres fixture can be started on random port."""
     assert postgresql_password.status == psycopg2.extensions.STATUS_READY
 
