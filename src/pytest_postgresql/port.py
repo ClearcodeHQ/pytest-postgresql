@@ -1,4 +1,4 @@
-# Copyright (C) 2016 by Clearcode <http://clearcode.cc>
+# Copyright (C) 2016-2020 by Clearcode <http://clearcode.cc>
 # and associates (see AUTHORS).
 
 # This file is part of pytest-postgresql.

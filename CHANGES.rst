@@ -4,6 +4,7 @@ CHANGELOG
 unreleased
 ----------
 
+- [enhancement] extract NoopExecutor into it's own submodule
 - [bugfix] Fix version detection, to allow for two-digit minor version part
 
 2.4.0
