@@ -1,7 +1,7 @@
-# Copyright (C) 2013 by Clearcode <http://clearcode.cc>
+# Copyright (C) 2016-2020 by Clearcode <http://clearcode.cc>
 # and associates (see AUTHORS).
 
-# This file is part of pytest-dbfixtures.
+# This file is part of pytest-postgresql.
 
 # pytest-dbfixtures is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -135,23 +135,25 @@ class PostgreSQLExecutor(TCPExecutor):
             return
         # remove old one if exists first.
         self.clean_directory()
-        init_directory = (
+        init_directory = [
             self.executable, 'initdb', f'-o "--auth=trust --username={self.user}"',
             f'-D {self.datadir}'
-        )
+        ]
 
         if self.password:
             password = self.password if isinstance(self.password, bytes) else self.password.encode()
             with tempfile.NamedTemporaryFile() as password_file:
-                init_directory += (
+                init_directory += [
                     f'-o "--pwfile={password_file.name}"',
-                )
+                ]
                 password_file.write(password)
                 # Without flush(), PostgreSQL will se password file as empty
                 password_file.flush()
                 subprocess.check_output(' '.join(init_directory), shell=True)
         else:
-            subprocess.check_output(' '.join(init_directory), shell=True)
+            options += ['--auth=trust']
+            init_directory += ['-o', ' '.join(options)]
+            subprocess.check_output(init_directory)
 
         self._directory_initialised = True
 

@@ -3,8 +3,8 @@ pip>=9  # minimum installation requirements
 setuptools>=21  # minimum installation requirements
 coverage==5.2.1 # pytest-cov
 pytest==6.0.1
-pytest-cov==2.10.0
-pytest-xdist==1.34.0
+pytest-cov==2.10.1
+pytest-xdist==2.0.0
 psycopg2-binary==2.8.5; platform_python_implementation != "PyPy"
 psycopg2cffi==2.8.1; platform_python_implementation == "PyPy"
 port-for==0.4
