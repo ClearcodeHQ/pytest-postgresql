@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-unreleased
+2.4.1
 ----------
 
 - [enhancement] extract NoopExecutor into it's own submodule
