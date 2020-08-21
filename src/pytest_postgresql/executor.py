@@ -151,8 +151,6 @@ class PostgreSQLExecutor(TCPExecutor):
                 password_file.flush()
                 subprocess.check_output(' '.join(init_directory), shell=True)
         else:
-            options += ['--auth=trust']
-            init_directory += ['-o', ' '.join(options)]
             subprocess.check_output(init_directory)
 
         self._directory_initialised = True
