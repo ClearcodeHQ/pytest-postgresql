@@ -74,8 +74,8 @@ def get_port(ports):
         nums = set(filter_by_type(ports, int))
         sets = set(chain.from_iterable(filter_by_type(ports, (set, frozenset))))
         ports_set = ports_set.union(ranges, sets, nums)
-    except ValueError:
-        raise InvalidPortsDefinition
+    except ValueError as exc:
+        raise InvalidPortsDefinition from exc
 
     return port_for.select_random(ports_set)
 
