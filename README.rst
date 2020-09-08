@@ -56,9 +56,16 @@ You will also need to install ``psycopg2``, or one of its alternative packagings
 
 Plugin contains three fixtures:
 
-* **postgresql** - it's a client fixture that has functional scope. After each test it ends all leftover connections, and drops test database from PostgreSQL ensuring repeatability.
-* **postgresql_proc** - session scoped fixture, that starts PostgreSQL instance at it's first use and stops at the end of the tests.
-* **postgresql_nooproc** - a nooprocess fixture, that's connecting to already running postgresql
+* **postgresql** - it's a client fixture that has functional scope.
+  After each test it ends all leftover connections, and drops test database
+  from PostgreSQL ensuring repeatability.
+  This fixture returns already connected psycopg2 connection.
+
+* **postgresql_proc** - session scoped fixture, that starts PostgreSQL instance
+  at it's first use and stops at the end of the tests.
+* **postgresql_nooproc** - a nooprocess fixture, that's connecting to already
+  running postgresql instance.
+  For example on dockerized test environments, or CI providing postgresql services
 
 Simply include one of these fixtures into your tests fixture list.
 
@@ -76,6 +83,17 @@ You can also create additional postgresql client and process fixtures if you'd n
 .. note::
 
     Each PostgreSQL process fixture can be configured in a different way than the others through the fixture factory arguments.
+
+Sample test
+
+.. code-block:: python
+
+    def test_example_postgres(postgresql):
+        """Check main postgresql fixture."""
+        cur = postgresql.cursor()
+        cur.execute("CREATE TABLE test (id serial PRIMARY KEY, num integer, data varchar);")
+        postgresql.commit()
+        cur.close()
 
 Connecting to already existing postgresql database
 --------------------------------------------------
@@ -230,6 +248,11 @@ or use it as a context manager:
 
     with DatabaseJanitor(user, host, port, db_name, version):
         # do something here
+
+.. note::
+
+    DatabaseJanitor manages the state of the database, but you'll have to create
+    connection to use in test code yourself.
 
 Package resources
 -----------------
