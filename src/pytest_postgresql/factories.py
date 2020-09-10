@@ -36,7 +36,7 @@ def get_config(request):
     config = {}
     options = [
         'exec', 'host', 'port', 'user', 'password', 'options', 'startparams',
-        'logsprefix', 'unixsocketdir', 'dbname'
+        'logsprefix', 'unixsocketdir', 'dbname', 'load'
     ]
     for option in options:
         option_name = 'postgresql_' + option
@@ -202,12 +202,13 @@ def postgresql_noproc(
     return postgresql_noproc_fixture
 
 
-def postgresql(process_fixture_name, db_name=None):
+def postgresql(process_fixture_name, db_name=None, load=None):
     """
     Return connection fixture factory for PostgreSQL.
 
     :param str process_fixture_name: name of the process fixture
     :param str db_name: database name
+    :param list load: SQL to automatically load into our test database
     :rtype: func
     :returns: function which makes a connection to postgresql
     """
@@ -235,6 +236,7 @@ def postgresql(process_fixture_name, db_name=None):
         pg_password = proc_fixture.password
         pg_options = proc_fixture.options
         pg_db = db_name or config['dbname']
+        pg_load = load or config['load']
 
         with DatabaseJanitor(
                 pg_user, pg_host, pg_port, pg_db, proc_fixture.version,
@@ -248,6 +250,11 @@ def postgresql(process_fixture_name, db_name=None):
                 port=pg_port,
                 options=pg_options
             )
+            if pg_load:
+                for filename in pg_load:
+                    with open(filename, 'r') as _fd:
+                        with connection.cursor() as cur:
+                            cur.execute(_fd.read())
             yield connection
             connection.close()
 

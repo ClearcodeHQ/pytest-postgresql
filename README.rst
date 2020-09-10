@@ -95,6 +95,18 @@ Sample test
         postgresql.commit()
         cur.close()
 
+If you want the database fixture to be automatically populated with your schema:
+
+.. code-block:: python
+
+    postgresql_my_with_schema = factories.postgresql('postgresql_my_proc', load=['schemafile.sql', 'otherschema.sql'])
+
+.. note::
+
+    The database will still be dropped each time.
+
+
+
 Connecting to already existing postgresql database
 --------------------------------------------------
 
@@ -183,6 +195,12 @@ You can pick which you prefer, but remember that these settings are handled in t
      - postgresql_dbname
      - -
      - test
+   * - Default Schema
+     - load
+     - --postgresql-load
+     - postgresql_load
+     -
+     -
    * - PostgreSQL connection options
      - options
      - --postgresql-options

@@ -32,6 +32,7 @@ _help_startparams = "Starting parameters for the PostgreSQL"
 _help_logsprefix = "Prefix for the log files"
 _help_unixsocketdir = "Location of the socket directory"
 _help_dbname = "Default database name"
+_help_load = "Load this SQL file by default, may be set multiple times"
 
 
 def pytest_addoption(parser):
@@ -94,6 +95,13 @@ def pytest_addoption(parser):
         name='postgresql_dbname',
         help=_help_dbname,
         default='tests'
+    )
+
+    parser.addini(
+        name='postgresql_load',
+        type='pathlist',
+        help=_help_load,
+        default=None
     )
 
     parser.addoption(
@@ -165,6 +173,13 @@ def pytest_addoption(parser):
         action='store',
         dest='postgresql_dbname',
         help=_help_dbname
+    )
+
+    parser.addoption(
+        '--postgresql-load',
+        action='append',
+        dest='postgresql_load',
+        help=_help_load
     )
 
 
