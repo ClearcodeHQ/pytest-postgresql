@@ -4,7 +4,8 @@ import psycopg2
 import pytest
 
 
-QUERY = "CREATE TABLE test (id serial PRIMARY KEY, num integer, data varchar);"
+MAKE_Q = "CREATE TABLE test (id serial PRIMARY KEY, num integer, data varchar);"
+SELECT_Q = "SELECT * FROM test;"
 
 
 @pytest.mark.skipif(
@@ -27,7 +28,7 @@ def test_postgresql_proc(request, postgres):
 def test_main_postgres(postgresql):
     """Check main postgresql fixture."""
     cur = postgresql.cursor()
-    cur.execute(QUERY)
+    cur.execute(MAKE_Q)
     postgresql.commit()
     cur.close()
 
@@ -35,13 +36,31 @@ def test_main_postgres(postgresql):
 def test_two_postgreses(postgresql, postgresql2):
     """Check two postgresql fixtures on one test."""
     cur = postgresql.cursor()
-    cur.execute(QUERY)
+    cur.execute(MAKE_Q)
     postgresql.commit()
     cur.close()
 
     cur = postgresql2.cursor()
-    cur.execute(QUERY)
+    cur.execute(MAKE_Q)
     postgresql2.commit()
+    cur.close()
+
+
+def test_postgres_load_one_file(postgresql_load_1):
+    """Check postgresql fixture can load one file."""
+    cur = postgresql_load_1.cursor()
+    cur.execute(SELECT_Q)
+    results = cur.fetchall()
+    assert len(results) == 1
+    cur.close()
+
+
+def test_postgres_load_two_files(postgresql_load_2):
+    """Check postgresql fixture can load two files."""
+    cur = postgresql_load_2.cursor()
+    cur.execute(SELECT_Q)
+    results = cur.fetchall()
+    assert len(results) == 2
     cur.close()
 
 
