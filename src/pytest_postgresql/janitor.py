@@ -1,21 +1,14 @@
 """Database Janitor."""
 from contextlib import contextmanager
 from types import TracebackType
-from typing import TypeVar, Union, Optional, Type, Any
+from typing import TypeVar, Union, Optional, Type
 
 from pkg_resources import parse_version
+
+from pytest_postgresql.compat import psycopg2, cursor
+
 Version = type(parse_version('1'))  # pylint:disable=invalid-name
 
-try:
-    import psycopg2
-    try:
-        from psycopg2._psycopg import cursor
-    except ImportError:
-        from psycopg2cffi._impl.cursor import Cursor as cursor
-except ImportError:
-    psycopg2 = False
-    # if there's no postgres, just go with the flow.
-    cursor = Any  # pylint:disable=invalid-name
 
 DatabaseJanitorType = TypeVar("DatabaseJanitorType", bound="DatabaseJanitor")
 

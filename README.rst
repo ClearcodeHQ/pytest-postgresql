@@ -105,6 +105,31 @@ If you want the database fixture to be automatically populated with your schema:
 
     The database will still be dropped each time.
 
+If you've got other programmatic ways to populate the database, you would need an additional fixture, that will take care of that:
+
+.. code-block:: python
+
+    @pytest.fixture(scope='function')
+    def db_session(postgresql):
+        """Session for SQLAlchemy."""
+        from pyramid_fullauth.models import Base  # pylint:disable=import-outside-toplevel
+
+        # NOTE: this fstring assumes that psycopg2 >= 2.8 is used. Not sure about it's support in psycopg2cffi (PyPy)
+        connection = f'postgresql+psycopg2://{postgres.info.user}:@{postgres.info.host}:{postgres.info.port}/{postgres.info.dbname}'
+
+        engine = create_engine(connection, echo=False, poolclass=NullPool)
+        pyramid_basemodel.Session = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
+        pyramid_basemodel.bind_engine(
+            engine, pyramid_basemodel.Session, should_create=True, should_drop=True)
+
+        yield pyramid_basemodel.Session
+
+        transaction.commit()
+        Base.metadata.drop_all(engine)
+
+See the original code at `pyramid_fullauth <https://github.com/fizyk/pyramid_fullauth/blob/2950e7f4a397b313aaf306d6d1a763ab7d8abf2b/tests/conftest.py#L35>`_.
+Depending on your needs, that in between code can fire alembic migrations in case of sqlalchemy stack or any other code
+
 
 
 Connecting to already existing postgresql database
