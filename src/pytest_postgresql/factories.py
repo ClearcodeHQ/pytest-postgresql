@@ -21,17 +21,21 @@ import os.path
 import platform
 import subprocess
 from tempfile import gettempdir
+from typing import List, Callable, Union, Iterable
 from warnings import warn
 
 import pytest
+from _pytest.fixtures import FixtureRequest
+from _pytest.tmpdir import TempdirFactory
 
+from pytest_postgresql.compat import psycopg2, connection
 from pytest_postgresql.executor_noop import NoopExecutor
-from pytest_postgresql.janitor import DatabaseJanitor, psycopg2
+from pytest_postgresql.janitor import DatabaseJanitor
 from pytest_postgresql.executor import PostgreSQLExecutor
 from pytest_postgresql.port import get_port
 
 
-def get_config(request):
+def get_config(request: FixtureRequest) -> dict:
     """Return a dictionary with config options."""
     config = {}
     options = [
@@ -84,9 +88,11 @@ def drop_postgresql_database(user, host, port, db_name, version, password=None):
 
 
 def postgresql_proc(
-        executable=None, host=None, port=-1, user=None, password=None,
-        options='', startparams=None, unixsocketdir=None, logs_prefix='',
-):
+        executable: str = None, host: str = None, port: Union[str, int, Iterable] = -1,
+        user: str = None, password: str = None,
+        options: str = '', startparams: str = None, unixsocketdir: str = None,
+        logs_prefix: str = '',
+) -> Callable[[FixtureRequest, TempdirFactory], PostgreSQLExecutor]:
     """
     Postgresql process factory.
 
@@ -107,8 +113,11 @@ def postgresql_proc(
     :rtype: func
     :returns: function which makes a postgresql process
     """
+
     @pytest.fixture(scope='session')
-    def postgresql_proc_fixture(request, tmpdir_factory):
+    def postgresql_proc_fixture(
+            request: FixtureRequest, tmpdir_factory: TempdirFactory
+    ) -> PostgreSQLExecutor:
         """
         Process fixture for PostgreSQL.
 
@@ -161,25 +170,26 @@ def postgresql_proc(
 
 
 def postgresql_noproc(
-        host=None, port=None, user=None, password=None, options='',
-):
+        host: str = None, port: Union[str, int] = None, user: str = None, password: str = None,
+        options: str = '',
+) -> Callable[[FixtureRequest], NoopExecutor]:
     """
     Postgresql noprocess factory.
 
-    :param str host: hostname
-    :param str|int port: exact port (e.g. '8000', 8000)
-    :param str user: postgresql username
-    :param str options: Postgresql connection options
-    :rtype: func
+    :param host: hostname
+    :param port: exact port (e.g. '8000', 8000)
+    :param user: postgresql username
+    :param password: postgresql password
+    :param options: Postgresql connection options
     :returns: function which makes a postgresql process
     """
+
     @pytest.fixture(scope='session')
-    def postgresql_noproc_fixture(request):
+    def postgresql_noproc_fixture(request: FixtureRequest) -> NoopExecutor:
         """
         Noop Process fixture for PostgreSQL.
 
         :param FixtureRequest request: fixture request object
-        :rtype: pytest_dbfixtures.executors.TCPExecutor
         :returns: tcp executor-like object
         """
         config = get_config(request)
@@ -202,23 +212,24 @@ def postgresql_noproc(
     return postgresql_noproc_fixture
 
 
-def postgresql(process_fixture_name, db_name=None, load=None):
+def postgresql(
+        process_fixture_name: str, db_name: str = None, load: List[str] = None
+) -> Callable[[FixtureRequest], connection]:
     """
     Return connection fixture factory for PostgreSQL.
 
-    :param str process_fixture_name: name of the process fixture
-    :param str db_name: database name
-    :param list load: SQL to automatically load into our test database
-    :rtype: func
+    :param process_fixture_name: name of the process fixture
+    :param db_name: database name
+    :param load: SQL to automatically load into our test database
     :returns: function which makes a connection to postgresql
     """
+
     @pytest.fixture
-    def postgresql_factory(request):
+    def postgresql_factory(request: FixtureRequest) -> connection:
         """
         Fixture factory for PostgreSQL.
 
         :param FixtureRequest request: fixture request object
-        :rtype: psycopg2.connection
         :returns: postgresql client
         """
         config = get_config(request)
@@ -228,7 +239,8 @@ def postgresql(process_fixture_name, db_name=None, load=None):
                 'psycopg2 or psycopg2-binary package for CPython '
                 'or psycopg2cffi for Pypy.'
             )
-        proc_fixture = request.getfixturevalue(process_fixture_name)
+        proc_fixture: Union[PostgreSQLExecutor, NoopExecutor] = request.getfixturevalue(
+            process_fixture_name)
 
         pg_host = proc_fixture.host
         pg_port = proc_fixture.port
@@ -242,7 +254,7 @@ def postgresql(process_fixture_name, db_name=None, load=None):
                 pg_user, pg_host, pg_port, pg_db, proc_fixture.version,
                 pg_password
         ):
-            connection = psycopg2.connect(
+            db_connection: connection = psycopg2.connect(
                 dbname=pg_db,
                 user=pg_user,
                 password=pg_password,
@@ -253,10 +265,10 @@ def postgresql(process_fixture_name, db_name=None, load=None):
             if pg_load:
                 for filename in pg_load:
                     with open(filename, 'r') as _fd:
-                        with connection.cursor() as cur:
+                        with db_connection.cursor() as cur:
                             cur.execute(_fd.read())
-            yield connection
-            connection.close()
+            yield db_connection
+            db_connection.close()
 
     return postgresql_factory
 
