@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+unreleased
+----------
+
+- [feature] Ability to define default schema to initialize database with
+- [docs] Added more examples to readme on how to use the plugin
+
+
 2.4.1
 ----------
 
