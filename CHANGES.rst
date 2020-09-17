@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-unreleased
+2.5.0
 ----------
 
 - [feature] Ability to define default schema to initialize database with
