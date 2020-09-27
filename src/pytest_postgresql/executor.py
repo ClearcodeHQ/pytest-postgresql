@@ -138,6 +138,7 @@ class PostgreSQLExecutor(TCPExecutor):
         self.clean_directory()
         init_directory = [self.executable, 'initdb', '--pgdata', self.datadir]
         options = ['--username=%s' % self.user]
+        env = self._popen_kwargs['env']
 
         if self.password:
             with tempfile.NamedTemporaryFile() as password_file:
@@ -150,11 +151,11 @@ class PostgreSQLExecutor(TCPExecutor):
                 password_file.write(password)
                 password_file.flush()
                 init_directory += ['-o', ' '.join(options)]
-                subprocess.check_output(init_directory)
+                subprocess.check_output(init_directory, env=env)
         else:
             options += ['--auth=trust']
             init_directory += ['-o', ' '.join(options)]
-            subprocess.check_output(init_directory)
+            subprocess.check_output(init_directory, env=env)
 
         self._directory_initialised = True
 
@@ -202,6 +203,7 @@ class PostgreSQLExecutor(TCPExecutor):
                     pg_ctl=self.executable,
                     datadir=self.datadir
                 ),
+                env=self._popen_kwargs['env'],
                 shell=True
             ).decode('utf-8')
         except subprocess.CalledProcessError as ex:
