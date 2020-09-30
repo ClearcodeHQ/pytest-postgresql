@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+unreleased
+----------
+
+- [fix] Added LC_* env vars to running initdb and other utilities. Now all tools and server are using same, C locale
+
+
 2.5.0
 ----------
 
