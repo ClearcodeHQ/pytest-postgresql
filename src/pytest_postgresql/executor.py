@@ -18,6 +18,7 @@
 """PostgreSQL executor crafter around pg_ctl."""
 
 import os.path
+import platform
 import re
 import shutil
 import subprocess
@@ -28,6 +29,11 @@ from pkg_resources import parse_version
 from mirakuru import TCPExecutor
 from mirakuru.base import ExecutorType
 from mirakuru.exceptions import ProcessFinishedWithError
+
+_LOCALE = "C.UTF-8"
+
+if platform.system() == "Darwin":
+    _LOCALE = "en_US.UTF-8"
 
 
 class PostgreSQLUnsupported(Exception):
@@ -100,9 +106,9 @@ class PostgreSQLExecutor(TCPExecutor):
             timeout=timeout,
             sleep=sleep,
             envvars={
-                'LC_ALL': 'C.UTF-8',
-                'LC_CTYPE': 'C.UTF-8',
-                'LANG': 'C.UTF-8',
+                "LC_ALL": _LOCALE,
+                "LC_CTYPE": _LOCALE,
+                "LANG": _LOCALE,
             }
         )
 
