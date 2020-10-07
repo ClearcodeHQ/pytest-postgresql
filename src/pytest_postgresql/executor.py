@@ -176,10 +176,12 @@ class PostgreSQLExecutor(TCPExecutor):
         start_info = 'database system is ready to accept connections'
         # wait for expected message.
         while 1:
-            with open(self.logfile, 'r') as content_file:
-                content = content_file.read()
-                if start_info in content:
-                    break
+            status_code = subprocess.getstatusoutput(
+                '{pg_ctl} status -D {datadir}'.format(
+                    pg_ctl=self.executable,
+                    datadir=self.datadir))[0]
+            if status_code == 0:
+                break
             time.sleep(1)
 
     def proc_start_command(self):
@@ -202,22 +204,13 @@ class PostgreSQLExecutor(TCPExecutor):
         """Check if server is still running."""
         if not os.path.exists(self.datadir):
             return False
+        
+        status_code = subprocess.getstatusoutput(
+            '{pg_ctl} status -D {datadir}'.format(
+                pg_ctl=self.executable,
+                datadir=self.datadir))[0]
 
-        try:
-            output = subprocess.check_output(
-                '{pg_ctl} status -D {datadir}'.format(
-                    pg_ctl=self.executable,
-                    datadir=self.datadir
-                ),
-                env=self._popen_kwargs['env'],
-                shell=True
-            ).decode('utf-8')
-        except subprocess.CalledProcessError as ex:
-            if b'pg_ctl: no server running' in ex.output:
-                return False
-            raise
-
-        return "pg_ctl: server is running" in output
+        return status_code == 0
 
     def stop(self,
              sig: int = None,
