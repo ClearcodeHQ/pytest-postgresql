@@ -144,7 +144,6 @@ class PostgreSQLExecutor(TCPExecutor):
         self.clean_directory()
         init_directory = [self.executable, 'initdb', '--pgdata', self.datadir]
         options = ['--username=%s' % self.user]
-        env = self._popen_kwargs['env']
 
         if self.password:
             with tempfile.NamedTemporaryFile() as password_file:
@@ -157,11 +156,11 @@ class PostgreSQLExecutor(TCPExecutor):
                 password_file.write(password)
                 password_file.flush()
                 init_directory += ['-o', ' '.join(options)]
-                subprocess.check_output(init_directory, env=env)
+                subprocess.check_output(init_directory)
         else:
             options += ['--auth=trust']
             init_directory += ['-o', ' '.join(options)]
-            subprocess.check_output(init_directory, env=env)
+            subprocess.check_output(init_directory)
 
         self._directory_initialised = True
 
@@ -169,18 +168,9 @@ class PostgreSQLExecutor(TCPExecutor):
         """Wait for postgresql being started."""
         if '-w' not in self.startparams:
             return
-        # wait until logfile is created
-        while not os.path.isfile(self.logfile):
-            time.sleep(1)
-
-        start_info = 'database system is ready to accept connections'
-        # wait for expected message.
+        # wait until server is running
         while 1:
-            status_code = subprocess.getstatusoutput(
-                '{pg_ctl} status -D {datadir}'.format(
-                    pg_ctl=self.executable,
-                    datadir=self.datadir))[0]
-            if status_code == 0:
+            if self.running():
                 break
             time.sleep(1)
 
@@ -201,15 +191,11 @@ class PostgreSQLExecutor(TCPExecutor):
         return parse_version(matches.groupdict()['version'])
 
     def running(self):
-        """Check if server is still running."""
+        """Check if server is running."""
         if not os.path.exists(self.datadir):
             return False
-        
         status_code = subprocess.getstatusoutput(
-            '{pg_ctl} status -D {datadir}'.format(
-                pg_ctl=self.executable,
-                datadir=self.datadir))[0]
-
+            f'{self.executable} status -D {self.datadir}')[0]
         return status_code == 0
 
     def stop(self,
