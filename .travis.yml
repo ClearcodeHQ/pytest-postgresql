@@ -41,6 +41,10 @@ jobs:
       - pip3 install virtualenv
       - virtualenv venv -p python3
       - source venv/bin/activate
+      addons:
+        apt:
+          packages:
+            - language-pack-de
       script:
       - py.test -n 0
     - stage: deploy

@@ -44,9 +44,14 @@ def test_unsupported_version(request):
     reason="Mac Os has completely different path for the executable"
            " than linux, and the default config."
 )
-def test_executor_init_with_password(request):
+@pytest.mark.parametrize('locale', (
+        "en_US.UTF-8",
+        "de_DE.UTF-8"
+))
+def test_executor_init_with_password(request, monkeypatch, locale):
     """Test whether the executor initializes properly."""
     config = get_config(request)
+    monkeypatch.setenv("LC_ALL", locale)
     executor = PostgreSQLExecutor(
         executable=config['exec'],
         host=config['host'],
