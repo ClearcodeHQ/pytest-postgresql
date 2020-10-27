@@ -1,10 +1,19 @@
 CHANGELOG
 =========
 
+unreleased
+----------
+
+- [fix] Status checks for running postgres depend on pg_ctl status code,
+  not on pg_ctl log language. Fixes starting on systems without C locale.
+  Thanks @Martin Meyries.
+
+
 2.5.1
 ----------
 
-- [fix] Added LC_* env vars to running initdb and other utilities. Now all tools and server are using same, C locale
+- [fix] Added LC_* env vars to running initdb and other utilities.
+  Now all tools and server are using same, C locale
 
 
 2.5.0
