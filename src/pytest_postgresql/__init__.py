@@ -24,4 +24,4 @@ except ImportError:
 else:
     psycopg2cffi.compat.register()
 
-__version__ = '2.5.1'
+__version__ = '2.5.2'

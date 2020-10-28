@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-unreleased
+2.5.2
 ----------
 
 - [fix] Status checks for running postgres depend on pg_ctl status code,
