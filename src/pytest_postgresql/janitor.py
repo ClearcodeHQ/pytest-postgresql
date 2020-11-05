@@ -88,6 +88,12 @@ class DatabaseJanitor:
             conn.close()
 
     def __enter__(self: DatabaseJanitorType) -> DatabaseJanitorType:
+        """
+        Sets a new : class : attrpc. database.
+
+        Args:
+            self: (todo): write your description
+        """
         self.init()
         return self
 
@@ -96,4 +102,14 @@ class DatabaseJanitor:
             exc_type: Optional[Type[BaseException]],
             exc_val: Optional[BaseException],
             exc_tb: Optional[TracebackType]) -> None:
+        """
+        Called when the exception is raised.
+
+        Args:
+            self: (todo): write your description
+            exc_type: (todo): write your description
+            Type: (todo): write your description
+            exc_val: (todo): write your description
+            exc_tb: (todo): write your description
+        """
         self.drop()
