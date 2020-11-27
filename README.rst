@@ -115,7 +115,7 @@ If you've got other programmatic ways to populate the database, you would need a
         from pyramid_fullauth.models import Base  # pylint:disable=import-outside-toplevel
 
         # NOTE: this fstring assumes that psycopg2 >= 2.8 is used. Not sure about it's support in psycopg2cffi (PyPy)
-        connection = f'postgresql+psycopg2://{postgres.info.user}:@{postgres.info.host}:{postgres.info.port}/{postgres.info.dbname}'
+        connection = f'postgresql+psycopg2://{postgresql.info.user}:@{postgresql.info.host}:{postgresql.info.port}/{postgresql.info.dbname}'
 
         engine = create_engine(connection, echo=False, poolclass=NullPool)
         pyramid_basemodel.Session = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
