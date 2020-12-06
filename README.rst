@@ -202,6 +202,12 @@ You can pick which you prefer, but remember that these settings are handled in t
      - postgresql_startparams
      - -
      - -w
+   * - Postgres exe extra arguments
+     - postgres_extra_args
+     - --postgresql-postgres-extra-args
+     - postgresql_postgres_extra_args
+     - -
+     - 
    * - Log filename's prefix
      - logsprefix
      - --postgresql-logsprefix

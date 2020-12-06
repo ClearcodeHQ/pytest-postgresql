@@ -52,7 +52,7 @@ class PostgreSQLExecutor(TCPExecutor):
     BASE_PROC_START_COMMAND = ' '.join((
         "{executable} start -D {datadir}",
         "-o \"-F -p {port} -c log_destination='stderr'",
-        "-c logging_collector=off -c %s='{unixsocketdir}'\"",
+        "-c logging_collector=off -c %s='{unixsocketdir} {extra_args}'\"",
         "-l {logfile} {startparams}"
     ))
 
@@ -62,7 +62,7 @@ class PostgreSQLExecutor(TCPExecutor):
     def __init__(self, executable, host, port,
                  datadir, unixsocketdir, logfile, startparams,
                  shell=False, timeout=60, sleep=0.1, user='postgres',
-                 password='', options=''):
+                 password='', options='', postgres_extra_params=''):
         """
         Initialize PostgreSQLExecutor executor.
 
@@ -80,6 +80,8 @@ class PostgreSQLExecutor(TCPExecutor):
         :param str user: [default] postgresql's username used to manage
             and access PostgreSQL
         :param str password: optional password for the user
+        :param str options:
+        :param str postgres_extra_params: extra arguments to `postgres start`
         """
         self._directory_initialised = False
         self.executable = executable
@@ -90,6 +92,7 @@ class PostgreSQLExecutor(TCPExecutor):
         self.unixsocketdir = unixsocketdir
         self.logfile = logfile
         self.startparams = startparams
+        self.postgres_extra_params = postgres_extra_params
         command = self.proc_start_command().format(
             executable=self.executable,
             datadir=self.datadir,
@@ -97,6 +100,7 @@ class PostgreSQLExecutor(TCPExecutor):
             unixsocketdir=self.unixsocketdir,
             logfile=self.logfile,
             startparams=self.startparams,
+            postgres_extra_params=self.postgres_extra_params
         )
         super().__init__(
             command,
