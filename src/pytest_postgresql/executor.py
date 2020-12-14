@@ -52,7 +52,7 @@ class PostgreSQLExecutor(TCPExecutor):
     BASE_PROC_START_COMMAND = ' '.join((
         "{executable} start -D {datadir}",
         "-o \"-F -p {port} -c log_destination='stderr'",
-        "-c logging_collector=off -c %s='{unixsocketdir} {extra_args}'\"",
+        "-c logging_collector=off -c %s='{unixsocketdir} {postgres_extra_params}'\"",
         "-l {logfile} {startparams}"
     ))
 

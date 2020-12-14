@@ -42,3 +42,11 @@ Coding style
 
 #. All python coding style are being enforced by `Pylama <https://pypi.python.org/pypi/pylama>`_ and configured in pylama.ini file.
 #. Additional, not always mandatory checks are being performed by `QuantifiedCode <https://www.quantifiedcode.com/app/project/gh:ClearcodeHQ:pytest-postgresql>`_
+
+Testing
+-------
+
+# Tests are writen using pytest.
+# PRs tests run in Travis.
+# In order to run the tests locally you need to have multiple versions of postgres installed (see `tests/conftest.py <../tests/conftest.py>` for a full list).
+# If you encounter any test failures due to locale issues, make sure that both `en_US.UTF-8` and `de_DE.UTF-8` are enabled in `/etc/locale.gen` and then run `sudo locale-gen`.

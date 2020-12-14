@@ -17,7 +17,9 @@ SELECT_Q = "SELECT * FROM test;"
     'postgresql95',
     'postgresql96',
     'postgresql10',
-    pytest.param('postgresql11', marks=pytest.mark.xfail),
+    'postgresql11',
+    'postgresql12',
+    'postgresql13'
 ))
 def test_postgresql_proc(request, postgres):
     """Test different postgresql versions."""

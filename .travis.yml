@@ -1,10 +1,10 @@
-dist: xenial
+dist: bionic
 language: python
 python:
 - 3.8
 - 3.7
 - 3.6
-- 3.9-dev
+- 3.9
 - nightly
 - pypy3
 # blocklist branches
@@ -12,6 +12,13 @@ branches:
   except:
   - requires-io-master
   - /^dependabot.*$/
+addons:
+  apt:
+    packages:
+      - postgresql-12
+      - postgresql-client-12
+      - postgresql-13
+      - postgresql-client-13
 install:
 - pip install -r requirements-test.txt
 - pip install coveralls wheel
