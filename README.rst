@@ -196,18 +196,18 @@ You can pick which you prefer, but remember that these settings are handled in t
      - postgresql_password
      - yes
      -
-   * - Starting parameters
+   * - Starting parameters (extra pg_ctl arguments)
      - startparams
      - --postgresql-startparams
      - postgresql_startparams
      - -
      - -w
-   * - Postgres exe extra arguments
-     - postgres_extra_args
-     - --postgresql-postgres-extra-args
-     - postgresql_postgres_extra_args
+   * - Postgres exe extra arguments (passed via pg_ctl's -o argument)
+     - postgres_options
+     - --postgresql-postgres-options
+     - postgresql_postgres_options
      - -
-     - 
+     -
    * - Log filename's prefix
      - logsprefix
      - --postgresql-logsprefix

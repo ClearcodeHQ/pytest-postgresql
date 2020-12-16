@@ -40,7 +40,7 @@ def get_config(request: FixtureRequest) -> dict:
     config = {}
     options = [
         'exec', 'host', 'port', 'user', 'password', 'options', 'startparams',
-        'logsprefix', 'unixsocketdir', 'dbname', 'load'
+        'logsprefix', 'unixsocketdir', 'dbname', 'load', 'postgres_options',
     ]
     for option in options:
         option_name = 'postgresql_' + option
@@ -91,7 +91,7 @@ def postgresql_proc(
         executable: str = None, host: str = None, port: Union[str, int, Iterable] = -1,
         user: str = None, password: str = None,
         options: str = '', startparams: str = None, unixsocketdir: str = None,
-        logs_prefix: str = '',
+        logs_prefix: str = '', postgres_options: str = None,
 ) -> Callable[[FixtureRequest, TempdirFactory], PostgreSQLExecutor]:
     """
     Postgresql process factory.
@@ -110,6 +110,7 @@ def postgresql_proc(
     :param str startparams: postgresql starting parameters
     :param str unixsocketdir: directory to create postgresql's unixsockets
     :param str logs_prefix: prefix for log filename
+    :param str postgres_options: Postgres executable options for use by pg_ctl
     :rtype: func
     :returns: function which makes a postgresql process
     """
@@ -159,6 +160,7 @@ def postgresql_proc(
             unixsocketdir=unixsocketdir or config['unixsocketdir'],
             logfile=logfile_path,
             startparams=startparams or config['startparams'],
+            postgres_options=postgres_options or config['postgres_options']
         )
         # start server
         with postgresql_executor:
