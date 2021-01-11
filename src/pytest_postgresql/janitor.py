@@ -23,7 +23,8 @@ class DatabaseJanitor:
             port: str,
             db_name: str,
             version: Union[str, float, Version],
-            password: str = None
+            password: str = None,
+            isolation_level: int = psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT,
     ) -> None:
         """
         Initialize janitor.
@@ -34,12 +35,15 @@ class DatabaseJanitor:
         :param db_name: database name
         :param version: postgresql version number
         :param password: optional postgresql password
+        :param isolation_level: optional postgresql isolation level
+                                defaults to ISOLATION_LEVEL_AUTOCOMMIT
         """
         self.user = user
         self.password = password
         self.host = host
         self.port = port
         self.db_name = db_name
+        self.isolation_level = isolation_level
         if not isinstance(version, Version):
             self.version = parse_version(str(version))
         else:
@@ -79,7 +83,7 @@ class DatabaseJanitor:
             host=self.host,
             port=self.port,
         )
-        conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
+        conn.set_isolation_level(self.isolation_level)
         cur = conn.cursor()
         try:
             yield cur
