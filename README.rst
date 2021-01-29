@@ -297,6 +297,9 @@ or use it as a context manager:
     DatabaseJanitor manages the state of the database, but you'll have to create
     connection to use in test code yourself.
 
+    You can optionally pass in a recognized postgresql ISOLATION_LEVEL for
+    additional control.
+
 Package resources
 -----------------
 

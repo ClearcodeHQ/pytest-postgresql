@@ -213,7 +213,8 @@ def postgresql_noproc(
 
 
 def postgresql(
-        process_fixture_name: str, db_name: str = None, load: List[str] = None
+        process_fixture_name: str, db_name: str = None, load: List[str] = None,
+        isolation_level: int = psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT,
 ) -> Callable[[FixtureRequest], connection]:
     """
     Return connection fixture factory for PostgreSQL.
@@ -221,6 +222,8 @@ def postgresql(
     :param process_fixture_name: name of the process fixture
     :param db_name: database name
     :param load: SQL to automatically load into our test database
+    :param isolation_level: optional postgresql isolation level
+                            defaults to ISOLATION_LEVEL_AUTOCOMMIT
     :returns: function which makes a connection to postgresql
     """
 
@@ -252,7 +255,7 @@ def postgresql(
 
         with DatabaseJanitor(
                 pg_user, pg_host, pg_port, pg_db, proc_fixture.version,
-                pg_password
+                pg_password, isolation_level
         ):
             db_connection: connection = psycopg2.connect(
                 dbname=pg_db,
