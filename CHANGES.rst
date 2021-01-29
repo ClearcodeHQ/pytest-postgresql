@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-unreleased
+2.5.3
 ----------
 
 - [enhancement] Add ability to set up isolation level for fixture and janitor
