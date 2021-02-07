@@ -27,7 +27,6 @@ addons:
       - postgresql@10
       - postgresql@9.6
       - postgresql@9.5
-    update: true
 
 install:
 - pip install -r requirements-test.txt
@@ -54,6 +53,7 @@ jobs:
     - stage: osx
       language: generic
       os: osx
+      osx_image: xcode12.2
       before_install:
       - pip3 install virtualenv
       - virtualenv venv -p python3
