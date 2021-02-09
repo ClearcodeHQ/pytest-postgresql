@@ -52,6 +52,6 @@ postgresql_load_2 = factories.postgresql('postgresql_proc2', db_name='test-db',
 postgresql_rand_proc = factories.postgresql_proc(port=None)
 postgresql_rand = factories.postgresql('postgresql_rand_proc')
 
-postgresql_max_conns_proc = factories.postgresql_proc(postgres_options='-N 10')
+postgresql_max_conns_proc = factories.postgresql_proc(postgres_options='-N 11')
 postgres_max_conns = factories.postgresql('postgresql_max_conns_proc')
 # pylint:enable=invalid-name

@@ -106,7 +106,7 @@ def test_proc_with_password(
 
 
 def test_postgres_options(postgres_max_conns):
-    """Check that max connections (-N 10) is honored."""
+    """Check that max connections (-N 11) is honored."""
     cur = postgres_max_conns.cursor()
     cur.execute('SHOW max_connections')
-    assert cur.fetchone() == ('10',)
+    assert cur.fetchone() == ('11',)
