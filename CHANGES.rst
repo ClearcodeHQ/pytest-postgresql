@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-unreleased
+2.6.0
 ----------
 
 - [enhancement] add ability to pass options to pg_ctl's -o flag to send arguments to the underlying postgres executable 
