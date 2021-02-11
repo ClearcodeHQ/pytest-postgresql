@@ -52,17 +52,18 @@ class PostgreSQLExecutor(TCPExecutor):
     BASE_PROC_START_COMMAND = ' '.join((
         "{executable} start -D {datadir}",
         "-o \"-F -p {port} -c log_destination='stderr'",
-        "-c logging_collector=off -c %s='{unixsocketdir}'\"",
+        "-c logging_collector=off -c %s='{unixsocketdir}' {postgres_options}\"",
         "-l {logfile} {startparams}"
     ))
 
     VERSION_RE = re.compile(r'.* (?P<version>\d+\.\d+)')
-    MIN_SUPPORTED_VERSION = parse_version('9.0')
+    MIN_SUPPORTED_VERSION = parse_version('9.5')
 
+    # pylint:disable=too-many-locals
     def __init__(self, executable, host, port,
                  datadir, unixsocketdir, logfile, startparams,
                  shell=False, timeout=60, sleep=0.1, user='postgres',
-                 password='', options=''):
+                 password='', options='', postgres_options=''):
         """
         Initialize PostgreSQLExecutor executor.
 
@@ -80,6 +81,8 @@ class PostgreSQLExecutor(TCPExecutor):
         :param str user: [default] postgresql's username used to manage
             and access PostgreSQL
         :param str password: optional password for the user
+        :param str options:
+        :param str postgres_options: extra arguments to `postgres start`
         """
         self._directory_initialised = False
         self.executable = executable
@@ -90,6 +93,7 @@ class PostgreSQLExecutor(TCPExecutor):
         self.unixsocketdir = unixsocketdir
         self.logfile = logfile
         self.startparams = startparams
+        self.postgres_options = postgres_options
         command = self.proc_start_command().format(
             executable=self.executable,
             datadir=self.datadir,
@@ -97,6 +101,7 @@ class PostgreSQLExecutor(TCPExecutor):
             unixsocketdir=self.unixsocketdir,
             logfile=self.logfile,
             startparams=self.startparams,
+            postgres_options=self.postgres_options
         )
         super().__init__(
             command,
@@ -111,6 +116,7 @@ class PostgreSQLExecutor(TCPExecutor):
                 "LANG": _LOCALE,
             }
         )
+    # pylint:enable=too-many-locals
 
     def start(self: ExecutorType) -> ExecutorType:
         """Add check for postgresql version before starting process."""

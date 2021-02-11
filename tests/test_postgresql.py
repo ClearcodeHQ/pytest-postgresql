@@ -1,5 +1,4 @@
 """All tests for pytest-postgresql."""
-import platform
 import psycopg2
 import pytest
 
@@ -8,16 +7,13 @@ MAKE_Q = "CREATE TABLE test (id serial PRIMARY KEY, num integer, data varchar);"
 SELECT_Q = "SELECT * FROM test;"
 
 
-@pytest.mark.skipif(
-    platform.system() == 'Darwin',
-    reason='These fixtures are only for linux'
-)
 @pytest.mark.parametrize('postgres', (
-    'postgresql94',
     'postgresql95',
     'postgresql96',
     'postgresql10',
-    pytest.param('postgresql11', marks=pytest.mark.xfail),
+    'postgresql11',
+    'postgresql12',
+    'postgresql13'
 ))
 def test_postgresql_proc(request, postgres):
     """Test different postgresql versions."""
@@ -71,13 +67,13 @@ def test_rand_postgres_port(postgresql_rand):
 
 @pytest.mark.parametrize('_', range(2))
 def test_postgres_terminate_connection(
-        postgresql, _):
+        postgres10, _):
     """
     Test that connections are terminated between tests.
 
     And check that only one exists at a time.
     """
-    cur = postgresql.cursor()
+    cur = postgres10.cursor()
     cur.execute(
         'SELECT * FROM pg_stat_activity '
         'WHERE backend_type = \'client backend\';'

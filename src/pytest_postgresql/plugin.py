@@ -33,6 +33,7 @@ _help_logsprefix = "Prefix for the log files"
 _help_unixsocketdir = "Location of the socket directory"
 _help_dbname = "Default database name"
 _help_load = "Load this SQL file by default, may be set multiple times"
+_help_postgres_options = 'Postgres executable extra parameters. Passed via the -o option to pg_ctl'
 
 
 def pytest_addoption(parser):
@@ -40,7 +41,7 @@ def pytest_addoption(parser):
     parser.addini(
         name='postgresql_exec',
         help=_help_executable,
-        default='/usr/lib/postgresql/9.1/bin/pg_ctl'
+        default='/usr/lib/postgresql/9.5/bin/pg_ctl'
     )
 
     parser.addini(
@@ -102,6 +103,11 @@ def pytest_addoption(parser):
         type='pathlist',
         help=_help_load,
         default=None
+    )
+    parser.addini(
+        name='postgresql_postgres_options',
+        help=_help_postgres_options,
+        default=''
     )
 
     parser.addoption(
@@ -180,6 +186,13 @@ def pytest_addoption(parser):
         action='append',
         dest='postgresql_load',
         help=_help_load
+    )
+
+    parser.addoption(
+        '--postgresql-postgres-options',
+        action='store',
+        dest='postgresql_postgres_options',
+        help=_help_postgres_options,
     )
 
 

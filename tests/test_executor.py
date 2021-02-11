@@ -41,8 +41,7 @@ def test_unsupported_version(request):
 
 @pytest.mark.skipif(
     sys.platform == "darwin",
-    reason="Mac Os has completely different path for the executable"
-           " than linux, and the default config."
+    reason="The default pg_ctl path is for linux, not macos"
 )
 @pytest.mark.parametrize('locale', (
         "en_US.UTF-8",
@@ -104,3 +103,10 @@ def test_proc_with_password(
             password='bogus',
             host=postgres_with_password.host,
             port=postgres_with_password.port)
+
+
+def test_postgres_options(postgres_max_conns):
+    """Check that max connections (-N 11) is honored."""
+    cur = postgres_max_conns.cursor()
+    cur.execute('SHOW max_connections')
+    assert cur.fetchone() == ('11',)
