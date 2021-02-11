@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+unreleased
+----------
+
+- [enhancement] add ability to pass options to pg_ctl's -o flag to send arguments to the underlying postgres executable 
+  Use `postgres_options` as fixture argument, `--postgresql-postgres-options` as pytest starting option or
+  `postgresql_postgres_options` as pytest.ini configuration option
+
 2.5.3
 ----------
 
