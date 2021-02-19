@@ -225,6 +225,7 @@ def postgresql(
     :param db_name: database name
     :param load: SQL to automatically load into our test database
     :param isolation_level: optional postgresql isolation level
+                            defaults to ISOLATION_LEVEL_AUTOCOMMIT
     :returns: function which makes a connection to postgresql
     """
 
