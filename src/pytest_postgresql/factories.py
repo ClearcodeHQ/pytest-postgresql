@@ -21,7 +21,7 @@ import os.path
 import platform
 import subprocess
 from tempfile import gettempdir
-from typing import List, Callable, Union, Iterable
+from typing import List, Callable, Union, Iterable, Optional
 from warnings import warn
 
 import pytest
@@ -216,7 +216,7 @@ def postgresql_noproc(
 
 def postgresql(
         process_fixture_name: str, db_name: str = None, load: List[str] = None,
-        isolation_level: int = psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT,
+        isolation_level: Optional[int] = None,
 ) -> Callable[[FixtureRequest], connection]:
     """
     Return connection fixture factory for PostgreSQL.
@@ -225,7 +225,6 @@ def postgresql(
     :param db_name: database name
     :param load: SQL to automatically load into our test database
     :param isolation_level: optional postgresql isolation level
-                            defaults to ISOLATION_LEVEL_AUTOCOMMIT
     :returns: function which makes a connection to postgresql
     """
 
