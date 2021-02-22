@@ -24,7 +24,7 @@ class DatabaseJanitor:
             db_name: str,
             version: Union[str, float, Version],
             password: str = None,
-            isolation_level: int = psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT,
+            isolation_level: Optional[int] = None,
     ) -> None:
         """
         Initialize janitor.
@@ -43,7 +43,7 @@ class DatabaseJanitor:
         self.host = host
         self.port = port
         self.db_name = db_name
-        self.isolation_level = isolation_level
+        self.isolation_level = isolation_level or psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT
         if not isinstance(version, Version):
             self.version = parse_version(str(version))
         else:
