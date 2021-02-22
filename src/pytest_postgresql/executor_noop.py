@@ -18,7 +18,7 @@
 """PostgreSQL Noop executor providing connection details for postgres client."""
 from pkg_resources import parse_version
 
-from pytest_postgresql.janitor import psycopg2
+from pytest_postgresql.compat import check_for_psycopg2, psycopg2
 
 
 class NoopExecutor:  # pylint: disable=too-few-public-methods
@@ -51,6 +51,7 @@ class NoopExecutor:  # pylint: disable=too-few-public-methods
     def version(self):
         """Get postgresql's version."""
         if not self._version:
+            check_for_psycopg2()
             with psycopg2.connect(
                     dbname='postgres',
                     user=self.user,
