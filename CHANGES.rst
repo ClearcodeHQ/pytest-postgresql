@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-unreleased
+2.6.1
 ----------
 
 - [bugfix] To not fail loading code if no postgresql version is installed.
