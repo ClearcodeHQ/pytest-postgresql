@@ -28,7 +28,7 @@ import pytest
 from _pytest.fixtures import FixtureRequest
 from _pytest.tmpdir import TempdirFactory
 
-from pytest_postgresql.compat import psycopg2, connection
+from pytest_postgresql.compat import psycopg2, connection, check_for_psycopg2
 from pytest_postgresql.executor_noop import NoopExecutor
 from pytest_postgresql.janitor import DatabaseJanitor
 from pytest_postgresql.executor import PostgreSQLExecutor
@@ -238,12 +238,8 @@ def postgresql(
         :returns: postgresql client
         """
         config = get_config(request)
-        if not psycopg2:
-            raise ImportError(
-                'No module named psycopg2. Please install either '
-                'psycopg2 or psycopg2-binary package for CPython '
-                'or psycopg2cffi for Pypy.'
-            )
+        check_for_psycopg2()
+        pg_isolation_level = isolation_level or psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT
         proc_fixture: Union[PostgreSQLExecutor, NoopExecutor] = request.getfixturevalue(
             process_fixture_name)
 
@@ -257,7 +253,7 @@ def postgresql(
 
         with DatabaseJanitor(
                 pg_user, pg_host, pg_port, pg_db, proc_fixture.version,
-                pg_password, isolation_level
+                pg_password, pg_isolation_level
         ):
             db_connection: connection = psycopg2.connect(
                 dbname=pg_db,

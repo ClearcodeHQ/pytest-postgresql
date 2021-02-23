@@ -5,7 +5,7 @@ from typing import TypeVar, Union, Optional, Type
 
 from pkg_resources import parse_version
 
-from pytest_postgresql.compat import psycopg2, cursor
+from pytest_postgresql.compat import psycopg2, cursor, check_for_psycopg2
 
 Version = type(parse_version('1'))  # pylint:disable=invalid-name
 
@@ -43,6 +43,7 @@ class DatabaseJanitor:
         self.host = host
         self.port = port
         self.db_name = db_name
+        check_for_psycopg2()
         self.isolation_level = isolation_level or psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT
         if not isinstance(version, Version):
             self.version = parse_version(str(version))

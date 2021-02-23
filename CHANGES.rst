@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+unreleased
+----------
+
+- [bugfix] To not fail loading code if no postgresql version is installed.
+  Fallback for janitor and process fixture only, if called upon.
+
 2.6.0
 ----------
 
