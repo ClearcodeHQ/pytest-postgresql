@@ -1,7 +1,7 @@
 # linters
 pycodestyle==2.6.0
 pydocstyle==5.1.1
-pylint==2.7.1
+pylint==2.7.2
 pygments
 pyroma==2.6.1
 -r requirements-test.txt
