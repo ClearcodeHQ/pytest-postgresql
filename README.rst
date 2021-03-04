@@ -63,7 +63,7 @@ Plugin contains three fixtures:
 
 * **postgresql_proc** - session scoped fixture, that starts PostgreSQL instance
   at it's first use and stops at the end of the tests.
-* **postgresql_nooproc** - a nooprocess fixture, that's connecting to already
+* **postgresql_noproc** - a nooprocess fixture, that's connecting to already
   running postgresql instance.
   For example on dockerized test environments, or CI providing postgresql services
 
@@ -136,15 +136,15 @@ Connecting to already existing postgresql database
 --------------------------------------------------
 
 Some projects are using already running postgresql servers (ie on docker instances).
-In order to connect to them, one would be using the ``postgresql_nooproc`` fixture.
+In order to connect to them, one would be using the ``postgresql_noproc`` fixture.
 
 .. code-block:: python
 
-    postgresql_external = factories.postgresql('postgresql_nooproc')
+    postgresql_external = factories.postgresql('postgresql_noproc')
 
-By default the  ``postgresql_nooproc`` fixture would connect to postgresql instance using **5432** port. Standard configuration options apply to it.
+By default the  ``postgresql_noproc`` fixture would connect to postgresql instance using **5432** port. Standard configuration options apply to it.
 
-These are the configuration options that are working on all levels with the ``postgresql_nooproc`` fixture:
+These are the configuration options that are working on all levels with the ``postgresql_noproc`` fixture:
 
 Configuration
 =============
