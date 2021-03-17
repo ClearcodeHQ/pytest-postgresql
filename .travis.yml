@@ -1,12 +1,7 @@
 dist: bionic
 language: python
 python:
-- 3.8
-- 3.7
-- 3.6
 - 3.9
-- nightly
-- pypy3
 # blocklist branches
 branches:
   except:
@@ -15,8 +10,6 @@ branches:
 addons:
   apt:
     packages:
-      - postgresql-12
-      - postgresql-client-12
       - postgresql-13
       - postgresql-client-13
   homebrew:
@@ -32,24 +25,9 @@ install:
 - pip install -r requirements-test.txt
 - pip install coveralls wheel
 script:
-- py.test -n 0
-after_success:
-- coveralls
+- POSTGRES=13 py.test -n 0
 jobs:
-  allow_failures:
-    - python: nightly
   include:
-    - stage: xdist
-      script: py.test -n 1
-    - stage: linters
-      install:
-      - pip install -r requirements-lint.txt
-      script:
-      - pycodestyle
-      - pydocstyle
-      - pylint pytest_postgresql tests
-      - pyroma .
-      after_success: skip
     - stage: osx
       language: generic
       os: osx
@@ -59,17 +37,9 @@ jobs:
       - virtualenv venv -p python3
       - source venv/bin/activate
       script:
-      - py.test -n 0
-    - stage: deploy
-      if: tag IS present
-      script: skip
-      deploy:
-        provider: pypi
-        user: thearoom
-        password:
-          secure: FAN5dMk+ktvFdfZX6OjKy9+XWwbTrJcZ4OrV6LVKNyZdsVRi0+iE6opSQXH8HjO6DCXsyHkZDD8a6f81y/Cc3j6QsRItnJwjQllu4dNce5LYHZNA/sQ9O8mgC9+DrPWzPYRlMkSgG9eVH3tI8UX1P7Wh4yuJLbQbNkWw8ZX7j+HSwZtYLPhP2uBp7xMF5rYO+9PcIA/I0QI0AkfRQtYtwSp3QAjKUVWnWXnUQOILey5wP+3ENYVojKmYSocmOtbKUUNfExgZIep8gsZXx60fuBQLRSG0XhDxud51nGKvzNegqQoN5Mpt61VslT7trS/D6zOzMCUTqNwbg/gMrebU5IMZm5ijJSKkvw5Cl30Yc5+cZ0o7N9NbepBjlEX3ByDUnDk7bfSRHukJw9lG5+mBHLi+aJ9+ZPEqUcIHuYzv6+yvjlGPkETqlxkCunU6HzwrsD5QdYwqcY4PLHf7Onx3I2Vjg4XxZO27BDbhvpOTF4SaAk45ALi9y10Gu7FSswp44/l5k54Ur1/JPhSmFGIO8XZJZ7mLGftextYLEmQuai7IKmu46rZ3ffzEpIk0lP5xi2NWyQvD9DHEJSMKxc4koVKb72lLbl69aVp+6vKRH4VtJ1E5/Hybrxe9bbz+upQ4xRdXjRAml4xAnGeBcH5hf2owbijYuoU26qOHKl68Ej0=
-        on:
-          tags: true
-          all_branches: true
-          repo: ClearcodeHQ/pytest-postgresql
-        distributions: bdist_wheel
+      - POSTGRES=9.5 py.test -n 0
+      - POSTGRES=9.6 py.test -n 0
+      - POSTGRES=10 py.test -n 0
+      - POSTGRES=11 py.test -n 0
+      - POSTGRES=12 py.test -n 0
+      - POSTGRES=13 py.test -n 0

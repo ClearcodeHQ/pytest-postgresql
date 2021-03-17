@@ -7,7 +7,7 @@ import psycopg2
 import pytest
 
 from pytest_postgresql.executor import PostgreSQLExecutor, PostgreSQLUnsupported
-from pytest_postgresql.factories import postgresql_proc
+from pytest_postgresql.factories import postgresql_proc, postgresql
 from pytest_postgresql.factories import get_config
 from pytest_postgresql.port import get_port
 
@@ -105,8 +105,12 @@ def test_proc_with_password(
             port=postgres_with_password.port)
 
 
+postgresql_max_conns_proc = postgresql_proc(postgres_options='-N 42')
+postgres_max_conns = postgresql('postgresql_max_conns_proc')
+
+
 def test_postgres_options(postgres_max_conns):
-    """Check that max connections (-N 11) is honored."""
+    """Check that max connections (-N 42) is honored."""
     cur = postgres_max_conns.cursor()
     cur.execute('SHOW max_connections')
-    assert cur.fetchone() == ('11',)
+    assert cur.fetchone() == ('42',)

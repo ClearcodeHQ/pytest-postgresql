@@ -1,0 +1,66 @@
+name: Run tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [3.7, 3.8, 3.9, pypy-3.7-v7.3.3]
+        postgres-version: [9.5, 9.6, 10, 11, 12, 13]
+    env:
+      OS: ubuntu-latest
+      PYTHON: ${{ matrix.python-version }}
+      POSTGRES: ${{ matrix.postgres-version }}
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install postgresql
+      run: |
+        sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg ${{ matrix.postgres-version }}" > /etc/apt/sources.list.d/pgdg.list'
+        sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+        wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+        sudo sh -c 'echo "Package: *" > /etc/apt/preferences.d/psql'
+        sudo sh -c 'echo "Pin: release c=${{ matrix.poxtgresql-version }}" >> /etc/apt/preferences.d/psql'
+        sudo sh -c 'echo "Pin-Priority: 1000" >> /etc/apt/preferences.d/psql'
+        sudo apt-get update -o Dir::Etc::sourcelist="/etc/apt/sources.list.d/pgdg.list" -o Dir::Etc::sourceparts="-" -o APT::Get::List-Cleanup="0"
+        sudo apt install -y postgresql-${{ matrix.postgres-version }} postgresql-client-${{ matrix.postgres-version }}
+    - name: Check installed locales
+      run: |
+        locale -a
+        sudo locale-gen de_DE.UTF-8
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements-test.txt
+    - name: Run test
+      run: |
+        py.test -n 0 --postgresql-exec="/usr/lib/postgresql/${{ matrix.postgres-version }}/bin/pg_ctl" -k "not test_postgres_terminate_connection" --cov-report=xml
+    - name: Run xdist test
+      run: |
+        py.test -n 1 --postgresql-exec="/usr/lib/postgresql/${{ matrix.postgres-version }}/bin/pg_ctl" -k "not test_postgres_terminate_connection" --cov-report=xml:coverage-xdist.xml
+    - name: Run test terminate
+      run: |
+        py.test -n 0 --postgresql-exec="/usr/lib/postgresql/${{ matrix.postgres-version }}/bin/pg_ctl" -k test_postgres_terminate_connection --cov-report=xml:coverage-term.xml
+    - uses: actions/upload-artifact@v2
+      if: failure()
+      with:
+        name: postgresql-${{ matrix.python-version }}-${{ matrix.postgres-version }}
+        path: /tmp/pytest-of-runner/**
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1
+      with:
+        files: ./coverage.xml, ./coverage-xdist.xml, ./coverage-term.xml
+        flags: unittests
+        env_vars: OS, PYTHON, POSTGRES
+        fail_ci_if_error: true

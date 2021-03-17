@@ -171,7 +171,7 @@ You can pick which you prefer, but remember that these settings are handled in t
      - --postgresql-exec
      - postgresql_exec
      - -
-     - /usr/lib/postgresql/9.1/bin/pg_ctl
+     - /usr/lib/postgresql/9.5/bin/pg_ctl
    * - host
      - host
      - --postgresql-host
