@@ -1,0 +1,58 @@
+name: Run tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  macostests:
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [3.7, 3.8, 3.9, pypy-3.7-v7.3.3]
+        postgres-version: [9.6, 10, 11, 12, 13]
+    env:
+      OS: macos-latest
+      PYTHON: ${{ matrix.python-version }}
+      POSTGRES: ${{ matrix.postgres-version }}
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install postgresql
+      run: |
+        brew install postgresql@${{ matrix.postgres-version }}
+    - name: Check installed locales
+      run: |
+        locale -a
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements-test.txt
+    - name: Install dependencies
+      run: |
+        echo "TMPDIR=$TMPDIR" >> $GITHUB_ENV
+    - name: Run test
+      run: |
+        py.test -n 0 --postgresql-exec="/usr/lib/postgresql/${{ matrix.postgres-version }}/bin/pg_ctl" -k "not test_postgres_terminate_connection" --cov-report=xml
+    - name: Run test terminate
+      run: |
+        py.test -n 0 --postgresql-exec="/usr/lib/postgresql/${{ matrix.postgres-version }}/bin/pg_ctl" -k test_postgres_terminate_connection --cov-report=xml:coverage-term.xml
+    - uses: actions/upload-artifact@v2
+      if: failure()
+      with:
+        name: postgresql-${{ matrix.python-version }}-${{ matrix.postgres-version }}
+        path: /${{ env.TMPDIR }}/pytest-of-runner/**
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1
+      with:
+        files: ./coverage.xml, ./coverage-term.xml
+        flags: unittests
+        env_vars: OS, PYTHON, POSTGRES
+        fail_ci_if_error: true

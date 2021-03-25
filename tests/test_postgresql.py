@@ -1,11 +1,10 @@
 """All tests for pytest-postgresql."""
 import decimal
-from datetime import datetime, timedelta
-from time import sleep
 
 import psycopg2
 import pytest
 
+from pytest_postgresql.retry import retry
 from tests.conftest import POSTGRESQL_VERSION
 
 MAKE_Q = "CREATE TABLE test (id serial PRIMARY KEY, num integer, data varchar);"
@@ -56,26 +55,9 @@ def test_postgres_load_two_files(postgresql_load_2):
     cur.close()
 
 
-def test_rand_postgres_port(postgresql_rand):
+def test_rand_postgres_port(postgresql2):
     """Check if postgres fixture can be started on random port."""
-    assert postgresql_rand.status == psycopg2.extensions.STATUS_READY
-
-
-def wait_for(func, timeout=60):
-    """Check for function to finish."""
-    time: datetime = datetime.utcnow()
-    timeout_diff: timedelta = timedelta(seconds=timeout)
-    i = 0
-    while True:
-        i += 1
-        try:
-            func()
-            return
-        except AssertionError as e:
-            if time + timeout_diff < datetime.utcnow():
-                raise AssertionError("Faile after {i} attempts".format(i=i)) from e
-            sleep(1)
-            pass
+    assert postgresql2.status == psycopg2.extensions.STATUS_READY
 
 
 @pytest.mark.skipif(
@@ -84,14 +66,14 @@ def wait_for(func, timeout=60):
 )
 @pytest.mark.parametrize('_', range(2))
 def test_postgres_terminate_connection(
-        postgresql_version, _):
+        postgresql2, _):
     """
     Test that connections are terminated between tests.
 
     And check that only one exists at a time.
     """
 
-    with postgresql_version.cursor() as cur:
+    with postgresql2.cursor() as cur:
         def check_if_one_connection():
             cur.execute(
                 'SELECT * FROM pg_stat_activity '
@@ -100,4 +82,4 @@ def test_postgres_terminate_connection(
             existing_connections = cur.fetchall()
             assert len(existing_connections) == 1, \
                 'there is always only one connection, {}'.format(existing_connections)
-        wait_for(check_if_one_connection, timeout=120)
+        retry(check_if_one_connection, timeout=120, possible_exception=AssertionError)

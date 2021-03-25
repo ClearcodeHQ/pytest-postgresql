@@ -6,6 +6,7 @@ unreleased
 
 - [enhancement] Updated supported python versions
 - [support] officially test against postgresql 9.6 and up
+- [development] Fully moved to the Github Actions as CI/CD pipeline
 
 2.6.1
 ----------
