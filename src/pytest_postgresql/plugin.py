@@ -41,7 +41,7 @@ def pytest_addoption(parser):
     parser.addini(
         name='postgresql_exec',
         help=_help_executable,
-        default='/usr/lib/postgresql/9.5/bin/pg_ctl'
+        default='/usr/lib/postgresql/9.6/bin/pg_ctl'
     )
 
     parser.addini(

@@ -21,17 +21,6 @@ pytest-postgresql
     :target: https://pypi.python.org/pypi/pytest-postgresql/
     :alt: License
 
-Package status
---------------
-
-.. image:: https://travis-ci.org/ClearcodeHQ/pytest-postgresql.svg?branch=v2.6.1
-    :target: https://travis-ci.org/ClearcodeHQ/pytest-postgresql
-    :alt: Tests
-
-.. image:: https://coveralls.io/repos/ClearcodeHQ/pytest-postgresql/badge.png?branch=v2.6.1
-    :target: https://coveralls.io/r/ClearcodeHQ/pytest-postgresql?branch=v2.6.1
-    :alt: Coverage Status
-
 What is this?
 =============
 
@@ -43,7 +32,7 @@ How to use
 
 .. warning::
 
-    Tested on PostgreSQL versions > 9.x. See tests for more details.
+    Tested on PostgreSQL versions >= 9.6. See tests for more details.
 
 Install with:
 
@@ -171,7 +160,7 @@ You can pick which you prefer, but remember that these settings are handled in t
      - --postgresql-exec
      - postgresql_exec
      - -
-     - /usr/lib/postgresql/9.5/bin/pg_ctl
+     - /usr/lib/postgresql/9.6/bin/pg_ctl
    * - host
      - host
      - --postgresql-host

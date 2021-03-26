@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+unreleased
+----------
+
+- [enhancement] Updated supported python versions
+- [support] officially test against postgresql 9.6 and up
+
 2.6.1
 ----------
 

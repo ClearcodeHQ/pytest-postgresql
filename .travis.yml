@@ -19,7 +19,6 @@ addons:
       - postgresql@11
       - postgresql@10
       - postgresql@9.6
-      - postgresql@9.5
 
 install:
 - pip install -r requirements-test.txt
@@ -37,7 +36,6 @@ jobs:
       - virtualenv venv -p python3
       - source venv/bin/activate
       script:
-      - POSTGRES=9.5 py.test -n 0
       - POSTGRES=9.6 py.test -n 0
       - POSTGRES=10 py.test -n 0
       - POSTGRES=11 py.test -n 0
