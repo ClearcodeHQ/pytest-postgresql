@@ -10,6 +10,7 @@ from pytest_postgresql.executor import PostgreSQLExecutor, PostgreSQLUnsupported
 from pytest_postgresql.factories import postgresql_proc, postgresql
 from pytest_postgresql.factories import get_config
 from pytest_postgresql.port import get_port
+from pytest_postgresql.retry import retry
 
 
 class PatchedPostgreSQLExecutor(PostgreSQLExecutor):
@@ -89,12 +90,15 @@ def test_proc_with_password(
 
     # no assertion necessary here; we just want to make sure it connects with
     # the password
-    psycopg2.connect(
-        dbname=postgres_with_password.user,
-        user=postgres_with_password.user,
-        password=postgres_with_password.password,
-        host=postgres_with_password.host,
-        port=postgres_with_password.port)
+    retry(
+        lambda: psycopg2.connect(
+            dbname=postgres_with_password.user,
+            user=postgres_with_password.user,
+            password=postgres_with_password.password,
+            host=postgres_with_password.host,
+            port=postgres_with_password.port
+        )
+    )
 
     with pytest.raises(psycopg2.OperationalError):
         psycopg2.connect(

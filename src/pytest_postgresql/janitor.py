@@ -6,6 +6,7 @@ from typing import TypeVar, Union, Optional, Type
 from pkg_resources import parse_version
 
 from pytest_postgresql.compat import psycopg2, cursor, check_for_psycopg2
+from pytest_postgresql.retry import retry
 
 Version = type(parse_version('1'))  # pylint:disable=invalid-name
 
@@ -77,13 +78,15 @@ class DatabaseJanitor:
     @contextmanager
     def cursor(self) -> cursor:
         """Return postgresql cursor."""
-        conn = psycopg2.connect(
-            dbname='postgres',
-            user=self.user,
-            password=self.password,
-            host=self.host,
-            port=self.port,
-        )
+        def connect():
+            return psycopg2.connect(
+                dbname='postgres',
+                user=self.user,
+                password=self.password,
+                host=self.host,
+                port=self.port,
+            )
+        conn = retry(connect)
         conn.set_isolation_level(self.isolation_level)
         cur = conn.cursor()
         try:
