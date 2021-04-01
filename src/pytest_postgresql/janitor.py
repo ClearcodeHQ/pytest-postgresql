@@ -26,6 +26,7 @@ class DatabaseJanitor:
             version: Union[str, float, Version],
             password: str = None,
             isolation_level: Optional[int] = None,
+            connection_timeout: int = 60
     ) -> None:
         """
         Initialize janitor.
@@ -37,13 +38,16 @@ class DatabaseJanitor:
         :param version: postgresql version number
         :param password: optional postgresql password
         :param isolation_level: optional postgresql isolation level
-                                defaults to ISOLATION_LEVEL_AUTOCOMMIT
+            defaults to ISOLATION_LEVEL_AUTOCOMMIT
+        :param connection_timeout: how long to retry connection before
+            raising a TimeoutError
         """
         self.user = user
         self.password = password
         self.host = host
         self.port = port
         self.db_name = db_name
+        self._connection_timeout = connection_timeout
         check_for_psycopg2()
         self.isolation_level = isolation_level or psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT
         if not isinstance(version, Version):
@@ -86,7 +90,7 @@ class DatabaseJanitor:
                 host=self.host,
                 port=self.port,
             )
-        conn = retry(connect)
+        conn = retry(connect, timeout=self._connection_timeout)
         conn.set_isolation_level(self.isolation_level)
         cur = conn.cursor()
         try:
