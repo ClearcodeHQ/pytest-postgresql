@@ -4,6 +4,8 @@ CHANGELOG
 unreleased
 ----------
 
+- [enhancement] DatabaseJanitor can now define a `connection_timeout` parameter.
+  How long will it try to connect to database before raising a TimeoutError
 - [enhancement] Updated supported python versions
 - [support] officially test against postgresql 9.6 and up
 - [development] Fully moved to the Github Actions as CI/CD pipeline
