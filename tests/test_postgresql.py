@@ -62,11 +62,10 @@ def test_rand_postgres_port(postgresql2):
 
 @pytest.mark.skipif(
     decimal.Decimal(POSTGRESQL_VERSION) < 10,
-    reason="Test query not supported in those postgresql versions, and soon will not be supported."
+    reason="Test query not supported in those postgresql versions, and soon will not be supported.",
 )
-@pytest.mark.parametrize('_', range(2))
-def test_postgres_terminate_connection(
-        postgresql2, _):
+@pytest.mark.parametrize("_", range(2))
+def test_postgres_terminate_connection(postgresql2, _):
     """
     Test that connections are terminated between tests.
 
@@ -74,12 +73,12 @@ def test_postgres_terminate_connection(
     """
 
     with postgresql2.cursor() as cur:
+
         def check_if_one_connection():
-            cur.execute(
-                'SELECT * FROM pg_stat_activity '
-                'WHERE backend_type = \'client backend\';'
-            )
+            cur.execute("SELECT * FROM pg_stat_activity " "WHERE backend_type = 'client backend';")
             existing_connections = cur.fetchall()
-            assert len(existing_connections) == 1, \
-                'there is always only one connection, {}'.format(existing_connections)
+            assert len(existing_connections) == 1, "there is always only one connection, {}".format(
+                existing_connections
+            )
+
         retry(check_if_one_connection, timeout=120, possible_exception=AssertionError)

@@ -53,22 +53,26 @@ class NoopExecutor:  # pylint: disable=too-few-public-methods
         if not self._version:
             check_for_psycopg2()
             with psycopg2.connect(
-                    dbname='postgres',
-                    user=self.user,
-                    host=self.host,
-                    port=self.port,
-                    password=self.password,
-                    options=self.options
+                dbname="postgres",
+                user=self.user,
+                host=self.host,
+                port=self.port,
+                password=self.password,
+                options=self.options,
             ) as connection:
                 version = str(connection.server_version)
                 # Pad the version for releases before 10
                 # if not we get 90524 instead of 090524
                 if len(version) < 6:
-                    version = '0' + version
-                self._version = parse_version(
-                    '.'.join([
-                        version[i: i+2] for i in range(0, len(version), 2)
-                        if int(version[i: i+2])
-                        ][:2])
-                )
+                    version = "0" + version
+                version_parts = []
+
+                # extract version parts to construct a two-part version
+                for i in range(0, len(version), 2):
+                    j = i + 2
+                    part = version[i:j]
+                    if not int(part):
+                        continue
+                    version_parts.append(part)
+                self._version = parse_version(".".join(version_parts[:2]))
         return self._version

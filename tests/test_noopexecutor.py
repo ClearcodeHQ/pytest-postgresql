@@ -15,11 +15,10 @@ def test_nooproc_version(postgresql_proc_version):
         postgresql_proc_version.host,
         postgresql_proc_version.port,
         postgresql_proc_version.user,
-        postgresql_proc_version.options
+        postgresql_proc_version.options,
     )
     nooproc_version = retry(
-        lambda: postgresql_nooproc.version,
-        possible_exception=psycopg2.OperationalError
+        lambda: postgresql_nooproc.version, possible_exception=psycopg2.OperationalError
     )
     assert postgresql_proc_version.version == nooproc_version
 
@@ -27,14 +26,8 @@ def test_nooproc_version(postgresql_proc_version):
 def test_nooproc_cached_version(postgresql_proc: PostgreSQLExecutor):
     """Test that the version is being cached."""
     postgresql_nooproc = NoopExecutor(
-        postgresql_proc.host,
-        postgresql_proc.port,
-        postgresql_proc.user,
-        postgresql_proc.options
+        postgresql_proc.host, postgresql_proc.port, postgresql_proc.user, postgresql_proc.options
     )
-    ver = retry(
-        lambda: postgresql_nooproc.version,
-        possible_exception=psycopg2.OperationalError
-    )
+    ver = retry(lambda: postgresql_nooproc.version, possible_exception=psycopg2.OperationalError)
     with postgresql_proc.stopped():
         assert ver == postgresql_nooproc.version

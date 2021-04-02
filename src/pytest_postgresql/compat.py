@@ -30,7 +30,7 @@ def check_for_psycopg2():
     """
     if not psycopg2:
         raise ImportError(
-            'No module named psycopg2. Please install either '
-            'psycopg2 or psycopg2-binary package for CPython '
-            'or psycopg2cffi for Pypy.'
+            "No module named psycopg2. Please install either "
+            "psycopg2 or psycopg2-binary package for CPython "
+            "or psycopg2cffi for Pypy."
         )

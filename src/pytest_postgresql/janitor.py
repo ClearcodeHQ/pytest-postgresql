@@ -8,7 +8,7 @@ from pkg_resources import parse_version
 from pytest_postgresql.compat import psycopg2, cursor, check_for_psycopg2
 from pytest_postgresql.retry import retry
 
-Version = type(parse_version('1'))  # pylint:disable=invalid-name
+Version = type(parse_version("1"))  # pylint:disable=invalid-name
 
 
 DatabaseJanitorType = TypeVar("DatabaseJanitorType", bound="DatabaseJanitor")
@@ -18,15 +18,15 @@ class DatabaseJanitor:
     """Manage database state for specific tasks."""
 
     def __init__(
-            self,
-            user: str,
-            host: str,
-            port: str,
-            db_name: str,
-            version: Union[str, float, Version],
-            password: str = None,
-            isolation_level: Optional[int] = None,
-            connection_timeout: int = 60
+        self,
+        user: str,
+        host: str,
+        port: str,
+        db_name: str,
+        version: Union[str, float, Version],
+        password: str = None,
+        isolation_level: Optional[int] = None,
+        connection_timeout: int = 60,
     ) -> None:
         """
         Initialize janitor.
@@ -64,32 +64,35 @@ class DatabaseJanitor:
         """Drop database in postgresql."""
         # We cannot drop the database while there are connections to it, so we
         # terminate all connections first while not allowing new connections.
-        if self.version >= parse_version('9.2'):
-            pid_column = 'pid'
+        if self.version >= parse_version("9.2"):
+            pid_column = "pid"
         else:
-            pid_column = 'procpid'
+            pid_column = "procpid"
         with self.cursor() as cur:
             cur.execute(
-                'UPDATE pg_database SET datallowconn=false WHERE datname = %s;',
-                (self.db_name,))
+                "UPDATE pg_database SET datallowconn=false WHERE datname = %s;", (self.db_name,)
+            )
             cur.execute(
-                'SELECT pg_terminate_backend(pg_stat_activity.{})'
-                'FROM pg_stat_activity '
-                'WHERE pg_stat_activity.datname = %s;'.format(pid_column),
-                (self.db_name,))
+                "SELECT pg_terminate_backend(pg_stat_activity.{})"
+                "FROM pg_stat_activity "
+                "WHERE pg_stat_activity.datname = %s;".format(pid_column),
+                (self.db_name,),
+            )
             cur.execute('DROP DATABASE IF EXISTS "{}";'.format(self.db_name))
 
     @contextmanager
     def cursor(self) -> cursor:
         """Return postgresql cursor."""
+
         def connect():
             return psycopg2.connect(
-                dbname='postgres',
+                dbname="postgres",
                 user=self.user,
                 password=self.password,
                 host=self.host,
                 port=self.port,
             )
+
         conn = retry(connect, timeout=self._connection_timeout)
         conn.set_isolation_level(self.isolation_level)
         cur = conn.cursor()
@@ -104,8 +107,9 @@ class DatabaseJanitor:
         return self
 
     def __exit__(
-            self: DatabaseJanitorType,
-            exc_type: Optional[Type[BaseException]],
-            exc_val: Optional[BaseException],
-            exc_tb: Optional[TracebackType]) -> None:
+        self: DatabaseJanitorType,
+        exc_type: Optional[Type[BaseException]],
+        exc_val: Optional[BaseException],
+        exc_tb: Optional[TracebackType],
+    ) -> None:
         self.drop()
