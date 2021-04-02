@@ -128,6 +128,7 @@ def postgresql_proc(
         """
         config = get_config(request)
         postgresql_ctl = executable or config['exec']
+        logfile_prefix = logs_prefix or config['logsprefix']
         # check if that executable exists, as it's no on system PATH
         # only replace if executable isn't passed manually
         if not os.path.exists(postgresql_ctl) and executable is None:
@@ -140,7 +141,7 @@ def postgresql_proc(
             gettempdir(), 'postgresqldata.{}'.format(pg_port))
         logfile_path = tmpdir_factory.mktemp("data").join(
             '{prefix}postgresql.{port}.log'.format(
-                prefix=logs_prefix,
+                prefix=logfile_prefix,
                 port=pg_port
             )
         )

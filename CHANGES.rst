@@ -9,6 +9,8 @@ unreleased
 - [enhancement] Updated supported python versions
 - [support] officially test against postgresql 9.6 and up
 - [development] Fully moved to the Github Actions as CI/CD pipeline
+- [bugfix] Use `postgresql_logsprefix` and `--postgresql-logsprefix` again.
+  They weren't used somewhere along the way.
 
 2.6.1
 ----------
