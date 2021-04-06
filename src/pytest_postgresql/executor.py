@@ -49,21 +49,36 @@ class PostgreSQLExecutor(TCPExecutor):
     <http://www.postgresql.org/docs/9.1/static/app-pg-ctl.html>`_
     """
 
-    BASE_PROC_START_COMMAND = ' '.join((
-        "{executable} start -D {datadir}",
-        "-o \"-F -p {port} -c log_destination='stderr'",
-        "-c logging_collector=off -c %s='{unixsocketdir}' {postgres_options}\"",
-        "-l {logfile} {startparams}"
-    ))
+    BASE_PROC_START_COMMAND = " ".join(
+        (
+            "{executable} start -D {datadir}",
+            "-o \"-F -p {port} -c log_destination='stderr'",
+            "-c logging_collector=off -c %s='{unixsocketdir}' {postgres_options}\"",
+            "-l {logfile} {startparams}",
+        )
+    )
 
-    VERSION_RE = re.compile(r'.* (?P<version>\d+\.\d+)')
-    MIN_SUPPORTED_VERSION = parse_version('9.5')
+    VERSION_RE = re.compile(r".* (?P<version>\d+\.\d+)")
+    MIN_SUPPORTED_VERSION = parse_version("9.5")
 
     # pylint:disable=too-many-locals
-    def __init__(self, executable, host, port,
-                 datadir, unixsocketdir, logfile, startparams,
-                 shell=False, timeout=60, sleep=0.1, user='postgres',
-                 password='', options='', postgres_options=''):
+    def __init__(
+        self,
+        executable,
+        host,
+        port,
+        datadir,
+        unixsocketdir,
+        logfile,
+        startparams,
+        shell=False,
+        timeout=60,
+        sleep=0.1,
+        user="postgres",
+        password="",
+        options="",
+        postgres_options="",
+    ):
         """
         Initialize PostgreSQLExecutor executor.
 
@@ -101,7 +116,7 @@ class PostgreSQLExecutor(TCPExecutor):
             unixsocketdir=self.unixsocketdir,
             logfile=self.logfile,
             startparams=self.startparams,
-            postgres_options=self.postgres_options
+            postgres_options=self.postgres_options,
         )
         super().__init__(
             command,
@@ -114,18 +129,20 @@ class PostgreSQLExecutor(TCPExecutor):
                 "LC_ALL": _LOCALE,
                 "LC_CTYPE": _LOCALE,
                 "LANG": _LOCALE,
-            }
+            },
         )
+
     # pylint:enable=too-many-locals
 
     def start(self: ExecutorType) -> ExecutorType:
         """Add check for postgresql version before starting process."""
         if self.version < self.MIN_SUPPORTED_VERSION:
             raise PostgreSQLUnsupported(
-                'Your version of PostgreSQL is not supported. '
-                'Consider updating to PostgreSQL {0} at least. '
-                'The currently installed version of PostgreSQL: {1}.'
-                .format(self.MIN_SUPPORTED_VERSION, self.version)
+                "Your version of PostgreSQL is not supported. "
+                "Consider updating to PostgreSQL {0} at least. "
+                "The currently installed version of PostgreSQL: {1}.".format(
+                    self.MIN_SUPPORTED_VERSION, self.version
+                )
             )
         self.init_directory()
         return super().start()
@@ -148,31 +165,30 @@ class PostgreSQLExecutor(TCPExecutor):
             return
         # remove old one if exists first.
         self.clean_directory()
-        init_directory = [self.executable, 'initdb', '--pgdata', self.datadir]
-        options = ['--username=%s' % self.user]
+        init_directory = [self.executable, "initdb", "--pgdata", self.datadir]
+        options = ["--username=%s" % self.user]
 
         if self.password:
             with tempfile.NamedTemporaryFile() as password_file:
-                options += ['--auth=password',
-                            '--pwfile=%s' % password_file.name]
-                if hasattr(self.password, 'encode'):
-                    password = self.password.encode('utf-8')
+                options += ["--auth=password", "--pwfile=%s" % password_file.name]
+                if hasattr(self.password, "encode"):
+                    password = self.password.encode("utf-8")
                 else:
                     password = self.password
                 password_file.write(password)
                 password_file.flush()
-                init_directory += ['-o', ' '.join(options)]
+                init_directory += ["-o", " ".join(options)]
                 subprocess.check_output(init_directory)
         else:
-            options += ['--auth=trust']
-            init_directory += ['-o', ' '.join(options)]
+            options += ["--auth=trust"]
+            init_directory += ["-o", " ".join(options)]
             subprocess.check_output(init_directory)
 
         self._directory_initialised = True
 
     def wait_for_postgres(self):
         """Wait for postgresql being started."""
-        if '-w' not in self.startparams:
+        if "-w" not in self.startparams:
             return
         # wait until server is running
         while 1:
@@ -182,39 +198,35 @@ class PostgreSQLExecutor(TCPExecutor):
 
     def proc_start_command(self):
         """Based on postgres version return proper start command."""
-        if self.version > parse_version('9.2'):
-            unix_socket_dir_arg_name = 'unix_socket_directories'
+        if self.version > parse_version("9.2"):
+            unix_socket_dir_arg_name = "unix_socket_directories"
         else:
-            unix_socket_dir_arg_name = 'unix_socket_directory'
+            unix_socket_dir_arg_name = "unix_socket_directory"
         return self.BASE_PROC_START_COMMAND % unix_socket_dir_arg_name
 
     @property
     def version(self):
         """Detect postgresql version."""
-        version_string = subprocess.check_output(
-            [self.executable, '--version']).decode('utf-8')
+        version_string = subprocess.check_output([self.executable, "--version"]).decode("utf-8")
         matches = self.VERSION_RE.search(version_string)
-        return parse_version(matches.groupdict()['version'])
+        return parse_version(matches.groupdict()["version"])
 
     def running(self):
         """Check if server is running."""
         if not os.path.exists(self.datadir):
             return False
-        status_code = subprocess.getstatusoutput(
-            f'{self.executable} status -D {self.datadir}')[0]
+        status_code = subprocess.getstatusoutput(f"{self.executable} status -D {self.datadir}")[0]
         return status_code == 0
 
-    def stop(self,
-             sig: int = None,
-             exp_sig: int = None
-             ):
+    def stop(self, sig: int = None, exp_sig: int = None):
         """Issue a stop request to executable."""
         subprocess.check_output(
-            '{pg_ctl} stop -D {datadir} -m f'.format(
+            "{pg_ctl} stop -D {datadir} -m f".format(
                 pg_ctl=self.executable,
                 datadir=self.datadir,
             ),
-            shell=True)
+            shell=True,
+        )
         try:
             super().stop(sig, exp_sig)
         except ProcessFinishedWithError:

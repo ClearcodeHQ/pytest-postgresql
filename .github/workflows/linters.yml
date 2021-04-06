@@ -44,9 +44,9 @@ jobs:
     - name: Run pydocstyle
       run: |
         pycodestyle src/ tests/
-#  black:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v2
-#      - uses: actions/setup-python@v2
-#      - uses: psf/black@stable
+  black:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - uses: psf/black@20.8b1

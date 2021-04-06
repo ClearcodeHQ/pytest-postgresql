@@ -39,13 +39,22 @@ def get_config(request: FixtureRequest) -> dict:
     """Return a dictionary with config options."""
     config = {}
     options = [
-        'exec', 'host', 'port', 'user', 'password', 'options', 'startparams',
-        'logsprefix', 'unixsocketdir', 'dbname', 'load', 'postgres_options',
+        "exec",
+        "host",
+        "port",
+        "user",
+        "password",
+        "options",
+        "startparams",
+        "logsprefix",
+        "unixsocketdir",
+        "dbname",
+        "load",
+        "postgres_options",
     ]
     for option in options:
-        option_name = 'postgresql_' + option
-        conf = request.config.getoption(option_name) or \
-            request.config.getini(option_name)
+        option_name = "postgresql_" + option
+        conf = request.config.getoption(option_name) or request.config.getini(option_name)
         config[option] = conf
     return config
 
@@ -61,9 +70,8 @@ def init_postgresql_database(user, host, port, db_name, password=None):
     :param str password: optional postgresql password
     """
     warn(
-        'init_postgresql_database is deprecated, '
-        'use DatabaseJanitor.init instead.',
-        DeprecationWarning
+        "init_postgresql_database is deprecated, " "use DatabaseJanitor.init instead.",
+        DeprecationWarning,
     )
     DatabaseJanitor(user, host, port, db_name, 0.0, password).init()
 
@@ -80,18 +88,23 @@ def drop_postgresql_database(user, host, port, db_name, version, password=None):
     :param str password: optional postgresql password
     """
     warn(
-        'drop_postgresql_database is deprecated, '
-        'use DatabaseJanitor.drop instead.',
-        DeprecationWarning
+        "drop_postgresql_database is deprecated, " "use DatabaseJanitor.drop instead.",
+        DeprecationWarning,
     )
     DatabaseJanitor(user, host, port, db_name, version, password).drop()
 
 
 def postgresql_proc(
-        executable: str = None, host: str = None, port: Union[str, int, Iterable] = -1,
-        user: str = None, password: str = None,
-        options: str = '', startparams: str = None, unixsocketdir: str = None,
-        logs_prefix: str = '', postgres_options: str = None,
+    executable: str = None,
+    host: str = None,
+    port: Union[str, int, Iterable] = -1,
+    user: str = None,
+    password: str = None,
+    options: str = "",
+    startparams: str = None,
+    unixsocketdir: str = None,
+    logs_prefix: str = "",
+    postgres_options: str = None,
 ) -> Callable[[FixtureRequest, TempdirFactory], PostgreSQLExecutor]:
     """
     Postgresql process factory.
@@ -115,9 +128,9 @@ def postgresql_proc(
     :returns: function which makes a postgresql process
     """
 
-    @pytest.fixture(scope='session')
+    @pytest.fixture(scope="session")
     def postgresql_proc_fixture(
-            request: FixtureRequest, tmpdir_factory: TempdirFactory
+        request: FixtureRequest, tmpdir_factory: TempdirFactory
     ) -> PostgreSQLExecutor:
         """
         Process fixture for PostgreSQL.
@@ -127,41 +140,37 @@ def postgresql_proc(
         :returns: tcp executor
         """
         config = get_config(request)
-        postgresql_ctl = executable or config['exec']
-        logfile_prefix = logs_prefix or config['logsprefix']
+        postgresql_ctl = executable or config["exec"]
+        logfile_prefix = logs_prefix or config["logsprefix"]
         # check if that executable exists, as it's no on system PATH
         # only replace if executable isn't passed manually
         if not os.path.exists(postgresql_ctl) and executable is None:
             pg_bindir = subprocess.check_output(
-                ['pg_config', '--bindir'], universal_newlines=True
+                ["pg_config", "--bindir"], universal_newlines=True
             ).strip()
-            postgresql_ctl = os.path.join(pg_bindir, 'pg_ctl')
-        pg_port = get_port(port) or get_port(config['port'])
-        datadir = os.path.join(
-            gettempdir(), 'postgresqldata.{}'.format(pg_port))
+            postgresql_ctl = os.path.join(pg_bindir, "pg_ctl")
+        pg_port = get_port(port) or get_port(config["port"])
+        datadir = os.path.join(gettempdir(), "postgresqldata.{}".format(pg_port))
         logfile_path = tmpdir_factory.mktemp("data").join(
-            '{prefix}postgresql.{port}.log'.format(
-                prefix=logfile_prefix,
-                port=pg_port
-            )
+            "{prefix}postgresql.{port}.log".format(prefix=logfile_prefix, port=pg_port)
         )
 
-        if platform.system() == 'FreeBSD':
-            with (datadir / 'pg_hba.conf').open(mode='a') as conf_file:
-                conf_file.write('host all all 0.0.0.0/0 trust\n')
+        if platform.system() == "FreeBSD":
+            with (datadir / "pg_hba.conf").open(mode="a") as conf_file:
+                conf_file.write("host all all 0.0.0.0/0 trust\n")
 
         postgresql_executor = PostgreSQLExecutor(
             executable=postgresql_ctl,
-            host=host or config['host'],
+            host=host or config["host"],
             port=pg_port,
-            user=user or config['user'],
-            password=password or config['password'],
-            options=options or config['options'],
+            user=user or config["user"],
+            password=password or config["password"],
+            options=options or config["options"],
             datadir=datadir,
-            unixsocketdir=unixsocketdir or config['unixsocketdir'],
+            unixsocketdir=unixsocketdir or config["unixsocketdir"],
             logfile=logfile_path,
-            startparams=startparams or config['startparams'],
-            postgres_options=postgres_options or config['postgres_options']
+            startparams=startparams or config["startparams"],
+            postgres_options=postgres_options or config["postgres_options"],
         )
         # start server
         with postgresql_executor:
@@ -173,8 +182,11 @@ def postgresql_proc(
 
 
 def postgresql_noproc(
-        host: str = None, port: Union[str, int] = None, user: str = None, password: str = None,
-        options: str = '',
+    host: str = None,
+    port: Union[str, int] = None,
+    user: str = None,
+    password: str = None,
+    options: str = "",
 ) -> Callable[[FixtureRequest], NoopExecutor]:
     """
     Postgresql noprocess factory.
@@ -187,7 +199,7 @@ def postgresql_noproc(
     :returns: function which makes a postgresql process
     """
 
-    @pytest.fixture(scope='session')
+    @pytest.fixture(scope="session")
     def postgresql_noproc_fixture(request: FixtureRequest) -> NoopExecutor:
         """
         Noop Process fixture for PostgreSQL.
@@ -196,11 +208,11 @@ def postgresql_noproc(
         :returns: tcp executor-like object
         """
         config = get_config(request)
-        pg_host = host or config['host']
-        pg_port = port or config['port'] or 5432
-        pg_user = user or config['user']
-        pg_password = password or config['password']
-        pg_options = options or config['options']
+        pg_host = host or config["host"]
+        pg_port = port or config["port"] or 5432
+        pg_user = user or config["user"]
+        pg_password = password or config["password"]
+        pg_options = options or config["options"]
 
         noop_exec = NoopExecutor(
             host=pg_host,
@@ -216,8 +228,10 @@ def postgresql_noproc(
 
 
 def postgresql(
-        process_fixture_name: str, db_name: str = None, load: List[str] = None,
-        isolation_level: Optional[int] = None,
+    process_fixture_name: str,
+    db_name: str = None,
+    load: List[str] = None,
+    isolation_level: Optional[int] = None,
 ) -> Callable[[FixtureRequest], connection]:
     """
     Return connection fixture factory for PostgreSQL.
@@ -242,19 +256,19 @@ def postgresql(
         check_for_psycopg2()
         pg_isolation_level = isolation_level or psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT
         proc_fixture: Union[PostgreSQLExecutor, NoopExecutor] = request.getfixturevalue(
-            process_fixture_name)
+            process_fixture_name
+        )
 
         pg_host = proc_fixture.host
         pg_port = proc_fixture.port
         pg_user = proc_fixture.user
         pg_password = proc_fixture.password
         pg_options = proc_fixture.options
-        pg_db = db_name or config['dbname']
-        pg_load = load or config['load']
+        pg_db = db_name or config["dbname"]
+        pg_load = load or config["load"]
 
         with DatabaseJanitor(
-                pg_user, pg_host, pg_port, pg_db, proc_fixture.version,
-                pg_password, pg_isolation_level
+            pg_user, pg_host, pg_port, pg_db, proc_fixture.version, pg_password, pg_isolation_level
         ):
             db_connection: connection = psycopg2.connect(
                 dbname=pg_db,
@@ -262,11 +276,11 @@ def postgresql(
                 password=pg_password,
                 host=pg_host,
                 port=pg_port,
-                options=pg_options
+                options=pg_options,
             )
             if pg_load:
                 for filename in pg_load:
-                    with open(filename, 'r') as _fd:
+                    with open(filename, "r") as _fd:
                         with db_connection.cursor() as cur:
                             cur.execute(_fd.read())
             yield db_connection
@@ -275,4 +289,4 @@ def postgresql(
     return postgresql_factory
 
 
-__all__ = ('postgresql', 'postgresql_proc')
+__all__ = ("postgresql", "postgresql_proc")
