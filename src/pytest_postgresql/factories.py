@@ -20,7 +20,6 @@
 import os.path
 import platform
 import subprocess
-from tempfile import gettempdir
 from typing import List, Callable, Union, Iterable, Optional
 from warnings import warn
 
@@ -142,6 +141,7 @@ def postgresql_proc(
         config = get_config(request)
         postgresql_ctl = executable or config["exec"]
         logfile_prefix = logs_prefix or config["logsprefix"]
+
         # check if that executable exists, as it's no on system PATH
         # only replace if executable isn't passed manually
         if not os.path.exists(postgresql_ctl) and executable is None:
@@ -149,9 +149,20 @@ def postgresql_proc(
                 ["pg_config", "--bindir"], universal_newlines=True
             ).strip()
             postgresql_ctl = os.path.join(pg_bindir, "pg_ctl")
+
+        tmpdir = tmpdir_factory.mktemp(f"pytest-postgresql-{request.fixturename}")
+
+        if logfile_prefix:
+            warn(
+                f"logfile_prefix and logsprefix config option is deprecated, "
+                f"and will be dropped in future releases. All fixture related "
+                f"data resides within {tmpdir}",
+                DeprecationWarning,
+            )
+
         pg_port = get_port(port) or get_port(config["port"])
-        datadir = os.path.join(gettempdir(), "postgresqldata.{}".format(pg_port))
-        logfile_path = tmpdir_factory.mktemp("data").join(
+        datadir = tmpdir.mkdir(f"data-{pg_port}")
+        logfile_path = tmpdir.join(
             "{prefix}postgresql.{port}.log".format(prefix=logfile_prefix, port=pg_port)
         )
 
