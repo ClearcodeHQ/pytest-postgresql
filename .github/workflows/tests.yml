@@ -45,13 +45,10 @@ jobs:
         pip install -r requirements-test.txt
     - name: Run test
       run: |
-        py.test -n 0 --postgresql-exec="/usr/lib/postgresql/${{ matrix.postgres-version }}/bin/pg_ctl" -k "not test_postgres_terminate_connection" --cov-report=xml
+        py.test -n 0 --postgresql-exec="/usr/lib/postgresql/${{ matrix.postgres-version }}/bin/pg_ctl" -k "not docker" --cov-report=xml
     - name: Run xdist test
       run: |
-        py.test -n 1 --postgresql-exec="/usr/lib/postgresql/${{ matrix.postgres-version }}/bin/pg_ctl" -k "not test_postgres_terminate_connection" --cov-report=xml:coverage-xdist.xml
-    - name: Run test terminate
-      run: |
-        py.test -n 0 --postgresql-exec="/usr/lib/postgresql/${{ matrix.postgres-version }}/bin/pg_ctl" -k test_postgres_terminate_connection --cov-report=xml:coverage-term.xml
+        py.test -n 1 --postgresql-exec="/usr/lib/postgresql/${{ matrix.postgres-version }}/bin/pg_ctl" -k "not docker" --cov-report=xml:coverage-xdist.xml
     - uses: actions/upload-artifact@v2
       if: failure()
       with:
@@ -60,7 +57,7 @@ jobs:
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
       with:
-        files: ./coverage.xml, ./coverage-xdist.xml, ./coverage-term.xml
+        files: ./coverage.xml, ./coverage-xdist.xml
         flags: unittests
         env_vars: OS, PYTHON, POSTGRES
         fail_ci_if_error: true

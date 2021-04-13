@@ -11,9 +11,9 @@ MAKE_Q = "CREATE TABLE test (id serial PRIMARY KEY, num integer, data varchar);"
 SELECT_Q = "SELECT * FROM test;"
 
 
-def test_postgresql_proc(postgresql_proc_version):
+def test_postgresql_proc(postgresql_proc):
     """Test different postgresql versions."""
-    assert postgresql_proc_version.running() is True
+    assert postgresql_proc.running() is True
 
 
 def test_main_postgres(postgresql):
