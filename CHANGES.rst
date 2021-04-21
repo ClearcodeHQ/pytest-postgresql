@@ -12,6 +12,8 @@ unreleased
 - [deprecated] Deprecated support for `logs_prefix` process fixture factory argument,
   `--postgresql-logsprefix` pytest command line option and `postgresql_logsprefix`
   ini configuration option. tmpdir_factory now builds pretty unique temporary directory structure.
+- [deprecation] Removed init_postgresql_database and drop_postgresql_database functions.
+  They were long deprecated and their role perfectly covered by DatabaseJanitor class.
 - [development] Fully moved to the Github Actions as CI/CD pipeline
 - [bugfix] Use `postgresql_logsprefix` and `--postgresql-logsprefix` again.
   They weren't used somewhere along the way.
