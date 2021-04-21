@@ -7,12 +7,13 @@ from pytest_postgresql.executor import PostgreSQLExecutor
 @pytest.mark.parametrize(
     "ctl_input, version",
     (
-        ("pg_ctl (PostgreSQL) 9.6.6", "9.6"),
-        ("pg_ctl (PostgreSQL) 9.5", "9.5"),
-        ("pg_ctl (PostgreSQL) 9.4.1", "9.4"),
+        ("pg_ctl (PostgreSQL) 9.6.21", "9.6"),
         ("pg_ctl (PostgreSQL) 10.0", "10.0"),
         ("pg_ctl (PostgreSQL) 10.1", "10.1"),
-        ("pg_ctl (PostgreSQL) 10.13", "10.13"),
+        ("pg_ctl (PostgreSQL) 10.16", "10.16"),
+        ("pg_ctl (PostgreSQL) 11.11", "11.11"),
+        ("pg_ctl (PostgreSQL) 12.6", "12.6"),
+        ("pg_ctl (PostgreSQL) 13.2", "13.2"),
     ),
 )
 def test_versions(ctl_input, version):

@@ -56,6 +56,6 @@ jobs:
       uses: codecov/codecov-action@v1
       with:
         file: ./coverage.xml
-        flags: unittests
+        flags: docker_postgres
         env_vars: OS, PYTHON
         fail_ci_if_error: true

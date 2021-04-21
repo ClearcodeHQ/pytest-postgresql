@@ -58,6 +58,6 @@ jobs:
       uses: codecov/codecov-action@v1
       with:
         file: ./coverage.xml
-        flags: unittests
+        flags: macos
         env_vars: OS, PYTHON, POSTGRES
         fail_ci_if_error: true
