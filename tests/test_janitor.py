@@ -1,4 +1,5 @@
 """Database Janitor tests."""
+import sys
 from unittest.mock import patch
 import pytest
 from pkg_resources import parse_version
@@ -33,3 +34,29 @@ def test_cursor_connects_with_password(connect_mock):
         connect_mock.assert_called_once_with(
             dbname="postgres", user="user", password="some_password", host="host", port="1234"
         )
+
+
+@pytest.mark.skipif(
+    sys.version_info < (3, 8), reason="Unittest call_args.kwargs was introduced since python 3.8"
+)
+@pytest.mark.parametrize(
+    "load_database", ("tests.loader.load_database", "tests.loader:load_database")
+)
+@patch("pytest_postgresql.janitor.psycopg2.connect")
+def test_janitor_populate(connect_mock, load_database):
+    """
+    Test that the cursor requests the postgres database.
+
+    load_database tries to connect to database, which triggers mocks.
+    """
+    call_kwargs = {
+        "host": "host",
+        "port": "1234",
+        "user": "user",
+        "dbname": "database_name",
+        "password": "some_password",
+    }
+    janitor = DatabaseJanitor(version=9.6, **call_kwargs)
+    janitor.load(load_database)
+    assert connect_mock.called
+    assert connect_mock.call_args.kwargs == call_kwargs

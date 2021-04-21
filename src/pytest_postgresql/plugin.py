@@ -19,6 +19,7 @@
 from tempfile import gettempdir
 
 from pytest_postgresql import factories
+from _pytest.config.argparsing import Parser
 
 
 # pylint:disable=invalid-name
@@ -32,11 +33,11 @@ _help_startparams = "Starting parameters for the PostgreSQL"
 _help_logsprefix = "Prefix for the log files"
 _help_unixsocketdir = "Location of the socket directory"
 _help_dbname = "Default database name"
-_help_load = "Load this SQL file by default, may be set multiple times"
+_help_load = "Dotted-style or entrypoint-style path to callable or path to SQL File"
 _help_postgres_options = "Postgres executable extra parameters. Passed via the -o option to pg_ctl"
 
 
-def pytest_addoption(parser):
+def pytest_addoption(parser: Parser):
     """Configure options for pytest-postgresql."""
     parser.addini(
         name="postgresql_exec", help=_help_executable, default="/usr/lib/postgresql/9.6/bin/pg_ctl"

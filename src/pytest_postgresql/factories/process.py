@@ -1,4 +1,4 @@
-# Copyright (C) 2013-2020 by Clearcode <http://clearcode.cc>
+# Copyright (C) 2013-2021 by Clearcode <http://clearcode.cc>
 # and associates (see AUTHORS).
 
 # This file is part of pytest-postgresql.
@@ -15,47 +15,21 @@
 
 # You should have received a copy of the GNU Lesser General Public License
 # along with pytest-dbfixtures.  If not, see <http://www.gnu.org/licenses/>.
-"""Fixture factories for postgresql fixtures."""
-
+"""Fixture factory for postgresql process."""
 import os.path
 import platform
 import subprocess
-from typing import List, Callable, Union, Iterable, Optional
-from warnings import warn
+from _warnings import warn
+from typing import Union, Iterable, Callable, List
 
 import pytest
 from _pytest.fixtures import FixtureRequest
 from _pytest.tmpdir import TempdirFactory
 
-from pytest_postgresql.compat import psycopg2, connection, check_for_psycopg2
-from pytest_postgresql.executor_noop import NoopExecutor
-from pytest_postgresql.janitor import DatabaseJanitor
+from pytest_postgresql.config import get_config
 from pytest_postgresql.executor import PostgreSQLExecutor
+from pytest_postgresql.janitor import DatabaseJanitor
 from pytest_postgresql.port import get_port
-
-
-def get_config(request: FixtureRequest) -> dict:
-    """Return a dictionary with config options."""
-    config = {}
-    options = [
-        "exec",
-        "host",
-        "port",
-        "user",
-        "password",
-        "options",
-        "startparams",
-        "logsprefix",
-        "unixsocketdir",
-        "dbname",
-        "load",
-        "postgres_options",
-    ]
-    for option in options:
-        option_name = "postgresql_" + option
-        conf = request.config.getoption(option_name) or request.config.getini(option_name)
-        config[option] = conf
-    return config
 
 
 def postgresql_proc(
@@ -64,11 +38,13 @@ def postgresql_proc(
     port: Union[str, int, Iterable] = -1,
     user: str = None,
     password: str = None,
+    dbname: str = None,
     options: str = "",
     startparams: str = None,
     unixsocketdir: str = None,
     logs_prefix: str = "",
     postgres_options: str = None,
+    load: List[Union[Callable, str]] = None,
 ) -> Callable[[FixtureRequest, TempdirFactory], PostgreSQLExecutor]:
     """
     Postgresql process factory.
@@ -83,11 +59,14 @@ def postgresql_proc(
         [{4002,4003}] or {4002,4003} - random of 4002 or 4003 ports
         [(2000,3000), {4002,4003}] - random of given range and set
     :param str user: postgresql username
+    :param password: postgresql password
+    :param dbname: postgresql database name
     :param str options: Postgresql connection options
     :param str startparams: postgresql starting parameters
     :param str unixsocketdir: directory to create postgresql's unixsockets
     :param str logs_prefix: prefix for log filename
     :param str postgres_options: Postgres executable options for use by pg_ctl
+    :param load: List of functions used to initialize database's template.
     :rtype: func
     :returns: function which makes a postgresql process
     """
@@ -106,6 +85,8 @@ def postgresql_proc(
         config = get_config(request)
         postgresql_ctl = executable or config["exec"]
         logfile_prefix = logs_prefix or config["logsprefix"]
+        pg_dbname = dbname or config["dbname"]
+        pg_load = load or config["load"]
 
         # check if that executable exists, as it's no on system PATH
         # only replace if executable isn't passed manually
@@ -141,6 +122,7 @@ def postgresql_proc(
             port=pg_port,
             user=user or config["user"],
             password=password or config["password"],
+            dbname=pg_dbname,
             options=options or config["options"],
             datadir=datadir,
             unixsocketdir=unixsocketdir or config["unixsocketdir"],
@@ -151,118 +133,17 @@ def postgresql_proc(
         # start server
         with postgresql_executor:
             postgresql_executor.wait_for_postgres()
-
-            yield postgresql_executor
+            template_dbname = f"{postgresql_executor.dbname}_tmpl"
+            with DatabaseJanitor(
+                user=postgresql_executor.user,
+                host=postgresql_executor.host,
+                port=postgresql_executor.port,
+                dbname=template_dbname,
+                version=postgresql_executor.version,
+                password=postgresql_executor.password,
+            ) as janitor:
+                for load_element in pg_load:
+                    janitor.load(load_element)
+                yield postgresql_executor
 
     return postgresql_proc_fixture
-
-
-def postgresql_noproc(
-    host: str = None,
-    port: Union[str, int] = None,
-    user: str = None,
-    password: str = None,
-    options: str = "",
-) -> Callable[[FixtureRequest], NoopExecutor]:
-    """
-    Postgresql noprocess factory.
-
-    :param host: hostname
-    :param port: exact port (e.g. '8000', 8000)
-    :param user: postgresql username
-    :param password: postgresql password
-    :param options: Postgresql connection options
-    :returns: function which makes a postgresql process
-    """
-
-    @pytest.fixture(scope="session")
-    def postgresql_noproc_fixture(request: FixtureRequest) -> NoopExecutor:
-        """
-        Noop Process fixture for PostgreSQL.
-
-        :param FixtureRequest request: fixture request object
-        :returns: tcp executor-like object
-        """
-        config = get_config(request)
-        pg_host = host or config["host"]
-        pg_port = port or config["port"] or 5432
-        pg_user = user or config["user"]
-        pg_password = password or config["password"]
-        pg_options = options or config["options"]
-
-        noop_exec = NoopExecutor(
-            host=pg_host,
-            port=pg_port,
-            user=pg_user,
-            password=pg_password,
-            options=pg_options,
-        )
-
-        yield noop_exec
-
-    return postgresql_noproc_fixture
-
-
-def postgresql(
-    process_fixture_name: str,
-    db_name: str = None,
-    load: List[str] = None,
-    isolation_level: Optional[int] = None,
-) -> Callable[[FixtureRequest], connection]:
-    """
-    Return connection fixture factory for PostgreSQL.
-
-    :param process_fixture_name: name of the process fixture
-    :param db_name: database name
-    :param load: SQL to automatically load into our test database
-    :param isolation_level: optional postgresql isolation level
-                            defaults to ISOLATION_LEVEL_AUTOCOMMIT
-    :returns: function which makes a connection to postgresql
-    """
-
-    @pytest.fixture
-    def postgresql_factory(request: FixtureRequest) -> connection:
-        """
-        Fixture factory for PostgreSQL.
-
-        :param FixtureRequest request: fixture request object
-        :returns: postgresql client
-        """
-        config = get_config(request)
-        check_for_psycopg2()
-        pg_isolation_level = isolation_level or psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT
-        proc_fixture: Union[PostgreSQLExecutor, NoopExecutor] = request.getfixturevalue(
-            process_fixture_name
-        )
-
-        pg_host = proc_fixture.host
-        pg_port = proc_fixture.port
-        pg_user = proc_fixture.user
-        pg_password = proc_fixture.password
-        pg_options = proc_fixture.options
-        pg_db = db_name or config["dbname"]
-        pg_load = load or config["load"]
-
-        with DatabaseJanitor(
-            pg_user, pg_host, pg_port, pg_db, proc_fixture.version, pg_password, pg_isolation_level
-        ):
-            db_connection: connection = psycopg2.connect(
-                dbname=pg_db,
-                user=pg_user,
-                password=pg_password,
-                host=pg_host,
-                port=pg_port,
-                options=pg_options,
-            )
-            if pg_load:
-                for filename in pg_load:
-                    with open(filename, "r") as _fd:
-                        with db_connection.cursor() as cur:
-                            cur.execute(_fd.read())
-            yield db_connection
-            db_connection.close()
-
-    return postgresql_factory
-
-
-__all__ = ("postgresql", "postgresql_proc")
