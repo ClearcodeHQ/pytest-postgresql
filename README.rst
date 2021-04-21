@@ -94,33 +94,6 @@ If you want the database fixture to be automatically populated with your schema:
 
     The database will still be dropped each time.
 
-If you've got other programmatic ways to populate the database, you would need an additional fixture, that will take care of that:
-
-.. code-block:: python
-
-    @pytest.fixture(scope='function')
-    def db_session(postgresql):
-        """Session for SQLAlchemy."""
-        from pyramid_fullauth.models import Base  # pylint:disable=import-outside-toplevel
-
-        # NOTE: this fstring assumes that psycopg2 >= 2.8 is used. Not sure about it's support in psycopg2cffi (PyPy)
-        connection = f'postgresql+psycopg2://{postgresql.info.user}:@{postgresql.info.host}:{postgresql.info.port}/{postgresql.info.dbname}'
-
-        engine = create_engine(connection, echo=False, poolclass=NullPool)
-        pyramid_basemodel.Session = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
-        pyramid_basemodel.bind_engine(
-            engine, pyramid_basemodel.Session, should_create=True, should_drop=True)
-
-        yield pyramid_basemodel.Session
-
-        transaction.commit()
-        Base.metadata.drop_all(engine)
-
-See the original code at `pyramid_fullauth <https://github.com/fizyk/pyramid_fullauth/blob/2950e7f4a397b313aaf306d6d1a763ab7d8abf2b/tests/conftest.py#L35>`_.
-Depending on your needs, that in between code can fire alembic migrations in case of sqlalchemy stack or any other code
-
-
-
 Connecting to already existing postgresql database
 --------------------------------------------------
 
@@ -254,6 +227,75 @@ Example usage:
         [pytest]
         postgresql_port = 8888
 
+Examples
+========
+
+Populating database for tests
+-----------------------------
+
+With SQLAlchemy
++++++++++++++++
+
+This example shows how to populate database and create an SQLAlchemy's ORM connection:
+
+Sample below is simplified session fixture from
+`pyramid_fullauth <https://github.com/fizyk/pyramid_fullauth/>`_ tests:
+
+.. code-block:: python
+
+    from sqlalchemy import create_engine
+    from sqlalchemy.orm import scoped_session, sessionmaker
+    from sqlalchemy.pool import NullPool
+    from zope.sqlalchemy import register
+
+
+    @pytest.fixture
+    def db_session(postgresql):
+        """Session for SQLAlchemy."""
+        from pyramid_fullauth.models import Base  # pylint:disable=import-outside-toplevel
+
+        # NOTE: this fstring assumes that psycopg2 >= 2.8 is used. Not sure about it's support in psycopg2cffi (PyPy)
+        connection = f'postgresql+psycopg2://{postgresql.info.user}:@{postgresql.info.host}:{postgresql.info.port}/{postgresql.info.dbname}'
+
+        engine = create_engine(connection, echo=False, poolclass=NullPool)
+        pyramid_basemodel.Session = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
+        pyramid_basemodel.bind_engine(
+            engine, pyramid_basemodel.Session, should_create=True, should_drop=True)
+
+        yield pyramid_basemodel.Session
+
+        transaction.commit()
+        Base.metadata.drop_all(engine)
+
+
+    @pytest.fixture
+    def user(db_session):
+        """Test user fixture."""
+        from pyramid_fullauth.models import User
+        from tests.tools import DEFAULT_USER
+
+        new_user = User(**DEFAULT_USER)
+        db_session.add(new_user)
+        transaction.commit()
+        return new_user
+
+
+    def test_remove_last_admin(db_session, user):
+        """
+        Sample test checks internal login, but shows usage in tests with SQLAlchemy
+        """
+        user = db_session.merge(user)
+        user.is_admin = True
+        transaction.commit()
+        user = db_session.merge(user)
+
+        with pytest.raises(AttributeError):
+            user.is_admin = False
+.. note::
+
+    See the original code at `pyramid_fullauth's conftest file <https://github.com/fizyk/pyramid_fullauth/blob/2950e7f4a397b313aaf306d6d1a763ab7d8abf2b/tests/conftest.py#L35>`_.
+    Depending on your needs, that in between code can fire alembic migrations in case of sqlalchemy stack or any other code
+
 Maintaining database state outside of the fixtures
 --------------------------------------------------
 
@@ -266,26 +308,57 @@ For this import DatabaseJanitor and use its init and drop methods:
 
 .. code-block:: python
 
+    import pytest
     from pytest_postgresql.factories import DatabaseJanitor
 
-    # variable definition
+    @pytest.fixture
+    func database(postgresql_proc):
+        # variable definition
 
-    janitor = DatabaseJanitor(user, host, port, db_name, version)
-    janitor.init()
-    # your code, or yield
-    janitor.drop()
-    # at this moment you'll have clean database step
+        janitor = DatabaseJanitor(
+            postgresql_proc.user,
+            postgresql_proc.host,
+            postgresql_proc.port,
+            "my_test_database",
+            postgresql_proc.version,
+            password="secret_password,
+        ):
+        janitor.init()
+        yield psycopg2.connect(
+            dbname="my_test_database",
+            user=postgresql_proc.user,
+            password="secret_password",
+            host=postgresql_proc.host,
+            port=postgresql_proc.port,
+        )
+        janitor.drop()
 
 or use it as a context manager:
 
 .. code-block:: python
 
+    import pytest
     from pytest_postgresql.factories import DatabaseJanitor
 
-    # variable definition
+    @pytest.fixture
+    func database(postgresql_proc):
+        # variable definition
 
-    with DatabaseJanitor(user, host, port, db_name, version):
-        # do something here
+        with DatabaseJanitor(
+            postgresql_proc.user,
+            postgresql_proc.host,
+            postgresql_proc.port,
+            "my_test_database",
+            postgresql_proc.version,
+            password="secret_password,
+        ):
+            yield psycopg2.connect(
+                dbname="my_test_database",
+                user=postgresql_proc.user,
+                password="secret_password",
+                host=postgresql_proc.host,
+                port=postgresql_proc.port,
+            )
 
 .. note::
 
@@ -295,8 +368,38 @@ or use it as a context manager:
     You can optionally pass in a recognized postgresql ISOLATION_LEVEL for
     additional control.
 
-Package resources
------------------
+.. note::
 
-* Bug tracker: https://github.com/ClearcodeHQ/pytest-postgresql/issues
+    See DatabaseJanitor usage in python's warehouse test code https://github.com/pypa/warehouse/blob/5d15bfe/tests/conftest.py#L127
 
+Connecting to Postgresql (in a docker)
+--------------------------------------
+
+To connect to a docker run postgresql and run test on it, use nooproc fixtures.
+
+.. code-block:: sh
+
+    docker run --name some-postgres -e POSTGRES_PASSWORD=mysecretpassword -d postgres
+
+This will start postgresql in a docker container, however using a postgresql installed locally is not much different.
+
+In tests, make sure that all your tests are using **postgresql_noproc** fixture like that:
+
+.. code-block:: python
+
+    postgresql_in_docker = factories.postgresql_noproc()
+    postresql = factories.postgresql("postgresql_in_docker", db_name="test")
+
+
+    def test_postgres_docker(postresql):
+        """Run test."""
+        cur = postgresql.cursor()
+        cur.execute("CREATE TABLE test (id serial PRIMARY KEY, num integer, data varchar);")
+        postgresql.commit()
+        cur.close()
+
+And run tests:
+
+.. code-block:: sh
+
+    pytest --postgresql-host=172.17.0.2 --postgresql-password=mysecretpassword

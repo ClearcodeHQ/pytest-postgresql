@@ -3,8 +3,16 @@ name: Run tests on macos
 on:
   push:
     branches: [ master ]
+    paths:
+      - '**.py'
+      - .github/workflows/tests-macos.yml
+      - requirements-tests.txt
   pull_request:
     branches: [ master ]
+    paths:
+      - '**.py'
+      - .github/workflows/tests-macos.yml
+      - requirements-tests.txt
 
 jobs:
   macostests:

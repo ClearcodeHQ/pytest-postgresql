@@ -3,8 +3,16 @@ name: Run linters
 on:
   push:
     branches: [ master ]
+    paths:
+      - '**.py'
+      - .github/workflows/linters.yml
+      - requirements-lint.txt
   pull_request:
     branches: [ master ]
+    paths:
+      - '**.py'
+      - .github/workflows/linters.yml
+      - requirements-lint.txt
 
 jobs:
   pydocstyle:
