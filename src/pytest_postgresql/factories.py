@@ -58,41 +58,6 @@ def get_config(request: FixtureRequest) -> dict:
     return config
 
 
-def init_postgresql_database(user, host, port, db_name, password=None):
-    """
-    Create database in postgresql.
-
-    :param str user: postgresql username
-    :param str host: postgresql host
-    :param str port: postgresql port
-    :param str db_name: database name
-    :param str password: optional postgresql password
-    """
-    warn(
-        "init_postgresql_database is deprecated, " "use DatabaseJanitor.init instead.",
-        DeprecationWarning,
-    )
-    DatabaseJanitor(user, host, port, db_name, 0.0, password).init()
-
-
-def drop_postgresql_database(user, host, port, db_name, version, password=None):
-    """
-    Drop databse in postgresql.
-
-    :param str user: postgresql username
-    :param str host: postgresql host
-    :param str port: postgresql port
-    :param str db_name: database name
-    :param packaging.version.Version version: postgresql version number
-    :param str password: optional postgresql password
-    """
-    warn(
-        "drop_postgresql_database is deprecated, " "use DatabaseJanitor.drop instead.",
-        DeprecationWarning,
-    )
-    DatabaseJanitor(user, host, port, db_name, version, password).drop()
-
-
 def postgresql_proc(
     executable: str = None,
     host: str = None,
