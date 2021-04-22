@@ -66,6 +66,6 @@ jobs:
       uses: codecov/codecov-action@v1
       with:
         files: ./coverage.xml, ./coverage-xdist.xml
-        flags: unittests
+        flags: linux
         env_vars: OS, PYTHON, POSTGRES
         fail_ci_if_error: true

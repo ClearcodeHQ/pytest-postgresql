@@ -8,7 +8,7 @@ unreleased
   How long will it try to connect to database before raising a TimeoutError
 - [enhancement] Updated supported python versions
 - [enhancement] Unified temporary directory handling in fixture. Settled on tmpdir_factory.
-- [support] officially test against postgresql 9.6 and up
+- [support] support postgresql 9.6 and up
 - [deprecated] Deprecated support for `logs_prefix` process fixture factory argument,
   `--postgresql-logsprefix` pytest command line option and `postgresql_logsprefix`
   ini configuration option. tmpdir_factory now builds pretty unique temporary directory structure.

@@ -37,7 +37,7 @@ if platform.system() == "Darwin":
 
 
 class PostgreSQLUnsupported(Exception):
-    """Exception raised when postgresql<9.0 would be detected."""
+    """Exception raised when unsupported postgresql would be detected."""
 
 
 # pylint:disable=too-many-arguments,too-many-instance-attributes
@@ -46,20 +46,19 @@ class PostgreSQLExecutor(TCPExecutor):
     PostgreSQL executor running on pg_ctl.
 
     Based over an `pg_ctl program
-    <http://www.postgresql.org/docs/9.1/static/app-pg-ctl.html>`_
+    <http://www.postgresql.org/docs/current/static/app-pg-ctl.html>`_
     """
 
-    BASE_PROC_START_COMMAND = " ".join(
-        (
-            "{executable} start -D {datadir}",
-            "-o \"-F -p {port} -c log_destination='stderr'",
-            "-c logging_collector=off -c %s='{unixsocketdir}' {postgres_options}\"",
-            "-l {logfile} {startparams}",
-        )
+    BASE_PROC_START_COMMAND = (
+        "{executable} start -D {datadir} "
+        "-o \"-F -p {port} -c log_destination='stderr' "
+        "-c logging_collector=off "
+        "-c unix_socket_directories='{unixsocketdir}' {postgres_options}\" "
+        "-l {logfile} {startparams}"
     )
 
     VERSION_RE = re.compile(r".* (?P<version>\d+\.\d+)")
-    MIN_SUPPORTED_VERSION = parse_version("9.5")
+    MIN_SUPPORTED_VERSION = parse_version("9.6")
 
     # pylint:disable=too-many-locals
     def __init__(
@@ -109,7 +108,7 @@ class PostgreSQLExecutor(TCPExecutor):
         self.logfile = logfile
         self.startparams = startparams
         self.postgres_options = postgres_options
-        command = self.proc_start_command().format(
+        command = self.BASE_PROC_START_COMMAND.format(
             executable=self.executable,
             datadir=self.datadir,
             port=port,
@@ -195,14 +194,6 @@ class PostgreSQLExecutor(TCPExecutor):
             if self.running():
                 break
             time.sleep(1)
-
-    def proc_start_command(self):
-        """Based on postgres version return proper start command."""
-        if self.version > parse_version("9.2"):
-            unix_socket_dir_arg_name = "unix_socket_directories"
-        else:
-            unix_socket_dir_arg_name = "unix_socket_directory"
-        return self.BASE_PROC_START_COMMAND % unix_socket_dir_arg_name
 
     @property
     def version(self):

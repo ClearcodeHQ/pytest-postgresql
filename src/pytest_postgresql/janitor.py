@@ -64,10 +64,7 @@ class DatabaseJanitor:
         """Drop database in postgresql."""
         # We cannot drop the database while there are connections to it, so we
         # terminate all connections first while not allowing new connections.
-        if self.version >= parse_version("9.2"):
-            pid_column = "pid"
-        else:
-            pid_column = "procpid"
+        pid_column = "pid"
         with self.cursor() as cur:
             cur.execute(
                 "UPDATE pg_database SET datallowconn=false WHERE datname = %s;", (self.db_name,)
