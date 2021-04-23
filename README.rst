@@ -52,7 +52,7 @@ Plugin contains three fixtures:
 
 * **postgresql_proc** - session scoped fixture, that starts PostgreSQL instance
   at it's first use and stops at the end of the tests.
-* **postgresql_noproc** - a nooprocess fixture, that's connecting to already
+* **postgresql_noproc** - a noprocess fixture, that's connecting to already
   running postgresql instance.
   For example on dockerized test environments, or CI providing postgresql services
 
@@ -375,7 +375,7 @@ or use it as a context manager:
 Connecting to Postgresql (in a docker)
 --------------------------------------
 
-To connect to a docker run postgresql and run test on it, use nooproc fixtures.
+To connect to a docker run postgresql and run test on it, use noproc fixtures.
 
 .. code-block:: sh
 

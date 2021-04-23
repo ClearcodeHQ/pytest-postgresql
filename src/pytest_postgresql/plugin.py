@@ -130,5 +130,5 @@ def pytest_addoption(parser):
 
 
 postgresql_proc = factories.postgresql_proc()
-postgresql_nooproc = factories.postgresql_noproc()
+postgresql_noproc = factories.postgresql_noproc()
 postgresql = factories.postgresql("postgresql_proc")
