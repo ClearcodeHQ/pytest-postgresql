@@ -18,7 +18,7 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         python-version: [3.7, 3.8, 3.9, pypy-3.7-v7.3.3]
         postgres-version: [9.6, 10, 11, 12, 13]
@@ -26,6 +26,24 @@ jobs:
       OS: ubuntu-latest
       PYTHON: ${{ matrix.python-version }}
       POSTGRES: ${{ matrix.postgres-version }}
+    # Service containers to run with `container-job`
+    services:
+      # Label used to access the service container
+      postgres:
+        # Docker Hub image:
+        image: postgres:${{ matrix.postgres-version }}
+        # Provide the password for postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5433:5432
 
     steps:
     - uses: actions/checkout@v2
@@ -62,10 +80,13 @@ jobs:
       with:
         name: postgresql-${{ matrix.python-version }}-${{ matrix.postgres-version }}
         path: /tmp/pytest-of-runner/**
+    - name: Run test noproc fixture on docker
+      run: |
+        pytest -n 0 -k docker --postgresql-host=localhost --postgresql-port 5433 --postgresql-password=postgres --cov-report=xml:docker.xml
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
       with:
-        files: ./coverage.xml, ./coverage-xdist.xml
+        files: ./coverage.xml, ./coverage-xdist.xml, ./docker.xml
         flags: linux
         env_vars: OS, PYTHON, POSTGRES
         fail_ci_if_error: true
