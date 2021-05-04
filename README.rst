@@ -84,16 +84,51 @@ Sample test
         postgresql.commit()
         cur.close()
 
-If you want the database fixture to be automatically populated with your schema:
+If you want the database fixture to be automatically populated with your schema there are two ways:
+
+#. client fixture specific
+#. process fixture specific
+
+Both are accepting same set of possible loaders:
+
+* sql file path
+* loading function import path (string)
+* actual loading function
+
+That function will receive **host**, **port**, **user**, **dbname** and **password** kwargs and will have to perform
+connection to the database inside. However, you'll be able to run SQL files or even trigger programmatically database
+migrations you have.
+
+Client specific loads the database each test
 
 .. code-block:: python
 
-    postgresql_my_with_schema = factories.postgresql('postgresql_my_proc', load=['schemafile.sql', 'otherschema.sql'])
+    postgresql_my_with_schema = factories.postgresql(
+        'postgresql_my_proc',
+        load=["schemafile.sql", "otherschema.sql", "import.path.to.function", "import.path.to:otherfunction", load_this]
+    )
 
-.. note::
+.. warning::
 
-    The database will still be dropped each time.
+    This way, the database will still be dropped each time.
 
+
+The process fixture performs the load once per test session, and loads the data into the template database.
+Client fixture then creates test database out of the template database each test, which significantly speeds up the tests.
+
+.. code-block:: python
+
+    postgresql_my_proc = factories.postgresql_proc(
+        load=["schemafile.sql", "otherschema.sql", "import.path.to.function", "import.path.to:otherfunction", load_this]
+    )
+
+
+.. code-block:: bash
+
+    pytest --postgresql-populate-template=path.to.loading_function --postgresql-populate-template=path.to.other:loading_function --postgresql-populate-template=path/to/file.sql
+
+
+The loading_function from example will receive , and have to commit that.
 Connecting to already existing postgresql database
 --------------------------------------------------
 
@@ -188,11 +223,11 @@ You can pick which you prefer, but remember that these settings are handled in t
      - postgresql_dbname
      - -
      - test
-   * - Default Schema
+   * - Default Schema either in sql files or import path to function that will load it (list of values for each)
      - load
      - --postgresql-load
      - postgresql_load
-     -
+     - yes
      -
    * - PostgreSQL connection options
      - options
@@ -403,3 +438,40 @@ And run tests:
 .. code-block:: sh
 
     pytest --postgresql-host=172.17.0.2 --postgresql-password=mysecretpassword
+
+Using a common database initialisation between tests
+----------------------------------------------------
+
+If you've got several tests that require common initialisation, you need to define a `load` and pass it to
+your custom postgresql process fixture:
+
+.. code-block:: python
+
+    from pytest_postgresql.factories import postgresql, postgresql_proc
+    def load_database(**kwargs):
+        db_connection: connection = psycopg2.connect(**kwargs)
+        with db_connection.cursor() as cur:
+            cur.execute("CREATE TABLE stories (id serial PRIMARY KEY, name varchar);")
+            cur.execute(
+                "INSERT INTO stories (name) VALUES"
+                "('Silmarillion'), ('Star Wars'), ('The Expanse'), ('Battlestar Galactica')"
+            )
+            db_connection.commit()
+
+    postgresql_proc = postgresql_proc(
+        load=[load_database],
+    )
+
+    postgresql = postgresql(
+        "postgresql_proc",
+    )
+
+You can also define your own database name by passing same dbname value
+to **both** factories.
+
+The way this will work is that the process fixture will populate template database,
+which in turn will be used automatically by client fixture to create a test database from scratch.
+Fast, clean and no dangling transactions, that could be accidentally rolled back.
+
+Same approach will work with noproces fixture, while connecting to already running postgresql instance whether
+it'll be on a docker machine or running remotely or locally.

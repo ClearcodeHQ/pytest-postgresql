@@ -11,17 +11,17 @@ TEST_SQL_DIR = os.path.dirname(os.path.abspath(__file__)) + "/test_sql/"
 
 # pylint:disable=invalid-name
 postgresql_proc2 = factories.postgresql_proc(port=None)
-postgresql2 = factories.postgresql("postgresql_proc2", db_name="test-db")
+postgresql2 = factories.postgresql("postgresql_proc2", dbname="test-db")
 postgresql_load_1 = factories.postgresql(
     "postgresql_proc2",
-    db_name="test-db",
+    dbname="test-load-db",
     load=[
         TEST_SQL_DIR + "test.sql",
     ],
 )
 postgresql_load_2 = factories.postgresql(
     "postgresql_proc2",
-    db_name="test-db",
+    dbname="test-load-moredb",
     load=[TEST_SQL_DIR + "test.sql", TEST_SQL_DIR + "test2.sql"],
 )
 # pylint:enable=invalid-name

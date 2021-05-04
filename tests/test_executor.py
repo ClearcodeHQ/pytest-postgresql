@@ -1,6 +1,7 @@
 """Test various executor behaviours."""
 import sys
 
+from _pytest.fixtures import FixtureRequest
 from pkg_resources import parse_version
 
 import psycopg2
@@ -8,7 +9,7 @@ import pytest
 
 from pytest_postgresql.executor import PostgreSQLExecutor, PostgreSQLUnsupported
 from pytest_postgresql.factories import postgresql_proc, postgresql
-from pytest_postgresql.factories import get_config
+from pytest_postgresql.config import get_config
 from pytest_postgresql.port import get_port
 from pytest_postgresql.retry import retry
 
@@ -43,17 +44,21 @@ def test_unsupported_version(request):
     sys.platform == "darwin", reason="The default pg_ctl path is for linux, not macos"
 )
 @pytest.mark.parametrize("locale", ("en_US.UTF-8", "de_DE.UTF-8"))
-def test_executor_init_with_password(request, monkeypatch, locale):
+def test_executor_init_with_password(request: FixtureRequest, monkeypatch, tmpdir_factory, locale):
     """Test whether the executor initializes properly."""
     config = get_config(request)
     monkeypatch.setenv("LC_ALL", locale)
+    port = get_port(config["port"])
+    tmpdir = tmpdir_factory.mktemp(f"pytest-postgresql-{request.node.name}")
+    datadir = tmpdir.mkdir(f"data-{port}")
+    logfile_path = tmpdir.join(f"postgresql.{port}.log")
     executor = PostgreSQLExecutor(
         executable=config["exec"],
         host=config["host"],
-        port=get_port(config["port"]),
-        datadir="/tmp/error",
+        port=port,
+        datadir=datadir,
         unixsocketdir=config["unixsocketdir"],
-        logfile="/tmp/version.error.log",
+        logfile=logfile_path,
         startparams=config["startparams"],
         password="somepassword",
     )

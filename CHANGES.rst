@@ -4,20 +4,41 @@ CHANGELOG
 unreleased
 ----------
 
-- [enhancement] DatabaseJanitor can now define a `connection_timeout` parameter.
+Features
+++++++++
+
+- Ability to create template database once for the process fixture and
+  re-recreate a clean database out of it every test. Not only it does provide some
+  common db initialisation between tests but also can speed up tests significantly,
+  especially if the initialisation has lots of operations to perform.
+- DatabaseJanitor can now define a `connection_timeout` parameter.
   How long will it try to connect to database before raising a TimeoutError
-- [enhancement] Updated supported python versions
-- [enhancement] Unified temporary directory handling in fixture. Settled on tmpdir_factory.
-- [support] support postgresql 9.6 and up
-- [deprecated] Deprecated support for `logs_prefix` process fixture factory argument,
+- Updated supported python versions
+- Unified temporary directory handling in fixture. Settled on tmpdir_factory.
+- Fully moved to the Github Actions as CI/CD pipeline
+
+Deprecations
+++++++++++++
+
+- Deprecated support for `logs_prefix` process fixture factory argument,
   `--postgresql-logsprefix` pytest command line option and `postgresql_logsprefix`
   ini configuration option. tmpdir_factory now builds pretty unique temporary directory structure.
-- [deprecation] Removed init_postgresql_database and drop_postgresql_database functions.
+
+Backward Incompatibilities
+++++++++++++++++++++++++++
+
+- Dropped support for postgresql 9.5 and down
+- Removed init_postgresql_database and drop_postgresql_database functions.
   They were long deprecated and their role perfectly covered by DatabaseJanitor class.
-- [development] Fully moved to the Github Actions as CI/CD pipeline
-- [bugfix] Use `postgresql_logsprefix` and `--postgresql-logsprefix` again.
-  They weren't used somewhere along the way.
-- [bugfix] Sometimes pytest-postrgesql would fail to start postgresql with
+- `pytest_postgresql.factories.get_config` was moved to `pytest_postgresql.config.get_config`
+- all `db_name` keywords and attributes were renamed to `dbname`
+
+Bugfix
+++++++
+
+- Use `postgresql_logsprefix` and `--postgresql-logsprefix` again.
+  They were stopped being used somewhere along the way.
+- Sometimes pytest-postrgesql would fail to start postgresql with
   "FATAL:  the database system is starting up" message. It's not really a fatal error,
   but a message indicating that the process still starts. Now pytest-postgresql will wait properly in this cases.
 

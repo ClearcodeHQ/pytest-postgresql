@@ -1,7 +1,7 @@
 """Test for NoopExecutor."""
 from pytest_postgresql.executor import PostgreSQLExecutor
-from pytest_postgresql.factories import NoopExecutor
 from pytest_postgresql.compat import psycopg2
+from pytest_postgresql.executor_noop import NoopExecutor
 from pytest_postgresql.retry import retry
 
 

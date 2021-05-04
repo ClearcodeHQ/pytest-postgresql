@@ -30,7 +30,7 @@ class NoopExecutor:  # pylint: disable=too-few-public-methods
     or with the use of containerisation like kubernetes or docker compose.
     """
 
-    def __init__(self, host, port, user, options, password=None):
+    def __init__(self, host, port, user, options, password=None, dbname=None):
         """
         Initialize nooperator executor mock.
 
@@ -39,12 +39,15 @@ class NoopExecutor:  # pylint: disable=too-few-public-methods
         :param str user: Postgresql username
         :param str user: Postgresql password
         :param str options: Additional connection options
+        :param password: postgresql password
+        :param dbname: postgresql database name
         """
         self.host = host
         self.port = int(port)
         self.user = user
         self.options = options
         self.password = password
+        self.dbname = dbname
         self._version = None
 
     @property
@@ -52,6 +55,8 @@ class NoopExecutor:  # pylint: disable=too-few-public-methods
         """Get postgresql's version."""
         if not self._version:
             check_for_psycopg2()
+            # could be called before self.dbname will be created.
+            # Use default postgres database
             with psycopg2.connect(
                 dbname="postgres",
                 user=self.user,

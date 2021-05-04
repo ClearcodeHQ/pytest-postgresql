@@ -63,9 +63,9 @@ class PostgreSQLExecutor(TCPExecutor):
     # pylint:disable=too-many-locals
     def __init__(
         self,
-        executable,
-        host,
-        port,
+        executable: str,
+        host: str,
+        port: int,
         datadir,
         unixsocketdir,
         logfile,
@@ -75,6 +75,7 @@ class PostgreSQLExecutor(TCPExecutor):
         sleep=0.1,
         user="postgres",
         password="",
+        dbname: str = None,
         options="",
         postgres_options="",
     ):
@@ -95,6 +96,7 @@ class PostgreSQLExecutor(TCPExecutor):
         :param str user: [default] postgresql's username used to manage
             and access PostgreSQL
         :param str password: optional password for the user
+        :param dbname: database name (might not yet exist)
         :param str options:
         :param str postgres_options: extra arguments to `postgres start`
         """
@@ -102,6 +104,7 @@ class PostgreSQLExecutor(TCPExecutor):
         self.executable = executable
         self.user = user
         self.password = password
+        self.dbname = dbname
         self.options = options
         self.datadir = datadir
         self.unixsocketdir = unixsocketdir

@@ -1,12 +1,15 @@
 """Database Janitor."""
+import re
 from contextlib import contextmanager
+from functools import partial
 from types import TracebackType
-from typing import TypeVar, Union, Optional, Type
+from typing import TypeVar, Union, Optional, Type, Callable
 
 from pkg_resources import parse_version
 
 from pytest_postgresql.compat import psycopg2, cursor, check_for_psycopg2
 from pytest_postgresql.retry import retry
+from pytest_postgresql.sql import loader
 
 Version = type(parse_version("1"))  # pylint:disable=invalid-name
 
@@ -22,7 +25,7 @@ class DatabaseJanitor:
         user: str,
         host: str,
         port: str,
-        db_name: str,
+        dbname: Optional[str],
         version: Union[str, float, Version],
         password: str = None,
         isolation_level: Optional[int] = None,
@@ -34,7 +37,7 @@ class DatabaseJanitor:
         :param user: postgresql username
         :param host: postgresql host
         :param port: postgresql port
-        :param db_name: database name
+        :param dbname: database name
         :param version: postgresql version number
         :param password: optional postgresql password
         :param isolation_level: optional postgresql isolation level
@@ -46,7 +49,7 @@ class DatabaseJanitor:
         self.password = password
         self.host = host
         self.port = port
-        self.db_name = db_name
+        self.dbname = dbname
         self._connection_timeout = connection_timeout
         check_for_psycopg2()
         self.isolation_level = isolation_level or psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT
@@ -57,25 +60,75 @@ class DatabaseJanitor:
 
     def init(self) -> None:
         """Create database in postgresql."""
+        template_name = f"{self.dbname}_tmpl"
         with self.cursor() as cur:
-            cur.execute('CREATE DATABASE "{}";'.format(self.db_name))
+            if self.dbname.endswith("_tmpl"):
+                result = False
+            else:
+                cur.execute(
+                    f"SELECT EXISTS "
+                    f"(SELECT datname FROM pg_catalog.pg_database WHERE datname= %s);",
+                    (template_name,),
+                )
+                result = cur.fetchone()[0]
+            if not result:
+                cur.execute(f'CREATE DATABASE "{self.dbname}";')
+            else:
+                # All template database does not allow connection:
+                self._dont_datallowconn(cur, template_name)
+                # And make sure no-one is left connected to the template database.
+                # Otherwise Creating database from template will fail
+                self._terminate_connection(cur, template_name)
+                cur.execute(f'CREATE DATABASE "{self.dbname}" TEMPLATE "{template_name}";')
 
     def drop(self) -> None:
         """Drop database in postgresql."""
         # We cannot drop the database while there are connections to it, so we
         # terminate all connections first while not allowing new connections.
-        pid_column = "pid"
         with self.cursor() as cur:
-            cur.execute(
-                "UPDATE pg_database SET datallowconn=false WHERE datname = %s;", (self.db_name,)
-            )
-            cur.execute(
-                "SELECT pg_terminate_backend(pg_stat_activity.{})"
-                "FROM pg_stat_activity "
-                "WHERE pg_stat_activity.datname = %s;".format(pid_column),
-                (self.db_name,),
-            )
-            cur.execute('DROP DATABASE IF EXISTS "{}";'.format(self.db_name))
+            self._dont_datallowconn(cur, self.dbname)
+            self._terminate_connection(cur, self.dbname)
+            cur.execute(f'DROP DATABASE IF EXISTS "{self.dbname}";')
+
+    @staticmethod
+    def _dont_datallowconn(cur: cursor, dbname: str) -> None:
+        cur.execute("UPDATE pg_database SET datallowconn=false WHERE datname = %s;", (dbname,))
+
+    @staticmethod
+    def _terminate_connection(cur: cursor, dbname: str) -> None:
+        cur.execute(
+            "SELECT pg_terminate_backend(pg_stat_activity.pid)"
+            "FROM pg_stat_activity "
+            "WHERE pg_stat_activity.datname = %s;",
+            (dbname,),
+        )
+
+    def load(self, load: Union[Callable, str]) -> None:
+        """
+        Loads data into a database.
+
+        Either runs a passed loader if it's callback,
+        or runs predefined loader if it's sql file.
+        """
+        _loader: Callable = None
+        if isinstance(load, str):
+            if "/" in load:
+                _loader = partial(loader, load)
+            else:
+                loader_parts = re.split("[.:]", load, 2)
+                import_path = ".".join(loader_parts[:-1])
+                loader_name = loader_parts[-1]
+                _temp_import = __import__(import_path, globals(), locals(), fromlist=[loader_name])
+                _loader = getattr(_temp_import, loader_name)
+        else:
+            _loader = load
+        _loader(
+            host=self.host,
+            port=self.port,
+            user=self.user,
+            dbname=self.dbname,
+            password=self.password,
+        )
 
     @contextmanager
     def cursor(self) -> cursor:
