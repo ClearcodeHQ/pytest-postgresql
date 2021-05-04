@@ -17,6 +17,9 @@ unreleased
 - [development] Fully moved to the Github Actions as CI/CD pipeline
 - [bugfix] Use `postgresql_logsprefix` and `--postgresql-logsprefix` again.
   They weren't used somewhere along the way.
+- [bugfix] Sometimes pytest-postrgesql would fail to start postgresql with
+  "FATAL:  the database system is starting up" message. It's not really a fatal error,
+  but a message indicating that the process still starts. Now pytest-postgresql will wait properly in this cases.
 
 2.6.1
 ----------
