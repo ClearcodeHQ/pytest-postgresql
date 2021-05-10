@@ -39,3 +39,5 @@ jobs:
           MERGE_METHOD: "squash"
           MERGE_LABELS: ""
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        with:
+           args: "--trace"
