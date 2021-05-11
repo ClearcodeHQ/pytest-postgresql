@@ -27,6 +27,6 @@ def retry(func, timeout: int = 60, possible_exception=psycopg2.OperationalError)
             return res
         except possible_exception as e:
             if time + timeout_diff < datetime.utcnow():
-                raise TimeoutError("Faile after {i} attempts".format(i=i)) from e
+                raise TimeoutError(f"Faile after {i} attempts") from e
             sleep(1)
             pass

@@ -140,11 +140,9 @@ class PostgreSQLExecutor(TCPExecutor):
         """Add check for postgresql version before starting process."""
         if self.version < self.MIN_SUPPORTED_VERSION:
             raise PostgreSQLUnsupported(
-                "Your version of PostgreSQL is not supported. "
-                "Consider updating to PostgreSQL {0} at least. "
-                "The currently installed version of PostgreSQL: {1}.".format(
-                    self.MIN_SUPPORTED_VERSION, self.version
-                )
+                f"Your version of PostgreSQL is not supported. "
+                f"Consider updating to PostgreSQL {self.MIN_SUPPORTED_VERSION} at least. "
+                f"The currently installed version of PostgreSQL: {self.version}."
             )
         self.init_directory()
         return super().start()
@@ -215,10 +213,7 @@ class PostgreSQLExecutor(TCPExecutor):
     def stop(self, sig: int = None, exp_sig: int = None):
         """Issue a stop request to executable."""
         subprocess.check_output(
-            "{pg_ctl} stop -D {datadir} -m f".format(
-                pg_ctl=self.executable,
-                datadir=self.datadir,
-            ),
+            f"{self.executable} stop -D {self.datadir} -m f",
             shell=True,
         )
         try:

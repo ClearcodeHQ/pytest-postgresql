@@ -1,6 +1,19 @@
 CHANGELOG
 =========
 
+unreleased
+----------
+
+Bugfix
+++++++
+
+- Fixed DatabaseJanitor port type hint to int from str
+
+Misc
+++++
+
+- Support python 3.7 and up
+
 3.0.0
 ----------
 
