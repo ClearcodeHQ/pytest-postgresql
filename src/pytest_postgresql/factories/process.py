@@ -108,9 +108,7 @@ def postgresql_proc(
 
         pg_port = get_port(port) or get_port(config["port"])
         datadir = tmpdir.mkdir(f"data-{pg_port}")
-        logfile_path = tmpdir.join(
-            "{prefix}postgresql.{port}.log".format(prefix=logfile_prefix, port=pg_port)
-        )
+        logfile_path = tmpdir.join(f"{logfile_prefix}postgresql.{pg_port}.log")
 
         if platform.system() == "FreeBSD":
             with (datadir / "pg_hba.conf").open(mode="a") as conf_file:
