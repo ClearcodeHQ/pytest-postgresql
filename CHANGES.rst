@@ -45,7 +45,7 @@ Backward Incompatibilities
   They were long deprecated and their role perfectly covered by DatabaseJanitor class.
 - `pytest_postgresql.factories.get_config` was moved to `pytest_postgresql.config.get_config`
 - all `db_name` keywords and attributes were renamed to `dbname`
-
+- postgresql_nooproc fixture was renamed to postgresql_noproc
 Bugfix
 ++++++
 
