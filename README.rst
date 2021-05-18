@@ -218,7 +218,7 @@ You can pick which you prefer, but remember that these settings are handled in t
      - -
      - $TMPDIR
    * - Database name
-     - db_name
+     - dbname
      - --postgresql-dbname
      - postgresql_dbname
      - -
