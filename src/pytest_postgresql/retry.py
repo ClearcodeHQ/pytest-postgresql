@@ -6,7 +6,7 @@ from time import sleep
 from pytest_postgresql.compat import psycopg2
 
 
-def retry(func, timeout: int = 60, possible_exception=psycopg2.OperationalError):
+def retry(func, timeout: int = 60, possible_exception=Exception):
     """
     Attempt to retry the function for timeout time.
 

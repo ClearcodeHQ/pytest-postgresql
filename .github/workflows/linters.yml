@@ -58,3 +58,25 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
       - uses: psf/black@main
+
+  imports:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements-test.txt
+    - name: Check if the code can be imported without psycopg2
+      run: |
+        python -c "import pytest_postgresql"
+        python -c "import pytest_postgresql.plugin"
+        python -c "import pytest_postgresql.factories"
+        python -c "import pytest_postgresql.factories.client"
+        python -c "import pytest_postgresql.factories.noprocess"
+        python -c "import pytest_postgresql.factories.process"
+        python -c "import pytest_postgresql.janitor"

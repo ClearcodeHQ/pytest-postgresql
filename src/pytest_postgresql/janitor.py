@@ -143,7 +143,9 @@ class DatabaseJanitor:
                 port=self.port,
             )
 
-        conn = retry(connect, timeout=self._connection_timeout)
+        conn = retry(
+            connect, timeout=self._connection_timeout, possible_exception=psycopg2.OperationalError
+        )
         conn.set_isolation_level(self.isolation_level)
         cur = conn.cursor()
         try:
