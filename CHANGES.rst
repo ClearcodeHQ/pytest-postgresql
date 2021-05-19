@@ -8,6 +8,8 @@ Bugfix
 ++++++
 
 - Fixed DatabaseJanitor port type hint to int from str
+- Changed retry definition to not fail if psycopg2 is not installed.
+  Now the default is Exception.
 
 Misc
 ++++

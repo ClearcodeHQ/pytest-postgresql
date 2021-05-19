@@ -98,7 +98,8 @@ def test_proc_with_password(postgres_with_password):  # pylint: disable=redefine
             password=postgres_with_password.password,
             host=postgres_with_password.host,
             port=postgres_with_password.port,
-        )
+        ),
+        possible_exception=psycopg2.OperationalError,
     )
 
     with pytest.raises(psycopg2.OperationalError):
