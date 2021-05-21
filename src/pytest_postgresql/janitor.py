@@ -92,7 +92,7 @@ class DatabaseJanitor:
 
     @staticmethod
     def _dont_datallowconn(cur: cursor, dbname: str) -> None:
-        cur.execute("UPDATE pg_database SET datallowconn=false WHERE datname = %s;", (dbname,))
+        cur.execute(f'ALTER DATABASE "{dbname}" with allow_connections false;')
 
     @staticmethod
     def _terminate_connection(cur: cursor, dbname: str) -> None:
