@@ -1,6 +1,14 @@
 CHANGELOG
 =========
 
+unreleased
+----------
+
+Bugfix
+++++++
+
+- Changed `UPDATE pg_database SET` to `ALTER`. System tables should not be updated.
+
 3.0.1
 ----------
 
