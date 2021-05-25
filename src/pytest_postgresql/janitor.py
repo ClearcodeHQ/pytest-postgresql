@@ -92,7 +92,7 @@ class DatabaseJanitor:
 
     @staticmethod
     def _dont_datallowconn(cur: cursor, dbname: str) -> None:
-        cur.execute(f'ALTER DATABASE "{dbname}" with allow_connections false;')
+        cur.execute('ALTER DATABASE "%s" with allow_connections false;', (dbname, ))
 
     @staticmethod
     def _terminate_connection(cur: cursor, dbname: str) -> None:
