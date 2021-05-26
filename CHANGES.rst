@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-unreleased
+3.0.2
 ----------
 
 Bugfix
