@@ -3,6 +3,9 @@ from typing import Any, TYPE_CHECKING
 from platform import python_implementation
 
 
+__all__ = ("psycopg2", "cursor", "connection", "check_for_psycopg2")
+
+
 try:
     import psycopg2
 except ImportError:
