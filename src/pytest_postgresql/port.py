@@ -17,6 +17,7 @@
 # along with pytest-postgresql. If not, see <http://www.gnu.org/licenses/>.
 """Helpers for port-for package."""
 from itertools import chain
+from typing import Set
 
 import port_for
 
@@ -66,7 +67,7 @@ def get_port(ports):
     except TypeError:
         pass
 
-    ports_set = set()
+    ports_set: Set[int] = set()
 
     try:
         if not isinstance(ports, list):

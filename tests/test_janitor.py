@@ -12,7 +12,7 @@ VERSION = parse_version("9.6")
 @pytest.mark.parametrize("version", (VERSION, 9.6, "9.6"))
 def test_version_cast(version):
     """Test that version is cast to Version object."""
-    janitor = DatabaseJanitor(None, None, None, None, version)
+    janitor = DatabaseJanitor("user", "host", "1234", "database_name", version)
     assert janitor.version == VERSION
 
 
@@ -56,7 +56,7 @@ def test_janitor_populate(connect_mock, load_database):
         "dbname": "database_name",
         "password": "some_password",
     }
-    janitor = DatabaseJanitor(version=9.6, **call_kwargs)
+    janitor = DatabaseJanitor(version=9.6, **call_kwargs)  # type: ignore[arg-type]
     janitor.load(load_database)
     assert connect_mock.called
     assert connect_mock.call_args.kwargs == call_kwargs

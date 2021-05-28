@@ -24,7 +24,7 @@ class DatabaseJanitor:
         self,
         user: str,
         host: str,
-        port: int,
+        port: Union[str, int],
         dbname: str,
         version: Union[str, float, Version],  # type: ignore[valid-type]
         password: str = None,

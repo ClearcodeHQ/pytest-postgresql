@@ -19,4 +19,5 @@ from pytest_postgresql.executor import PostgreSQLExecutor
 def test_versions(ctl_input, version):
     """Check correctness of the version regexp."""
     match = PostgreSQLExecutor.VERSION_RE.search(ctl_input)
+    assert match is not None
     assert match.groupdict()["version"] == version
