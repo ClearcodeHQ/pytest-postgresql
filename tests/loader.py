@@ -3,7 +3,7 @@
 from pytest_postgresql.compat import connection, psycopg2
 
 
-def load_database(**kwargs):
+def load_database(**kwargs: str) -> None:
     db_connection: connection = psycopg2.connect(**kwargs)
     with db_connection.cursor() as cur:
         cur.execute("CREATE TABLE stories (id serial PRIMARY KEY, name varchar);")

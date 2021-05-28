@@ -23,7 +23,7 @@ else:
     from psycopg2._psycopg import cursor, connection  # pylint:disable=no-name-in-module
 
 
-def check_for_psycopg2():
+def check_for_psycopg2() -> None:
     """
     Function checks whether psycopg2 was imported.
 

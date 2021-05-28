@@ -107,6 +107,7 @@ def postgresql_proc(
             )
 
         pg_port = get_port(port) or get_port(config["port"])
+        assert pg_port is not None
         datadir = tmpdir.mkdir(f"data-{pg_port}")
         logfile_path = tmpdir.join(f"{logfile_prefix}postgresql.{pg_port}.log")
 
@@ -122,9 +123,9 @@ def postgresql_proc(
             password=password or config["password"],
             dbname=pg_dbname,
             options=options or config["options"],
-            datadir=datadir,
+            datadir=str(datadir),
             unixsocketdir=unixsocketdir or config["unixsocketdir"],
-            logfile=logfile_path,
+            logfile=str(logfile_path),
             startparams=startparams or config["startparams"],
             postgres_options=postgres_options or config["postgres_options"],
         )

@@ -18,7 +18,7 @@ postgres_with_template = pytest_postgresql.factories.client.postgresql(
 )
 
 
-def test_postgres_docker_load(postgres_with_schema):
+def test_postgres_docker_load(postgres_with_schema: connection) -> None:
     """
     Check main postgres fixture
     """
@@ -31,7 +31,7 @@ def test_postgres_docker_load(postgres_with_schema):
 
 
 @pytest.mark.parametrize("_", range(5))
-def test_template_database(postgres_with_template: connection, _):
+def test_template_database(postgres_with_template: connection, _: int) -> None:
     """Check that the database structure gets recreated out of a template."""
     with postgres_with_template.cursor() as cur:
         cur.execute("SELECT * FROM stories")

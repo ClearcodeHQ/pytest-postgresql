@@ -7,7 +7,7 @@ from typing import TypeVar, Union, Optional, Type, Callable
 
 from pkg_resources import parse_version
 
-from pytest_postgresql.compat import psycopg2, cursor, check_for_psycopg2
+from pytest_postgresql.compat import psycopg2, cursor, check_for_psycopg2, connection
 from pytest_postgresql.retry import retry
 from pytest_postgresql.sql import loader
 
@@ -133,7 +133,7 @@ class DatabaseJanitor:
     def cursor(self) -> cursor:
         """Return postgresql cursor."""
 
-        def connect():
+        def connect() -> connection:
             return psycopg2.connect(
                 dbname="postgres",
                 user=self.user,

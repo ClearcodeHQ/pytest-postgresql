@@ -18,7 +18,7 @@ postgresql_template = postgresql(
 
 
 @pytest.mark.parametrize("_", range(5))
-def test_template_database(postgresql_template: connection, _):
+def test_template_database(postgresql_template: connection, _: int) -> None:
     """Check that the database struture gets recreated out of a template."""
     with postgresql_template.cursor() as cur:
         cur.execute("SELECT * FROM stories")

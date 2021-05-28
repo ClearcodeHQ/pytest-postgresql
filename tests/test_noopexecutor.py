@@ -5,7 +5,7 @@ from pytest_postgresql.executor_noop import NoopExecutor
 from pytest_postgresql.retry import retry
 
 
-def test_noproc_version(postgresql_proc):
+def test_noproc_version(postgresql_proc: PostgreSQLExecutor) -> None:
     """
     Test the way postgresql version is being read.
 
@@ -18,16 +18,20 @@ def test_noproc_version(postgresql_proc):
         postgresql_proc.options,
     )
     noproc_version = retry(
-        lambda: postgresql_noproc.version, possible_exception=psycopg2.OperationalError
+        lambda: postgresql_noproc.version,  # type: ignore[no-any-return]
+        possible_exception=psycopg2.OperationalError,
     )
     assert postgresql_proc.version == noproc_version
 
 
-def test_noproc_cached_version(postgresql_proc: PostgreSQLExecutor):
+def test_noproc_cached_version(postgresql_proc: PostgreSQLExecutor) -> None:
     """Test that the version is being cached."""
     postgresql_noproc = NoopExecutor(
         postgresql_proc.host, postgresql_proc.port, postgresql_proc.user, postgresql_proc.options
     )
-    ver = retry(lambda: postgresql_noproc.version, possible_exception=psycopg2.OperationalError)
+    ver = retry(
+        lambda: postgresql_noproc.version,  # type: ignore[no-any-return]
+        possible_exception=psycopg2.OperationalError,
+    )
     with postgresql_proc.stopped():
         assert ver == postgresql_noproc.version

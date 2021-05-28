@@ -16,7 +16,7 @@ from pytest_postgresql.executor import PostgreSQLExecutor
         ("pg_ctl (PostgreSQL) 13.2", "13.2"),
     ),
 )
-def test_versions(ctl_input, version):
+def test_versions(ctl_input: str, version: str) -> None:
     """Check correctness of the version regexp."""
     match = PostgreSQLExecutor.VERSION_RE.search(ctl_input)
     assert match is not None
