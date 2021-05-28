@@ -30,8 +30,8 @@ from pytest_postgresql.janitor import DatabaseJanitor
 
 def postgresql(
     process_fixture_name: str,
-    dbname: str = None,
-    load: List[Union[Callable, str]] = None,
+    dbname: Optional[str] = None,
+    load: Optional[List[Union[Callable, str]]] = None,
     isolation_level: Optional[int] = None,
 ) -> Callable[[FixtureRequest], connection]:
     """

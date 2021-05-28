@@ -27,7 +27,7 @@ class DatabaseJanitor:
         port: Union[str, int],
         dbname: str,
         version: Union[str, float, Version],  # type: ignore[valid-type]
-        password: str = None,
+        password: Optional[str] = None,
         isolation_level: Optional[int] = None,
         connection_timeout: int = 60,
     ) -> None:

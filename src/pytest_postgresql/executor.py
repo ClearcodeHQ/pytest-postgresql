@@ -78,7 +78,7 @@ class PostgreSQLExecutor(TCPExecutor):
         sleep: float = 0.1,
         user: str = "postgres",
         password: str = "",
-        dbname: str = None,
+        dbname: Optional[str] = None,
         options: str = "",
         postgres_options: str = "",
     ):
@@ -214,14 +214,14 @@ class PostgreSQLExecutor(TCPExecutor):
         status_code = subprocess.getstatusoutput(f"{self.executable} status -D {self.datadir}")[0]
         return status_code == 0
 
-    def stop(self: T, sig: int = None, exp_sig: int = None) -> T:
+    def stop(self: T, sig: Optional[int] = None, exp_sig: Optional[int] = None) -> T:
         """Issue a stop request to executable."""
         subprocess.check_output(
             f"{self.executable} stop -D {self.datadir} -m f",
             shell=True,
         )
         try:
-            super().stop(sig, exp_sig)
+            super().stop(sig, exp_sig)  # type: ignore[arg-type]
         except ProcessFinishedWithError:
             # Finished, leftovers ought to be cleaned afterwards anyway
             pass

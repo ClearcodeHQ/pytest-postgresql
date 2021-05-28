@@ -20,7 +20,7 @@ import os.path
 import platform
 import subprocess
 from _warnings import warn
-from typing import Union, Iterable, Callable, List, Iterator
+from typing import Union, Iterable, Callable, List, Iterator, Optional
 
 import pytest
 from _pytest.fixtures import FixtureRequest
@@ -33,18 +33,18 @@ from pytest_postgresql.port import get_port
 
 
 def postgresql_proc(
-    executable: str = None,
-    host: str = None,
+    executable: Optional[str] = None,
+    host: Optional[str] = None,
     port: Union[str, int, Iterable, None] = -1,
-    user: str = None,
-    password: str = None,
-    dbname: str = None,
+    user: Optional[str] = None,
+    password: Optional[str] = None,
+    dbname: Optional[str] = None,
     options: str = "",
-    startparams: str = None,
-    unixsocketdir: str = None,
+    startparams: Optional[str] = None,
+    unixsocketdir: Optional[str] = None,
     logs_prefix: str = "",
-    postgres_options: str = None,
-    load: List[Union[Callable, str]] = None,
+    postgres_options: Optional[str] = None,
+    load: Optional[List[Union[Callable, str]]] = None,
 ) -> Callable[[FixtureRequest, TempdirFactory], Iterator[PostgreSQLExecutor]]:
     """
     Postgresql process factory.
