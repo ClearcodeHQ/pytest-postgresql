@@ -25,8 +25,8 @@ class DatabaseJanitor:
         user: str,
         host: str,
         port: int,
-        dbname: Optional[str],
-        version: Union[str, float, Version],
+        dbname: str,
+        version: Union[str, float, Version],  # type: ignore[valid-type]
         password: str = None,
         isolation_level: Optional[int] = None,
         connection_timeout: int = 60,
@@ -110,10 +110,9 @@ class DatabaseJanitor:
         Either runs a passed loader if it's callback,
         or runs predefined loader if it's sql file.
         """
-        _loader: Callable = None
         if isinstance(load, str):
             if "/" in load:
-                _loader = partial(loader, load)
+                _loader: Callable = partial(loader, load)
             else:
                 loader_parts = re.split("[.:]", load, 2)
                 import_path = ".".join(loader_parts[:-1])

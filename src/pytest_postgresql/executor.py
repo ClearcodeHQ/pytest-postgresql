@@ -24,16 +24,19 @@ import shutil
 import subprocess
 import tempfile
 import time
+from typing import TypeVar
 
 from pkg_resources import parse_version
 from mirakuru import TCPExecutor
-from mirakuru.base import ExecutorType
 from mirakuru.exceptions import ProcessFinishedWithError
 
 _LOCALE = "C.UTF-8"
 
 if platform.system() == "Darwin":
     _LOCALE = "en_US.UTF-8"
+
+
+T = TypeVar("T", bound="PostgreSQLExecutor")
 
 
 class PostgreSQLUnsupported(Exception):
@@ -136,7 +139,7 @@ class PostgreSQLExecutor(TCPExecutor):
 
     # pylint:enable=too-many-locals
 
-    def start(self: ExecutorType) -> ExecutorType:
+    def start(self: T) -> T:
         """Add check for postgresql version before starting process."""
         if self.version < self.MIN_SUPPORTED_VERSION:
             raise PostgreSQLUnsupported(
