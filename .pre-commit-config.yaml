@@ -1,0 +1,28 @@
+---
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+  # We use locally installed linters so all version numbers are kept in
+  # requirements-lint.txt.
+  - repo: local
+    hooks:
+      - id: black
+        name: black
+        entry: black
+        language: system
+        types:
+          - python
+        require_serial: true
+      - id: pycodestyle
+        name: pycodestyle
+        entry: pycodestyle
+        language: system
+        types_or:
+          - python
+          - pyi
+      - id: pydocstyle
+        name: pydocstyle
+        entry: pydocstyle
+        language: system
+        types:
+          - python
