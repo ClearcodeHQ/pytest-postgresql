@@ -1,6 +1,19 @@
 CHANGELOG
 =========
 
+unreleased
+----------
+
+Features
+++++++++
+
+- Added type annotations and compatibitlity with PEP 561
+
+Misc
+++++
+
+- pre-commit configuration
+
 3.0.2
 ----------
 
