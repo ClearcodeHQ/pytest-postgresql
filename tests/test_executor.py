@@ -1,5 +1,6 @@
 """Test various executor behaviours."""
 import sys
+from typing import Any
 
 from _pytest.fixtures import FixtureRequest
 from pkg_resources import parse_version
@@ -9,6 +10,7 @@ import pytest
 
 from pytest_postgresql.executor import PostgreSQLExecutor, PostgreSQLUnsupported
 from pytest_postgresql.factories import postgresql_proc, postgresql
+from pytest_postgresql.compat import connection
 from pytest_postgresql.config import get_config
 from pytest_postgresql.port import get_port
 from pytest_postgresql.retry import retry
@@ -18,18 +20,20 @@ class PatchedPostgreSQLExecutor(PostgreSQLExecutor):
     """PostgreSQLExecutor that always says it's 8.9 version."""
 
     @property
-    def version(self):
+    def version(self) -> Any:
         """Overwrite version, to always return highes unsupported version."""
         return parse_version("8.9")
 
 
-def test_unsupported_version(request):
+def test_unsupported_version(request: FixtureRequest) -> None:
     """Check that the error gets raised on unsupported postgres version."""
     config = get_config(request)
+    port = get_port(config["port"])
+    assert port is not None
     executor = PatchedPostgreSQLExecutor(
         executable=config["exec"],
         host=config["host"],
-        port=get_port(config["port"]),
+        port=port,
         datadir="/tmp/error",
         unixsocketdir=config["unixsocketdir"],
         logfile="/tmp/version.error.log",
@@ -44,11 +48,17 @@ def test_unsupported_version(request):
     sys.platform == "darwin", reason="The default pg_ctl path is for linux, not macos"
 )
 @pytest.mark.parametrize("locale", ("en_US.UTF-8", "de_DE.UTF-8"))
-def test_executor_init_with_password(request: FixtureRequest, monkeypatch, tmpdir_factory, locale):
+def test_executor_init_with_password(
+    request: FixtureRequest,
+    monkeypatch: pytest.MonkeyPatch,
+    tmpdir_factory: pytest.TempdirFactory,
+    locale: str,
+) -> None:
     """Test whether the executor initializes properly."""
     config = get_config(request)
     monkeypatch.setenv("LC_ALL", locale)
     port = get_port(config["port"])
+    assert port is not None
     tmpdir = tmpdir_factory.mktemp(f"pytest-postgresql-{request.node.name}")
     datadir = tmpdir.mkdir(f"data-{port}")
     logfile_path = tmpdir.join(f"postgresql.{port}.log")
@@ -56,9 +66,9 @@ def test_executor_init_with_password(request: FixtureRequest, monkeypatch, tmpdi
         executable=config["exec"],
         host=config["host"],
         port=port,
-        datadir=datadir,
+        datadir=str(datadir),
         unixsocketdir=config["unixsocketdir"],
-        logfile=logfile_path,
+        logfile=str(logfile_path),
         startparams=config["startparams"],
         password="somepassword",
     )
@@ -85,14 +95,16 @@ def test_executor_init_with_password(request: FixtureRequest, monkeypatch, tmpdi
 postgres_with_password = postgresql_proc(password="hunter2")
 
 
-def test_proc_with_password(postgres_with_password):  # pylint: disable=redefined-outer-name
+def test_proc_with_password(
+    postgres_with_password: PostgreSQLExecutor,
+) -> None:  # pylint: disable=redefined-outer-name
     """Check that password option to postgresql_proc factory is honored."""
     assert postgres_with_password.running() is True
 
     # no assertion necessary here; we just want to make sure it connects with
     # the password
     retry(
-        lambda: psycopg2.connect(
+        lambda: psycopg2.connect(  # type: ignore[no-any-return]
             dbname=postgres_with_password.user,
             user=postgres_with_password.user,
             password=postgres_with_password.password,
@@ -116,7 +128,7 @@ postgresql_max_conns_proc = postgresql_proc(postgres_options="-N 42")
 postgres_max_conns = postgresql("postgresql_max_conns_proc")
 
 
-def test_postgres_options(postgres_max_conns):
+def test_postgres_options(postgres_max_conns: connection) -> None:
     """Check that max connections (-N 42) is honored."""
     cur = postgres_max_conns.cursor()
     cur.execute("SHOW max_connections")

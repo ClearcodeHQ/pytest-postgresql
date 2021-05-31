@@ -24,16 +24,19 @@ import shutil
 import subprocess
 import tempfile
 import time
+from typing import TypeVar, Optional, Any, Union
 
 from pkg_resources import parse_version
 from mirakuru import TCPExecutor
-from mirakuru.base import ExecutorType
 from mirakuru.exceptions import ProcessFinishedWithError
 
 _LOCALE = "C.UTF-8"
 
 if platform.system() == "Darwin":
     _LOCALE = "en_US.UTF-8"
+
+
+T = TypeVar("T", bound="PostgreSQLExecutor")
 
 
 class PostgreSQLUnsupported(Exception):
@@ -66,39 +69,39 @@ class PostgreSQLExecutor(TCPExecutor):
         executable: str,
         host: str,
         port: int,
-        datadir,
-        unixsocketdir,
-        logfile,
-        startparams,
-        shell=False,
-        timeout=60,
-        sleep=0.1,
-        user="postgres",
-        password="",
-        dbname: str = None,
-        options="",
-        postgres_options="",
+        datadir: str,
+        unixsocketdir: str,
+        logfile: str,
+        startparams: str,
+        shell: bool = False,
+        timeout: Optional[int] = 60,
+        sleep: float = 0.1,
+        user: str = "postgres",
+        password: str = "",
+        dbname: Optional[str] = None,
+        options: str = "",
+        postgres_options: str = "",
     ):
         """
         Initialize PostgreSQLExecutor executor.
 
-        :param str executable: pg_ctl location
-        :param str host: host under which process is accessible
-        :param int port: port under which process is accessible
-        :param str datadir: path to postgresql datadir
-        :param str unixsocketdir: path to socket directory
-        :param pathlib.Path logfile: path to logfile for postgresql
-        :param str startparams: additional start parameters
-        :param bool shell: see `subprocess.Popen`
-        :param int timeout: time to wait for process to start or stop.
+        :param executable: pg_ctl location
+        :param host: host under which process is accessible
+        :param port: port under which process is accessible
+        :param datadir: path to postgresql datadir
+        :param unixsocketdir: path to socket directory
+        :param logfile: path to logfile for postgresql
+        :param startparams: additional start parameters
+        :param shell: see `subprocess.Popen`
+        :param timeout: time to wait for process to start or stop.
             if None, wait indefinitely.
-        :param float sleep: how often to check for start/stop condition
-        :param str user: [default] postgresql's username used to manage
+        :param sleep: how often to check for start/stop condition
+        :param user: postgresql's username used to manage
             and access PostgreSQL
-        :param str password: optional password for the user
+        :param password: optional password for the user
         :param dbname: database name (might not yet exist)
-        :param str options:
-        :param str postgres_options: extra arguments to `postgres start`
+        :param options:
+        :param postgres_options: extra arguments to `postgres start`
         """
         self._directory_initialised = False
         self.executable = executable
@@ -136,7 +139,7 @@ class PostgreSQLExecutor(TCPExecutor):
 
     # pylint:enable=too-many-locals
 
-    def start(self: ExecutorType) -> ExecutorType:
+    def start(self: T) -> T:
         """Add check for postgresql version before starting process."""
         if self.version < self.MIN_SUPPORTED_VERSION:
             raise PostgreSQLUnsupported(
@@ -147,13 +150,13 @@ class PostgreSQLExecutor(TCPExecutor):
         self.init_directory()
         return super().start()
 
-    def clean_directory(self):
+    def clean_directory(self) -> None:
         """Remove directory created for postgresql run."""
         if os.path.isdir(self.datadir):
             shutil.rmtree(self.datadir)
         self._directory_initialised = False
 
-    def init_directory(self):
+    def init_directory(self) -> None:
         """
         Initialize postgresql data directory.
 
@@ -174,7 +177,7 @@ class PostgreSQLExecutor(TCPExecutor):
                 if hasattr(self.password, "encode"):
                     password = self.password.encode("utf-8")
                 else:
-                    password = self.password
+                    password = self.password  # type: ignore[assignment]
                 password_file.write(password)
                 password_file.flush()
                 init_directory += ["-o", " ".join(options)]
@@ -186,7 +189,7 @@ class PostgreSQLExecutor(TCPExecutor):
 
         self._directory_initialised = True
 
-    def wait_for_postgres(self):
+    def wait_for_postgres(self) -> None:
         """Wait for postgresql being started."""
         if "-w" not in self.startparams:
             return
@@ -197,32 +200,34 @@ class PostgreSQLExecutor(TCPExecutor):
             time.sleep(1)
 
     @property
-    def version(self):
+    def version(self) -> Any:
         """Detect postgresql version."""
         version_string = subprocess.check_output([self.executable, "--version"]).decode("utf-8")
         matches = self.VERSION_RE.search(version_string)
+        assert matches is not None
         return parse_version(matches.groupdict()["version"])
 
-    def running(self):
+    def running(self) -> bool:
         """Check if server is running."""
         if not os.path.exists(self.datadir):
             return False
         status_code = subprocess.getstatusoutput(f"{self.executable} status -D {self.datadir}")[0]
         return status_code == 0
 
-    def stop(self, sig: int = None, exp_sig: int = None):
+    def stop(self: T, sig: Optional[int] = None, exp_sig: Optional[int] = None) -> T:
         """Issue a stop request to executable."""
         subprocess.check_output(
             f"{self.executable} stop -D {self.datadir} -m f",
             shell=True,
         )
         try:
-            super().stop(sig, exp_sig)
+            super().stop(sig, exp_sig)  # type: ignore[arg-type]
         except ProcessFinishedWithError:
             # Finished, leftovers ought to be cleaned afterwards anyway
             pass
+        return self
 
-    def __del__(self):
+    def __del__(self) -> None:
         """Make sure the directories are properly removed at the end."""
         try:
             super().__del__()

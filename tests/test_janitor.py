@@ -1,6 +1,7 @@
 """Database Janitor tests."""
 import sys
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
+from typing import Any
 import pytest
 from pkg_resources import parse_version
 
@@ -10,14 +11,14 @@ VERSION = parse_version("9.6")
 
 
 @pytest.mark.parametrize("version", (VERSION, 9.6, "9.6"))
-def test_version_cast(version):
+def test_version_cast(version: Any) -> None:
     """Test that version is cast to Version object."""
-    janitor = DatabaseJanitor(None, None, None, None, version)
+    janitor = DatabaseJanitor("user", "host", "1234", "database_name", version)
     assert janitor.version == VERSION
 
 
 @patch("pytest_postgresql.janitor.psycopg2.connect")
-def test_cursor_selects_postgres_database(connect_mock):
+def test_cursor_selects_postgres_database(connect_mock: MagicMock) -> None:
     """Test that the cursor requests the postgres database."""
     janitor = DatabaseJanitor("user", "host", "1234", "database_name", 9.6)
     with janitor.cursor():
@@ -27,7 +28,7 @@ def test_cursor_selects_postgres_database(connect_mock):
 
 
 @patch("pytest_postgresql.janitor.psycopg2.connect")
-def test_cursor_connects_with_password(connect_mock):
+def test_cursor_connects_with_password(connect_mock: MagicMock) -> None:
     """Test that the cursor requests the postgres database."""
     janitor = DatabaseJanitor("user", "host", "1234", "database_name", 9.6, "some_password")
     with janitor.cursor():
@@ -43,7 +44,7 @@ def test_cursor_connects_with_password(connect_mock):
     "load_database", ("tests.loader.load_database", "tests.loader:load_database")
 )
 @patch("pytest_postgresql.janitor.psycopg2.connect")
-def test_janitor_populate(connect_mock, load_database):
+def test_janitor_populate(connect_mock: MagicMock, load_database: str) -> None:
     """
     Test that the cursor requests the postgres database.
 
@@ -56,7 +57,7 @@ def test_janitor_populate(connect_mock, load_database):
         "dbname": "database_name",
         "password": "some_password",
     }
-    janitor = DatabaseJanitor(version=9.6, **call_kwargs)
+    janitor = DatabaseJanitor(version=9.6, **call_kwargs)  # type: ignore[arg-type]
     janitor.load(load_database)
     assert connect_mock.called
     assert connect_mock.call_args.kwargs == call_kwargs

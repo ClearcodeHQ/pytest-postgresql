@@ -1,2 +1,3 @@
 include *.rst *.py
+include src/pytest_postgresql/py.typed
 recursive-include src/pytest_postgresql *.py

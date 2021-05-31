@@ -7,7 +7,7 @@ from typing import TypeVar, Union, Optional, Type, Callable
 
 from pkg_resources import parse_version
 
-from pytest_postgresql.compat import psycopg2, cursor, check_for_psycopg2
+from pytest_postgresql.compat import psycopg2, cursor, check_for_psycopg2, connection
 from pytest_postgresql.retry import retry
 from pytest_postgresql.sql import loader
 
@@ -24,10 +24,10 @@ class DatabaseJanitor:
         self,
         user: str,
         host: str,
-        port: int,
-        dbname: Optional[str],
-        version: Union[str, float, Version],
-        password: str = None,
+        port: Union[str, int],
+        dbname: str,
+        version: Union[str, float, Version],  # type: ignore[valid-type]
+        password: Optional[str] = None,
         isolation_level: Optional[int] = None,
         connection_timeout: int = 60,
     ) -> None:
@@ -110,10 +110,9 @@ class DatabaseJanitor:
         Either runs a passed loader if it's callback,
         or runs predefined loader if it's sql file.
         """
-        _loader: Callable = None
         if isinstance(load, str):
             if "/" in load:
-                _loader = partial(loader, load)
+                _loader: Callable = partial(loader, load)
             else:
                 loader_parts = re.split("[.:]", load, 2)
                 import_path = ".".join(loader_parts[:-1])
@@ -134,7 +133,7 @@ class DatabaseJanitor:
     def cursor(self) -> cursor:
         """Return postgresql cursor."""
 
-        def connect():
+        def connect() -> connection:
             return psycopg2.connect(
                 dbname="postgres",
                 user=self.user,

@@ -26,3 +26,11 @@ repos:
         language: system
         types:
           - python
+      - id: mypy
+        name: mypy
+        entry: mypy
+        language: system
+        types:
+          - python
+        # Workaround <https://github.com/python/mypy/issues/9977>.
+        require_serial: true

@@ -20,7 +20,7 @@ import os.path
 import platform
 import subprocess
 from _warnings import warn
-from typing import Union, Iterable, Callable, List
+from typing import Union, Iterable, Callable, List, Iterator, Optional
 
 import pytest
 from _pytest.fixtures import FixtureRequest
@@ -33,53 +33,51 @@ from pytest_postgresql.port import get_port
 
 
 def postgresql_proc(
-    executable: str = None,
-    host: str = None,
-    port: Union[str, int, Iterable] = -1,
-    user: str = None,
-    password: str = None,
-    dbname: str = None,
+    executable: Optional[str] = None,
+    host: Optional[str] = None,
+    port: Union[str, int, Iterable, None] = -1,
+    user: Optional[str] = None,
+    password: Optional[str] = None,
+    dbname: Optional[str] = None,
     options: str = "",
-    startparams: str = None,
-    unixsocketdir: str = None,
+    startparams: Optional[str] = None,
+    unixsocketdir: Optional[str] = None,
     logs_prefix: str = "",
-    postgres_options: str = None,
-    load: List[Union[Callable, str]] = None,
-) -> Callable[[FixtureRequest, TempdirFactory], PostgreSQLExecutor]:
+    postgres_options: Optional[str] = None,
+    load: Optional[List[Union[Callable, str]]] = None,
+) -> Callable[[FixtureRequest, TempdirFactory], Iterator[PostgreSQLExecutor]]:
     """
     Postgresql process factory.
 
-    :param str executable: path to postgresql_ctl
-    :param str host: hostname
-    :param str|int|tuple|set|list port:
+    :param executable: path to postgresql_ctl
+    :param host: hostname
+    :param port:
         exact port (e.g. '8000', 8000)
         randomly selected port (None) - any random available port
         -1 - command line or pytest.ini configured port
         [(2000,3000)] or (2000,3000) - random available port from a given range
         [{4002,4003}] or {4002,4003} - random of 4002 or 4003 ports
         [(2000,3000), {4002,4003}] - random of given range and set
-    :param str user: postgresql username
+    :param user: postgresql username
     :param password: postgresql password
     :param dbname: postgresql database name
-    :param str options: Postgresql connection options
-    :param str startparams: postgresql starting parameters
-    :param str unixsocketdir: directory to create postgresql's unixsockets
-    :param str logs_prefix: prefix for log filename
-    :param str postgres_options: Postgres executable options for use by pg_ctl
+    :param options: Postgresql connection options
+    :param startparams: postgresql starting parameters
+    :param unixsocketdir: directory to create postgresql's unixsockets
+    :param logs_prefix: prefix for log filename
+    :param postgres_options: Postgres executable options for use by pg_ctl
     :param load: List of functions used to initialize database's template.
-    :rtype: func
     :returns: function which makes a postgresql process
     """
 
     @pytest.fixture(scope="session")
     def postgresql_proc_fixture(
         request: FixtureRequest, tmpdir_factory: TempdirFactory
-    ) -> PostgreSQLExecutor:
+    ) -> Iterator[PostgreSQLExecutor]:
         """
         Process fixture for PostgreSQL.
 
-        :param FixtureRequest request: fixture request object
-        :rtype: pytest_dbfixtures.executors.TCPExecutor
+        :param request: fixture request object
         :returns: tcp executor
         """
         config = get_config(request)
@@ -107,6 +105,7 @@ def postgresql_proc(
             )
 
         pg_port = get_port(port) or get_port(config["port"])
+        assert pg_port is not None
         datadir = tmpdir.mkdir(f"data-{pg_port}")
         logfile_path = tmpdir.join(f"{logfile_prefix}postgresql.{pg_port}.log")
 
@@ -122,9 +121,9 @@ def postgresql_proc(
             password=password or config["password"],
             dbname=pg_dbname,
             options=options or config["options"],
-            datadir=datadir,
+            datadir=str(datadir),
             unixsocketdir=unixsocketdir or config["unixsocketdir"],
-            logfile=logfile_path,
+            logfile=str(logfile_path),
             startparams=startparams or config["startparams"],
             postgres_options=postgres_options or config["postgres_options"],
         )

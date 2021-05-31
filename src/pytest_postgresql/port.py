@@ -17,6 +17,7 @@
 # along with pytest-postgresql. If not, see <http://www.gnu.org/licenses/>.
 """Helpers for port-for package."""
 from itertools import chain
+from typing import Set, Any, Tuple, Union, List, Optional, TypeVar, Type, Iterable
 
 import port_for
 
@@ -24,7 +25,7 @@ import port_for
 class InvalidPortsDefinition(ValueError):
     """Exception raised if ports definition is not a valid string."""
 
-    def __init__(self, ports):
+    def __init__(self, ports: Any):
         """Construct InvalidPortsDefinition exception."""
         super().__init__(
             f"Unknown format of ports: {ports}.\n"
@@ -37,7 +38,7 @@ class InvalidPortsDefinition(ValueError):
         )
 
 
-def get_port(ports):
+def get_port(ports: Any) -> Optional[int]:
     """
     Return a random available port.
 
@@ -47,7 +48,7 @@ def get_port(ports):
     When a range or list of ports is passed `port_for` external package
     is used in order to find a free port.
 
-    :param str|int|tuple|set|list port:
+    :param port:
         exact port (e.g. '8000', 8000)
         randomly selected port (None) - any random available port
         [(2000,3000)] or (2000,3000) - random available port from a given range
@@ -59,28 +60,33 @@ def get_port(ports):
     if ports == -1:
         return None
     if not ports:
-        return port_for.select_random(None)
+        port: int = port_for.select_random(None)
+        return port
 
     try:
         return int(ports)
     except TypeError:
         pass
 
-    ports_set = set()
+    ports_set: Set[int] = set()
 
     try:
         if not isinstance(ports, list):
             ports = [ports]
         ranges = port_for.utils.ranges_to_set(filter_by_type(ports, tuple))
-        nums = set(filter_by_type(ports, int))
-        sets = set(chain.from_iterable(filter_by_type(ports, (set, frozenset))))
+        nums: Set[int] = set(filter_by_type(ports, int))
+        sets: Set[int] = set(chain.from_iterable(filter_by_type(ports, (set, frozenset))))
         ports_set = ports_set.union(ranges, sets, nums)
     except ValueError as exc:
         raise InvalidPortsDefinition from exc
 
-    return port_for.select_random(ports_set)
+    port = port_for.select_random(ports_set)
+    return port
 
 
-def filter_by_type(lst, type_of):
+T = TypeVar("T")
+
+
+def filter_by_type(lst: Iterable[Any], type_of: Union[Type[T], Tuple[Type[T], ...]]) -> List[T]:
     """Return a list of elements with given type."""
     return [e for e in lst if isinstance(e, type_of)]

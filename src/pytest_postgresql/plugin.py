@@ -37,7 +37,7 @@ _help_load = "Dotted-style or entrypoint-style path to callable or path to SQL F
 _help_postgres_options = "Postgres executable extra parameters. Passed via the -o option to pg_ctl"
 
 
-def pytest_addoption(parser: Parser):
+def pytest_addoption(parser: Parser) -> None:
     """Configure options for pytest-postgresql."""
     parser.addini(
         name="postgresql_exec", help=_help_executable, default="/usr/lib/postgresql/9.6/bin/pg_ctl"

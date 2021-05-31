@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with pytest-dbfixtures.  If not, see <http://www.gnu.org/licenses/>.
 """PostgreSQL Noop executor providing connection details for postgres client."""
+from typing import Union, Optional, Any
+
 from pkg_resources import parse_version
 
 from pytest_postgresql.compat import check_for_psycopg2, psycopg2
@@ -30,15 +32,22 @@ class NoopExecutor:  # pylint: disable=too-few-public-methods
     or with the use of containerisation like kubernetes or docker compose.
     """
 
-    def __init__(self, host, port, user, options, password=None, dbname=None):
+    def __init__(
+        self,
+        host: str,
+        port: Union[str, int],
+        user: str,
+        options: str,
+        password: Optional[str] = None,
+        dbname: Optional[str] = None,
+    ):
         """
         Initialize nooperator executor mock.
 
-        :param str host: Postgresql hostname
-        :param str|int port: Postrgesql port
-        :param str user: Postgresql username
-        :param str user: Postgresql password
-        :param str options: Additional connection options
+        :param host: Postgresql hostname
+        :param port: Postgresql port
+        :param user: Postgresql username
+        :param options: Additional connection options
         :param password: postgresql password
         :param dbname: postgresql database name
         """
@@ -48,10 +57,10 @@ class NoopExecutor:  # pylint: disable=too-few-public-methods
         self.options = options
         self.password = password
         self.dbname = dbname
-        self._version = None
+        self._version: Any = None
 
     @property
-    def version(self):
+    def version(self) -> Any:
         """Get postgresql's version."""
         if not self._version:
             check_for_psycopg2()

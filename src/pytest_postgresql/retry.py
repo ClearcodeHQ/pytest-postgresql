@@ -2,11 +2,17 @@
 
 from datetime import datetime, timedelta
 from time import sleep
+from typing import Callable, TypeVar, Type
 
 from pytest_postgresql.compat import psycopg2
 
 
-def retry(func, timeout: int = 60, possible_exception=Exception):
+T = TypeVar("T")
+
+
+def retry(
+    func: Callable[[], T], timeout: int = 60, possible_exception: Type[Exception] = Exception
+) -> T:
     """
     Attempt to retry the function for timeout time.
 
@@ -29,4 +35,3 @@ def retry(func, timeout: int = 60, possible_exception=Exception):
             if time + timeout_diff < datetime.utcnow():
                 raise TimeoutError(f"Faile after {i} attempts") from e
             sleep(1)
-            pass

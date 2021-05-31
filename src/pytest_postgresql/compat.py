@@ -1,6 +1,9 @@
 """pscypog2 Compatibility module."""
-from typing import Any
+from typing import Any, TYPE_CHECKING
 from platform import python_implementation
+
+
+__all__ = ("psycopg2", "cursor", "connection", "check_for_psycopg2")
 
 
 try:
@@ -10,10 +13,11 @@ except ImportError:
 
 # pylint:disable=unused-import
 if not psycopg2:
-    # if there's no postgres, just go with the flow.
-    # pylint:disable=invalid-name
-    cursor = Any
-    connection = Any
+    if not TYPE_CHECKING:
+        # if there's no postgres, just go with the flow.
+        # pylint:disable=invalid-name
+        cursor = Any
+        connection = Any
 elif python_implementation() == "PyPy":
     # pylint:disable=import-error
     from psycopg2cffi._impl.cursor import Cursor as cursor
@@ -22,7 +26,7 @@ else:
     from psycopg2._psycopg import cursor, connection  # pylint:disable=no-name-in-module
 
 
-def check_for_psycopg2():
+def check_for_psycopg2() -> None:
     """
     Function checks whether psycopg2 was imported.
 
