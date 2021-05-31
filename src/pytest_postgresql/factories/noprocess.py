@@ -53,7 +53,7 @@ def postgresql_noproc(
         """
         Noop Process fixture for PostgreSQL.
 
-        :param FixtureRequest request: fixture request object
+        :param request: fixture request object
         :returns: tcp executor-like object
         """
         config = get_config(request)

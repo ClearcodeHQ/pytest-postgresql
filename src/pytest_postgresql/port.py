@@ -48,7 +48,7 @@ def get_port(ports: Any) -> Optional[int]:
     When a range or list of ports is passed `port_for` external package
     is used in order to find a free port.
 
-    :param str|int|tuple|set|list port:
+    :param port:
         exact port (e.g. '8000', 8000)
         randomly selected port (None) - any random available port
         [(2000,3000)] or (2000,3000) - random available port from a given range

@@ -85,23 +85,23 @@ class PostgreSQLExecutor(TCPExecutor):
         """
         Initialize PostgreSQLExecutor executor.
 
-        :param str executable: pg_ctl location
-        :param str host: host under which process is accessible
-        :param int port: port under which process is accessible
-        :param str datadir: path to postgresql datadir
-        :param str unixsocketdir: path to socket directory
-        :param str logfile: path to logfile for postgresql
-        :param str startparams: additional start parameters
-        :param bool shell: see `subprocess.Popen`
-        :param int timeout: time to wait for process to start or stop.
+        :param executable: pg_ctl location
+        :param host: host under which process is accessible
+        :param port: port under which process is accessible
+        :param datadir: path to postgresql datadir
+        :param unixsocketdir: path to socket directory
+        :param logfile: path to logfile for postgresql
+        :param startparams: additional start parameters
+        :param shell: see `subprocess.Popen`
+        :param timeout: time to wait for process to start or stop.
             if None, wait indefinitely.
-        :param float sleep: how often to check for start/stop condition
-        :param str user: [default] postgresql's username used to manage
+        :param sleep: how often to check for start/stop condition
+        :param user: postgresql's username used to manage
             and access PostgreSQL
-        :param str password: optional password for the user
+        :param password: optional password for the user
         :param dbname: database name (might not yet exist)
-        :param str options:
-        :param str postgres_options: extra arguments to `postgres start`
+        :param options:
+        :param postgres_options: extra arguments to `postgres start`
         """
         self._directory_initialised = False
         self.executable = executable

@@ -51,7 +51,7 @@ def postgresql(
         """
         Fixture factory for PostgreSQL.
 
-        :param FixtureRequest request: fixture request object
+        :param request: fixture request object
         :returns: postgresql client
         """
         config = get_config(request)

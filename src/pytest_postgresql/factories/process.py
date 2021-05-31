@@ -49,25 +49,24 @@ def postgresql_proc(
     """
     Postgresql process factory.
 
-    :param str executable: path to postgresql_ctl
-    :param str host: hostname
-    :param str|int|tuple|set|list port:
+    :param executable: path to postgresql_ctl
+    :param host: hostname
+    :param port:
         exact port (e.g. '8000', 8000)
         randomly selected port (None) - any random available port
         -1 - command line or pytest.ini configured port
         [(2000,3000)] or (2000,3000) - random available port from a given range
         [{4002,4003}] or {4002,4003} - random of 4002 or 4003 ports
         [(2000,3000), {4002,4003}] - random of given range and set
-    :param str user: postgresql username
+    :param user: postgresql username
     :param password: postgresql password
     :param dbname: postgresql database name
-    :param str options: Postgresql connection options
-    :param str startparams: postgresql starting parameters
-    :param str unixsocketdir: directory to create postgresql's unixsockets
-    :param str logs_prefix: prefix for log filename
-    :param str postgres_options: Postgres executable options for use by pg_ctl
+    :param options: Postgresql connection options
+    :param startparams: postgresql starting parameters
+    :param unixsocketdir: directory to create postgresql's unixsockets
+    :param logs_prefix: prefix for log filename
+    :param postgres_options: Postgres executable options for use by pg_ctl
     :param load: List of functions used to initialize database's template.
-    :rtype: func
     :returns: function which makes a postgresql process
     """
 
@@ -78,8 +77,7 @@ def postgresql_proc(
         """
         Process fixture for PostgreSQL.
 
-        :param FixtureRequest request: fixture request object
-        :rtype: pytest_dbfixtures.executors.TCPExecutor
+        :param request: fixture request object
         :returns: tcp executor
         """
         config = get_config(request)

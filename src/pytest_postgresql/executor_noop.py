@@ -44,11 +44,10 @@ class NoopExecutor:  # pylint: disable=too-few-public-methods
         """
         Initialize nooperator executor mock.
 
-        :param str host: Postgresql hostname
-        :param str|int port: Postrgesql port
-        :param str user: Postgresql username
-        :param str user: Postgresql password
-        :param str options: Additional connection options
+        :param host: Postgresql hostname
+        :param port: Postgresql port
+        :param user: Postgresql username
+        :param options: Additional connection options
         :param password: postgresql password
         :param dbname: postgresql database name
         """
