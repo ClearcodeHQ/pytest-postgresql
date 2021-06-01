@@ -14,9 +14,9 @@ jobs:
         with:
           python-version: 3.9
       - name: Install build tools
-        run: pip install pep517
+        run: pip install build
       - name: Build a wheel package
-        run: python -m pep517.build .
+        run: python -m build .
 #      - name: Publish distribution 📦 to Test PyPI
 #        uses: pypa/gh-action-pypi-publish@master
 #        with:

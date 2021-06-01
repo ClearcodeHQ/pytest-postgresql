@@ -19,6 +19,4 @@
 """pytest-postgresql setup.py module."""
 from setuptools import setup
 
-setup(
-    entry_points={"pytest11": ["pytest_postgresql = pytest_postgresql.plugin"]},
-)
+setup()
