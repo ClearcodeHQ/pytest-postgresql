@@ -20,22 +20,34 @@ import os.path
 import platform
 import subprocess
 from _warnings import warn
-from typing import Union, Iterable, Callable, List, Iterator, Optional
+from typing import Union, Iterable, Callable, List, Iterator, Optional, Tuple, Set
 
 import pytest
 from _pytest.fixtures import FixtureRequest
 from _pytest.tmpdir import TempdirFactory
+from port_for import get_port
 
 from pytest_postgresql.config import get_config
 from pytest_postgresql.executor import PostgreSQLExecutor
 from pytest_postgresql.janitor import DatabaseJanitor
-from pytest_postgresql.port import get_port
 
 
 def postgresql_proc(
     executable: Optional[str] = None,
     host: Optional[str] = None,
-    port: Union[str, int, Iterable, None] = -1,
+    port: Union[
+        None,
+        str,
+        int,
+        Tuple[int, int],
+        Set[int],
+        List[str],
+        List[int],
+        List[Tuple[int, int]],
+        List[Set[int]],
+        List[Union[Set[int], Tuple[int, int]]],
+        List[Union[str, int, Tuple[int, int], Set[int]]],
+    ] = -1,
     user: Optional[str] = None,
     password: Optional[str] = None,
     dbname: Optional[str] = None,

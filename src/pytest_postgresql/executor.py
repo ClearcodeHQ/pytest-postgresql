@@ -221,7 +221,7 @@ class PostgreSQLExecutor(TCPExecutor):
             shell=True,
         )
         try:
-            super().stop(sig, exp_sig)  # type: ignore[arg-type]
+            super().stop(sig, exp_sig)
         except ProcessFinishedWithError:
             # Finished, leftovers ought to be cleaned afterwards anyway
             pass
