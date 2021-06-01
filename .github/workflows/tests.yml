@@ -79,11 +79,10 @@ jobs:
         path: /tmp/pytest-of-runner/**
     - name: Run test noproc fixture on docker
       run: |
-        pytest -n 0 -k docker --postgresql-host=localhost --postgresql-port 5433 --postgresql-password=postgres --cov-report=xml:docker.xml
+        pytest -n 0 -k docker --postgresql-host=localhost --postgresql-port 5433 --postgresql-password=postgres --cov-report=xml:coverage-docker.xml
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
       with:
-        files: ./coverage.xml, ./coverage-xdist.xml, ./docker.xml
         flags: linux
         env_vars: OS, PYTHON, POSTGRES
         fail_ci_if_error: true
