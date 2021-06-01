@@ -7,12 +7,12 @@ from pkg_resources import parse_version
 
 import psycopg2
 import pytest
+from port_for import get_port
 
 from pytest_postgresql.executor import PostgreSQLExecutor, PostgreSQLUnsupported
 from pytest_postgresql.factories import postgresql_proc, postgresql
 from pytest_postgresql.compat import connection
 from pytest_postgresql.config import get_config
-from pytest_postgresql.port import get_port
 from pytest_postgresql.retry import retry
 
 
