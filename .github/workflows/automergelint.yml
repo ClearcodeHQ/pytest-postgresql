@@ -1,4 +1,4 @@
-name: Merge me test dependencies!
+name: Merge me linter dependencies!
 
 on:
   workflow_run:
@@ -6,8 +6,8 @@ on:
       - completed
     workflows:
       # List all required workflow names here.
+      - 'Run linters'
       - 'Run tests'
-      - 'Run tests on macos'
       - 'Test build package'
 
 jobs:
