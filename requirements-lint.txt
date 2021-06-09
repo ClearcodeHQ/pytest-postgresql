@@ -2,5 +2,5 @@
 pycodestyle==2.7.0
 pydocstyle==6.1.1
 black==21.5b2
-mypy==0.812
+mypy==0.901
 -r requirements-test-withpsycopg.txt
