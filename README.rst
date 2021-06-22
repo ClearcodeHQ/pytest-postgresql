@@ -347,7 +347,7 @@ For this import DatabaseJanitor and use its init and drop methods:
     from pytest_postgresql.janitor import DatabaseJanitor
 
     @pytest.fixture
-    func database(postgresql_proc):
+    def database(postgresql_proc):
         # variable definition
 
         janitor = DatabaseJanitor(
@@ -376,7 +376,7 @@ or use it as a context manager:
     from pytest_postgresql.janitor import DatabaseJanitor
 
     @pytest.fixture
-    func database(postgresql_proc):
+    def database(postgresql_proc):
         # variable definition
 
         with DatabaseJanitor(
