@@ -9,10 +9,6 @@ on:
       - requirements-lint.txt
   pull_request:
     branches: [ master ]
-    paths:
-      - '**.py'
-      - .github/workflows/linters.yml
-      - requirements-lint.txt
 
 jobs:
   pydocstyle:
@@ -57,7 +53,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
-      - uses: psf/black@main
+      - uses: psf/black@21.7b0
 
   imports:
     runs-on: ubuntu-latest

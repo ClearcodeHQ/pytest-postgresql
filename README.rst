@@ -447,7 +447,7 @@ your custom postgresql process fixture:
 
 .. code-block:: python
 
-    from pytest_postgresql.factories import postgresql, postgresql_proc
+    import pytest_postgresql.factories
     def load_database(**kwargs):
         db_connection: connection = psycopg2.connect(**kwargs)
         with db_connection.cursor() as cur:
@@ -458,11 +458,11 @@ your custom postgresql process fixture:
             )
             db_connection.commit()
 
-    postgresql_proc = postgresql_proc(
+    postgresql_proc = factories.postgresql_proc(
         load=[load_database],
     )
 
-    postgresql = postgresql(
+    postgresql = factories.postgresql(
         "postgresql_proc",
     )
 
