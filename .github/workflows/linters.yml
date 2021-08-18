@@ -57,7 +57,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
-      - uses: psf/black@main
+      - uses: psf/black@21.7b0
 
   imports:
     runs-on: ubuntu-latest
