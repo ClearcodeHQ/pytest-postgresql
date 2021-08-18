@@ -57,7 +57,7 @@ jobs:
         name: postgresql-${{ matrix.python-version }}-${{ matrix.postgres-version }}
         path: /${{ env.TMPDIR }}/pytest-of-runner/**
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v1
+      uses: codecov/codecov-action@v2.0.2
       with:
         flags: macos
         env_vars: OS, PYTHON, POSTGRES
