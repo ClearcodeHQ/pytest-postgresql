@@ -2,7 +2,7 @@
 pip>=9  # minimum installation requirements
 setuptools>=21  # minimum installation requirements
 coverage==5.5 # pytest-cov
-pytest==6.2.4
+pytest==6.2.5
 pytest-cov==2.12.1
 pytest-xdist==2.3.0
 port-for==0.6.1
