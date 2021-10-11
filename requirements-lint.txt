@@ -1,5 +1,5 @@
 # linters
-pycodestyle==2.7.0
+pycodestyle==2.8.0
 pydocstyle==6.1.1
 black==21.9b0
 mypy==0.910
