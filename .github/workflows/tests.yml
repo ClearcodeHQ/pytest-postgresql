@@ -7,7 +7,8 @@ on:
       - '**.py'
       - .github/workflows/tests.yml
       - requirements-test.txt
-      - requirements-test-withpsycopg.txt
+      - requirements-test-withpsycopg2.txt
+      - requirements-test-withpsycopg3.txt
   pull_request:
     branches: [ master ]
 
@@ -19,6 +20,7 @@ jobs:
       matrix:
         python-version: [3.7, 3.8, 3.9, pypy-3.7-v7.3.3]
         postgres-version: [9.6, 10, 11, 12, 13]
+        psycopg-version: [2, 3]
     env:
       OS: ubuntu-latest
       PYTHON: ${{ matrix.python-version }}
@@ -65,7 +67,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements-test-withpsycopg.txt
+        pip install -r requirements-test-withpsycopg${{ matrix.psycopg-version }}.txt
     - name: Run test
       run: |
         py.test -n 0 --postgresql-exec="/usr/lib/postgresql/${{ matrix.postgres-version }}/bin/pg_ctl" -k "not docker" --cov-report=xml
@@ -75,7 +77,7 @@ jobs:
     - uses: actions/upload-artifact@v2
       if: failure()
       with:
-        name: postgresql-${{ matrix.python-version }}-${{ matrix.postgres-version }}
+        name: postgresql-${{ matrix.python-version }}-${{ matrix.postgres-version }}-${{ matrix.psycopg-version }}
         path: /tmp/pytest-of-runner/**
     - name: Run test noproc fixture on docker
       run: |

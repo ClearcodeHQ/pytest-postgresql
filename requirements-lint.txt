@@ -7,4 +7,4 @@ pydocstyle==6.1.1
 black==21.9b0
 mypy==0.910
 types-pkg-resources==0.1.3
--r requirements-test-withpsycopg.txt
+-r requirements-test-withpsycopg3.txt

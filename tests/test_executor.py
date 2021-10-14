@@ -5,13 +5,12 @@ from typing import Any
 from _pytest.fixtures import FixtureRequest
 from pkg_resources import parse_version
 
-import psycopg2
 import pytest
 from port_for import get_port
 
 from pytest_postgresql.executor import PostgreSQLExecutor, PostgreSQLUnsupported
 from pytest_postgresql.factories import postgresql_proc, postgresql
-from pytest_postgresql.compat import connection
+from pytest_postgresql.compat import connection, psycopg2
 from pytest_postgresql.config import get_config
 from pytest_postgresql.retry import retry
 
@@ -104,7 +103,7 @@ def test_proc_with_password(
     # no assertion necessary here; we just want to make sure it connects with
     # the password
     retry(
-        lambda: psycopg2.connect(  # type: ignore[no-any-return]
+        lambda: psycopg2.connect(
             dbname=postgres_with_password.user,
             user=postgres_with_password.user,
             password=postgres_with_password.password,

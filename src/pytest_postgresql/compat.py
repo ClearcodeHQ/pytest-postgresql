@@ -7,20 +7,26 @@ __all__ = ("psycopg2", "cursor", "connection", "check_for_psycopg2")
 
 
 try:
-    import psycopg2
+    import psycopg as psycopg2
 except ImportError:
-    psycopg2 = False
+    try:
+        import psycopg2  # type: ignore[no-redef]
+    except ImportError:
+        psycopg2 = False  # type: ignore[assignment]
 
-if not psycopg2:
-    if not TYPE_CHECKING:
-        # if there's no postgres, just go with the flow.
-        cursor = Any
-        connection = Any
-elif python_implementation() == "PyPy":
-    from psycopg2cffi._impl.cursor import Cursor as cursor
-    from psycopg2cffi._impl.connection import Connection as connection
+    if not psycopg2:
+        if not TYPE_CHECKING:
+            # if there's no postgres, just go with the flow.
+            cursor = Any
+            connection = Any
+    if python_implementation() == "PyPy":
+        from psycopg2cffi._impl.cursor import Cursor as cursor
+        from psycopg2cffi._impl.connection import Connection as connection
+    else:
+        from psycopg2._psycopg import cursor, connection
 else:
-    from psycopg2._psycopg import cursor, connection
+    from psycopg import Cursor as cursor
+    from psycopg import Connection as connection
 
 
 def check_for_psycopg2() -> None:
@@ -32,6 +38,6 @@ def check_for_psycopg2() -> None:
     if not psycopg2:
         raise ImportError(
             "No module named psycopg2. Please install either "
-            "psycopg2 or psycopg2-binary package for CPython "
+            "psycopg, psycopg2 or psycopg2-binary package for CPython "
             "or psycopg2cffi for Pypy."
         )

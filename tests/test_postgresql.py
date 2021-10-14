@@ -1,7 +1,6 @@
 """All tests for pytest-postgresql."""
 import decimal
 
-import psycopg2
 import pytest
 
 from pytest_postgresql.executor import PostgreSQLExecutor
@@ -59,7 +58,7 @@ def test_postgres_load_two_files(postgresql_load_2: connection) -> None:
 
 def test_rand_postgres_port(postgresql2: connection) -> None:
     """Check if postgres fixture can be started on random port."""
-    assert postgresql2.status == psycopg2.extensions.STATUS_READY
+    assert postgresql2.info.status == 0
 
 
 @pytest.mark.skipif(

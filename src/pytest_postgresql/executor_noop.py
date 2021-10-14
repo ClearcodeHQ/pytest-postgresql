@@ -74,7 +74,7 @@ class NoopExecutor:
                 password=self.password,
                 options=self.options,
             ) as connection:
-                version = str(connection.server_version)
+                version = str(connection.info.server_version)
                 # Pad the version for releases before 10
                 # if not we get 90524 instead of 090524
                 if len(version) < 6:
