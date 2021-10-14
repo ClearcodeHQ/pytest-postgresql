@@ -32,7 +32,6 @@ def postgresql(
     process_fixture_name: str,
     dbname: Optional[str] = None,
     load: Optional[List[Union[Callable, str]]] = None,
-    isolation_level: Optional[int] = None,
 ) -> Callable[[FixtureRequest], connection]:
     """
     Return connection fixture factory for PostgreSQL.
@@ -41,8 +40,6 @@ def postgresql(
     :param dbname: database name
     :param load: SQL, function or function import paths to automatically load
                  into our test database
-    :param isolation_level: optional postgresql isolation level
-                            defaults to ISOLATION_LEVEL_AUTOCOMMIT
     :returns: function which makes a connection to postgresql
     """
 
@@ -56,7 +53,6 @@ def postgresql(
         """
         config = get_config(request)
         check_for_psycopg2()
-        pg_isolation_level = isolation_level or psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT
         proc_fixture: Union[PostgreSQLExecutor, NoopExecutor] = request.getfixturevalue(
             process_fixture_name
         )
@@ -70,7 +66,7 @@ def postgresql(
         pg_load = load or config["load"]  # TODO: only a fixture param should be left here.
 
         with DatabaseJanitor(
-            pg_user, pg_host, pg_port, pg_db, proc_fixture.version, pg_password, pg_isolation_level
+            pg_user, pg_host, pg_port, pg_db, proc_fixture.version, pg_password
         ) as janitor:
             db_connection: connection = psycopg2.connect(
                 dbname=pg_db,
