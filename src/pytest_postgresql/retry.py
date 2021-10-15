@@ -4,8 +4,6 @@ from datetime import datetime, timedelta
 from time import sleep
 from typing import Callable, TypeVar, Type
 
-from pytest_postgresql.compat import psycopg2
-
 
 T = TypeVar("T")
 

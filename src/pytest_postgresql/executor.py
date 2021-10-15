@@ -24,7 +24,7 @@ import shutil
 import subprocess
 import tempfile
 import time
-from typing import TypeVar, Optional, Any, Union
+from typing import TypeVar, Optional, Any
 
 from pkg_resources import parse_version
 from mirakuru import TCPExecutor
@@ -43,7 +43,6 @@ class PostgreSQLUnsupported(Exception):
     """Exception raised when unsupported postgresql would be detected."""
 
 
-# pylint:disable=too-many-arguments,too-many-instance-attributes
 class PostgreSQLExecutor(TCPExecutor):
     """
     PostgreSQL executor running on pg_ctl.
@@ -63,7 +62,6 @@ class PostgreSQLExecutor(TCPExecutor):
     VERSION_RE = re.compile(r".* (?P<version>\d+\.\d+)")
     MIN_SUPPORTED_VERSION = parse_version("9.6")
 
-    # pylint:disable=too-many-locals
     def __init__(
         self,
         executable: str,
@@ -136,8 +134,6 @@ class PostgreSQLExecutor(TCPExecutor):
                 "LANG": _LOCALE,
             },
         )
-
-    # pylint:enable=too-many-locals
 
     def start(self: T) -> T:
         """Add check for postgresql version before starting process."""

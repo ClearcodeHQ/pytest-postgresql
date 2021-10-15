@@ -20,7 +20,7 @@ import os.path
 import platform
 import subprocess
 from _warnings import warn
-from typing import Union, Iterable, Callable, List, Iterator, Optional, Tuple, Set
+from typing import Union, Callable, List, Iterator, Optional, Tuple, Set
 
 import pytest
 from _pytest.fixtures import FixtureRequest

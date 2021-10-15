@@ -11,7 +11,7 @@ from pytest_postgresql.compat import psycopg2, cursor, check_for_psycopg2, conne
 from pytest_postgresql.retry import retry
 from pytest_postgresql.sql import loader
 
-Version = type(parse_version("1"))  # pylint:disable=invalid-name
+Version = type(parse_version("1"))
 
 
 DatabaseJanitorType = TypeVar("DatabaseJanitorType", bound="DatabaseJanitor")
@@ -66,8 +66,8 @@ class DatabaseJanitor:
                 result = False
             else:
                 cur.execute(
-                    f"SELECT EXISTS "
-                    f"(SELECT datname FROM pg_catalog.pg_database WHERE datname= %s);",
+                    "SELECT EXISTS "
+                    "(SELECT datname FROM pg_catalog.pg_database WHERE datname= %s);",
                     (template_name,),
                 )
                 result = cur.fetchone()[0]

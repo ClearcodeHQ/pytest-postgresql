@@ -97,7 +97,7 @@ postgres_with_password = postgresql_proc(password="hunter2")
 
 def test_proc_with_password(
     postgres_with_password: PostgreSQLExecutor,
-) -> None:  # pylint: disable=redefined-outer-name
+) -> None:
     """Check that password option to postgresql_proc factory is honored."""
     assert postgres_with_password.running() is True
 

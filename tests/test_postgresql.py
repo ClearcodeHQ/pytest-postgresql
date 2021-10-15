@@ -1,6 +1,5 @@
 """All tests for pytest-postgresql."""
 import decimal
-from typing import Any
 
 import psycopg2
 import pytest
