@@ -40,7 +40,7 @@ Install with:
 
     pip install pytest-postgresql
 
-You will also need to install ``psycopg2``, or one of its alternative packagings such as ``psycopg2-binary``
+You will also need to install ``psycopg2`` (2.9 or newer), or one of its alternative packagings such as ``psycopg2-binary``
 (pre-compiled wheels) or ``psycopg2cffi`` (CFFI based, useful on PyPy).
 
 Plugin contains three fixtures:
@@ -289,7 +289,6 @@ Sample below is simplified session fixture from
         """Session for SQLAlchemy."""
         from pyramid_fullauth.models import Base
 
-        # NOTE: this fstring assumes that psycopg2 >= 2.8 is used. Not sure about it's support in psycopg2cffi (PyPy)
         connection = f'postgresql+psycopg2://{postgresql.info.user}:@{postgresql.info.host}:{postgresql.info.port}/{postgresql.info.dbname}'
 
         engine = create_engine(connection, echo=False, poolclass=NullPool)
