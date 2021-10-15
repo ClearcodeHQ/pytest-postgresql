@@ -133,3 +133,15 @@ def test_postgres_options(postgres_max_conns: connection) -> None:
     cur = postgres_max_conns.cursor()
     cur.execute("SHOW max_connections")
     assert cur.fetchone() == ("42",)
+
+
+postgres_isolation_level = postgresql(
+    "postgresql_proc", isolation_level=psycopg2.extensions.ISOLATION_LEVEL_SERIALIZABLE
+)
+
+
+def test_custom_isolation_level(postgres_isolation_level: connection) -> None:
+    """Check that a client fixture with a custom isolation level works."""
+    cur = postgres_isolation_level.cursor()
+    cur.execute("SELECT 1")
+    assert cur.fetchone() == (1,)

@@ -41,7 +41,7 @@ class DatabaseJanitor:
         :param version: postgresql version number
         :param password: optional postgresql password
         :param isolation_level: optional postgresql isolation level
-            defaults to ISOLATION_LEVEL_AUTOCOMMIT
+            defaults to server's default
         :param connection_timeout: how long to retry connection before
             raising a TimeoutError
         """
@@ -52,7 +52,7 @@ class DatabaseJanitor:
         self.dbname = dbname
         self._connection_timeout = connection_timeout
         check_for_psycopg2()
-        self.isolation_level = isolation_level or psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT
+        self.isolation_level = isolation_level
         if not isinstance(version, Version):
             self.version = parse_version(str(version))
         else:
@@ -146,6 +146,8 @@ class DatabaseJanitor:
             connect, timeout=self._connection_timeout, possible_exception=psycopg2.OperationalError
         )
         conn.set_isolation_level(self.isolation_level)
+        # We must not run a transaction since we create a database.
+        conn.autocommit = True
         cur = conn.cursor()
         try:
             yield cur
