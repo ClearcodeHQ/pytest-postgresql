@@ -24,7 +24,7 @@ import shutil
 import subprocess
 import tempfile
 import time
-from typing import TypeVar, Optional, Any, Union
+from typing import TypeVar, Optional, Any
 
 from pkg_resources import parse_version
 from mirakuru import TCPExecutor

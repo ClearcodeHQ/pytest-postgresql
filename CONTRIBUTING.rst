@@ -40,7 +40,7 @@ Commits
 Coding style
 ------------
 
-#. Coding style is being handled by black and doublechecked by pycodestyle and pydocstyle
+#. Coding style is being handled by black and doublechecked by flake8 and pydocstyle
     * We provide a `pre-commit <https://pre-commit.com/>`_ configuration for invoking these on commit.
 
 Testing

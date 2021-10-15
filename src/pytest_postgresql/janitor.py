@@ -66,8 +66,8 @@ class DatabaseJanitor:
                 result = False
             else:
                 cur.execute(
-                    f"SELECT EXISTS "
-                    f"(SELECT datname FROM pg_catalog.pg_database WHERE datname= %s);",
+                    "SELECT EXISTS "
+                    "(SELECT datname FROM pg_catalog.pg_database WHERE datname= %s);",
                     (template_name,),
                 )
                 result = cur.fetchone()[0]
