@@ -19,14 +19,22 @@ except ImportError:
             # if there's no postgres, just go with the flow.
             cursor = Any
             connection = Any
+            ISOLATION_LEVEL_SERIALIZABLE = 3
+    else:
+        ISOLATION_LEVEL_SERIALIZABLE = (
+            psycopg2.extensions.ISOLATION_LEVEL_SERIALIZABLE  # type: ignore[attr-defined]
+        )
     if python_implementation() == "PyPy":
         from psycopg2cffi._impl.cursor import Cursor as cursor
         from psycopg2cffi._impl.connection import Connection as connection
     else:
         from psycopg2._psycopg import cursor, connection
+
 else:
     from psycopg import Cursor as cursor
     from psycopg import Connection as connection
+
+    ISOLATION_LEVEL_SERIALIZABLE = psycopg2.IsolationLevel.SERIALIZABLE
 
 
 def check_for_psycopg2() -> None:

@@ -10,7 +10,7 @@ from port_for import get_port
 
 from pytest_postgresql.executor import PostgreSQLExecutor, PostgreSQLUnsupported
 from pytest_postgresql.factories import postgresql_proc, postgresql
-from pytest_postgresql.compat import connection, psycopg2
+from pytest_postgresql.compat import connection, psycopg2, ISOLATION_LEVEL_SERIALIZABLE
 from pytest_postgresql.config import get_config
 from pytest_postgresql.retry import retry
 
@@ -135,7 +135,7 @@ def test_postgres_options(postgres_max_conns: connection) -> None:
 
 
 postgres_isolation_level = postgresql(
-    "postgresql_proc", isolation_level=psycopg2.extensions.ISOLATION_LEVEL_SERIALIZABLE
+    "postgresql_proc", isolation_level=ISOLATION_LEVEL_SERIALIZABLE
 )
 
 

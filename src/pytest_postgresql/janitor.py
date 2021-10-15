@@ -145,7 +145,7 @@ class DatabaseJanitor:
         conn = retry(
             connect, timeout=self._connection_timeout, possible_exception=psycopg2.OperationalError
         )
-        conn.set_isolation_level(self.isolation_level)
+        conn.isolation_level = self.isolation_level
         # We must not run a transaction since we create a database.
         conn.autocommit = True
         cur = conn.cursor()
