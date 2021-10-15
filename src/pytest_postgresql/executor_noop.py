@@ -23,7 +23,7 @@ from pkg_resources import parse_version
 from pytest_postgresql.compat import check_for_psycopg2, psycopg2
 
 
-class NoopExecutor:  # pylint: disable=too-few-public-methods
+class NoopExecutor:
     """
     Nooperator executor.
 

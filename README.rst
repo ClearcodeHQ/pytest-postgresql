@@ -287,7 +287,7 @@ Sample below is simplified session fixture from
     @pytest.fixture
     def db_session(postgresql):
         """Session for SQLAlchemy."""
-        from pyramid_fullauth.models import Base  # pylint:disable=import-outside-toplevel
+        from pyramid_fullauth.models import Base
 
         # NOTE: this fstring assumes that psycopg2 >= 2.8 is used. Not sure about it's support in psycopg2cffi (PyPy)
         connection = f'postgresql+psycopg2://{postgresql.info.user}:@{postgresql.info.host}:{postgresql.info.port}/{postgresql.info.dbname}'
