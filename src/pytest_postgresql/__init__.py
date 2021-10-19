@@ -17,11 +17,5 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with pytest-postgresql. If not, see <http://www.gnu.org/licenses/>.
 """Main module for pytest-postgresql."""
-try:
-    import psycopg2cffi.compat
-except ImportError:
-    pass
-else:
-    psycopg2cffi.compat.register()
 
 __version__ = "3.1.1"

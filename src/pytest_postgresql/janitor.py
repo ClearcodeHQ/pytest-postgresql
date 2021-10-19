@@ -3,11 +3,11 @@ import re
 from contextlib import contextmanager
 from functools import partial
 from types import TracebackType
-from typing import TypeVar, Union, Optional, Type, Callable
+from typing import TypeVar, Union, Optional, Type, Callable, Iterator
 
 from pkg_resources import parse_version
 
-from pytest_postgresql.compat import psycopg2, cursor, check_for_psycopg2, connection
+from pytest_postgresql.compat import psycopg, cursor, check_for_psycopg, connection
 from pytest_postgresql.retry import retry
 from pytest_postgresql.sql import loader
 
@@ -28,7 +28,7 @@ class DatabaseJanitor:
         dbname: str,
         version: Union[str, float, Version],  # type: ignore[valid-type]
         password: Optional[str] = None,
-        isolation_level: Optional[int] = None,
+        isolation_level: "Optional[psycopg.IsolationLevel]" = None,
         connection_timeout: int = 60,
     ) -> None:
         """
@@ -51,7 +51,7 @@ class DatabaseJanitor:
         self.port = port
         self.dbname = dbname
         self._connection_timeout = connection_timeout
-        check_for_psycopg2()
+        check_for_psycopg()
         self.isolation_level = isolation_level
         if not isinstance(version, Version):
             self.version = parse_version(str(version))
@@ -70,7 +70,8 @@ class DatabaseJanitor:
                     "(SELECT datname FROM pg_catalog.pg_database WHERE datname= %s);",
                     (template_name,),
                 )
-                result = cur.fetchone()[0]
+                row = cur.fetchone()
+                result = (row is not None) and row[0]
             if not result:
                 cur.execute(f'CREATE DATABASE "{self.dbname}";')
             else:
@@ -130,11 +131,11 @@ class DatabaseJanitor:
         )
 
     @contextmanager
-    def cursor(self) -> cursor:
+    def cursor(self) -> Iterator[cursor]:
         """Return postgresql cursor."""
 
         def connect() -> connection:
-            return psycopg2.connect(
+            return psycopg.connect(
                 dbname="postgres",
                 user=self.user,
                 password=self.password,
@@ -143,7 +144,7 @@ class DatabaseJanitor:
             )
 
         conn = retry(
-            connect, timeout=self._connection_timeout, possible_exception=psycopg2.OperationalError
+            connect, timeout=self._connection_timeout, possible_exception=psycopg.OperationalError
         )
         conn.isolation_level = self.isolation_level
         # We must not run a transaction since we create a database.

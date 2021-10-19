@@ -7,16 +7,14 @@ on:
       - '**.py'
       - .github/workflows/tests-macos.yml
       - requirements-test.txt
-      - requirements-test-withpsycopg2.txt
-      - requirements-test-withpsycopg3.txt
+      - requirements-test-withpsycopg.txt
   pull_request:
     branches: [ master ]
     paths:
       - '**.py'
       - .github/workflows/tests-macos.yml
       - requirements-test.txt
-      - requirements-test-withpsycopg2.txt
-      - requirements-test-withpsycopg3.txt
+      - requirements-test-withpsycopg.txt
 
 jobs:
   macostests:
@@ -26,7 +24,6 @@ jobs:
       matrix:
         python-version: [3.7, 3.8, 3.9, pypy-3.7-v7.3.3]
         postgres-version: [11, 12, 13]
-        psycopg-version: [2, 3]
     env:
       OS: macos-latest
       PYTHON: ${{ matrix.python-version }}
@@ -47,7 +44,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements-test-withpsycopg${{ matrix.psycopg-version }}.txt
+        pip install -r requirements-test-withpsycopg.txt
     - name: Install dependencies
       run: |
         echo "TMPDIR=$TMPDIR" >> $GITHUB_ENV
@@ -57,7 +54,7 @@ jobs:
     - uses: actions/upload-artifact@v2
       if: failure()
       with:
-        name: postgresql-${{ matrix.python-version }}-${{ matrix.postgres-version }}-${{ matrix.psycopg-version }}
+        name: postgresql-${{ matrix.python-version }}-${{ matrix.postgres-version }}
         path: /${{ env.TMPDIR }}/pytest-of-runner/**
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v2.1.0
