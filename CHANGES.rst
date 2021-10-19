@@ -1,6 +1,15 @@
 CHANGELOG
 =========
 
+unreleased
+----------
+
+Bugfix
+++++++
+
+- Database can be created by DatabaseJanitor or the client fixture when an isolation
+  level is specified.
+
 3.1.1
 ----------
 
