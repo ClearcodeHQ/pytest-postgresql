@@ -4,10 +4,24 @@ CHANGELOG
 unreleased
 ----------
 
+Features
+++++++++
+
+- Upgrade to psycopg 3.
+
 Backward Incompatibilities
 ++++++++++++++++++++++++++
 
 - Use psycopg 3 and return its connections in client fixtures.
+
+3.1.2
+----------
+
+Bugfix
+++++++
+
+- Database can be created by DatabaseJanitor or the client fixture when an isolation
+  level is specified.
 
 3.1.1
 ----------
