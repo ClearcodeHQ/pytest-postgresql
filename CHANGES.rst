@@ -13,6 +13,12 @@ Backward Incompatibilities
 ++++++++++++++++++++++++++
 
 - Use psycopg 3 and return its connections in client fixtures.
+- Drop support for postgresql 9.6
+
+Misc
+++++
+
+- Add Postgresql 14 to the CI
 
 3.1.2
 ----------

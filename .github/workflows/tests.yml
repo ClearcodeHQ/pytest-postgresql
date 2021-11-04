@@ -18,7 +18,7 @@ jobs:
       fail-fast: true
       matrix:
         python-version: [3.7, 3.8, 3.9, "3.10", pypy-3.7-v7.3.3]
-        postgres-version: [9.6, 10, 11, 12, 13]
+        postgres-version: [10, 11, 12, 13, 14]
     env:
       OS: ubuntu-latest
       PYTHON: ${{ matrix.python-version }}
