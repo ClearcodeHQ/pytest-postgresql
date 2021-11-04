@@ -17,7 +17,7 @@ def test_version_cast(version: Any) -> None:
     assert janitor.version == VERSION
 
 
-@patch("pytest_postgresql.janitor.psycopg2.connect")
+@patch("pytest_postgresql.janitor.psycopg.connect")
 def test_cursor_selects_postgres_database(connect_mock: MagicMock) -> None:
     """Test that the cursor requests the postgres database."""
     janitor = DatabaseJanitor("user", "host", "1234", "database_name", 9.6)
@@ -27,7 +27,7 @@ def test_cursor_selects_postgres_database(connect_mock: MagicMock) -> None:
         )
 
 
-@patch("pytest_postgresql.janitor.psycopg2.connect")
+@patch("pytest_postgresql.janitor.psycopg.connect")
 def test_cursor_connects_with_password(connect_mock: MagicMock) -> None:
     """Test that the cursor requests the postgres database."""
     janitor = DatabaseJanitor("user", "host", "1234", "database_name", 9.6, "some_password")
@@ -43,7 +43,7 @@ def test_cursor_connects_with_password(connect_mock: MagicMock) -> None:
 @pytest.mark.parametrize(
     "load_database", ("tests.loader.load_database", "tests.loader:load_database")
 )
-@patch("pytest_postgresql.janitor.psycopg2.connect")
+@patch("pytest_postgresql.janitor.psycopg.connect")
 def test_janitor_populate(connect_mock: MagicMock, load_database: str) -> None:
     """
     Test that the cursor requests the postgres database.

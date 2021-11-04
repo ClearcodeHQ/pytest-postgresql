@@ -20,7 +20,7 @@ from typing import Union, Optional, Any
 
 from pkg_resources import parse_version
 
-from pytest_postgresql.compat import check_for_psycopg2, psycopg2
+from pytest_postgresql.compat import check_for_psycopg, psycopg
 
 
 class NoopExecutor:
@@ -63,10 +63,10 @@ class NoopExecutor:
     def version(self) -> Any:
         """Get postgresql's version."""
         if not self._version:
-            check_for_psycopg2()
+            check_for_psycopg()
             # could be called before self.dbname will be created.
             # Use default postgres database
-            with psycopg2.connect(
+            with psycopg.connect(
                 dbname="postgres",
                 user=self.user,
                 host=self.host,
@@ -74,7 +74,7 @@ class NoopExecutor:
                 password=self.password,
                 options=self.options,
             ) as connection:
-                version = str(connection.server_version)
+                version = str(connection.info.server_version)
                 # Pad the version for releases before 10
                 # if not we get 90524 instead of 090524
                 if len(version) < 6:
