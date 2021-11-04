@@ -38,8 +38,8 @@ class NoopExecutor:
         port: Union[str, int],
         user: str,
         options: str,
+        dbname: str,
         password: Optional[str] = None,
-        dbname: Optional[str] = None,
     ):
         """
         Initialize nooperator executor mock.

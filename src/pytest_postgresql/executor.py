@@ -71,12 +71,12 @@ class PostgreSQLExecutor(TCPExecutor):
         unixsocketdir: str,
         logfile: str,
         startparams: str,
+        dbname: str,
         shell: bool = False,
         timeout: Optional[int] = 60,
         sleep: float = 0.1,
         user: str = "postgres",
         password: str = "",
-        dbname: Optional[str] = None,
         options: str = "",
         postgres_options: str = "",
     ):

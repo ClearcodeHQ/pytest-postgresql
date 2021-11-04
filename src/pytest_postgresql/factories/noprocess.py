@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with pytest-dbfixtures.  If not, see <http://www.gnu.org/licenses/>.
 """Fixture factory for existing postgresql server."""
+import os
 from typing import Union, Callable, List, Iterator, Optional
 
 import pytest
@@ -24,6 +25,14 @@ from _pytest.fixtures import FixtureRequest
 from pytest_postgresql.config import get_config
 from pytest_postgresql.executor_noop import NoopExecutor
 from pytest_postgresql.janitor import DatabaseJanitor
+
+
+def xdistify_dbname(dbname: str) -> str:
+    """Modified the database name depending on the presence and usage of xdist."""
+    xdist_worker = os.getenv("PYTEST_XDIST_WORKER")
+    if xdist_worker:
+        return f"{dbname}{xdist_worker}"
+    return dbname
 
 
 def postgresql_noproc(
@@ -61,7 +70,7 @@ def postgresql_noproc(
         pg_port = port or config["port"] or 5432
         pg_user = user or config["user"]
         pg_password = password or config["password"]
-        pg_dbname = dbname or config["dbname"]
+        pg_dbname = xdistify_dbname(dbname or config["dbname"])
         pg_options = options or config["options"]
         pg_load = load or config["load"]
 
