@@ -2,14 +2,14 @@ name: Run tests on macos
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
     paths:
       - '**.py'
       - .github/workflows/tests-macos.yml
       - requirements-test.txt
       - requirements-test-withpsycopg.txt
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
     paths:
       - '**.py'
       - .github/workflows/tests-macos.yml
