@@ -16,6 +16,7 @@ def test_noproc_version(postgresql_proc: PostgreSQLExecutor) -> None:
         postgresql_proc.port,
         postgresql_proc.user,
         postgresql_proc.options,
+        postgresql_proc.dbname,
     )
     noproc_version = retry(
         lambda: postgresql_noproc.version,  # type: ignore[no-any-return]
@@ -27,7 +28,11 @@ def test_noproc_version(postgresql_proc: PostgreSQLExecutor) -> None:
 def test_noproc_cached_version(postgresql_proc: PostgreSQLExecutor) -> None:
     """Test that the version is being cached."""
     postgresql_noproc = NoopExecutor(
-        postgresql_proc.host, postgresql_proc.port, postgresql_proc.user, postgresql_proc.options
+        postgresql_proc.host,
+        postgresql_proc.port,
+        postgresql_proc.user,
+        postgresql_proc.options,
+        postgresql_proc.dbname,
     )
     ver = retry(
         lambda: postgresql_noproc.version,  # type: ignore[no-any-return]

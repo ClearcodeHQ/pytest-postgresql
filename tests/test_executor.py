@@ -37,6 +37,7 @@ def test_unsupported_version(request: FixtureRequest) -> None:
         unixsocketdir=config["unixsocketdir"],
         logfile="/tmp/version.error.log",
         startparams=config["startparams"],
+        dbname="random_name",
     )
 
     with pytest.raises(PostgreSQLUnsupported):
@@ -70,6 +71,7 @@ def test_executor_init_with_password(
         logfile=str(logfile_path),
         startparams=config["startparams"],
         password="somepassword",
+        dbname="somedatabase",
     )
     with executor:
         assert executor.running()

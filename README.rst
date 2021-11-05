@@ -220,7 +220,7 @@ You can pick which you prefer, but remember that these settings are handled in t
      - dbname
      - --postgresql-dbname
      - postgresql_dbname
-     - -
+     - yes, however with xdist an index is being added to name, resulting in test0, test1 for each worker.
      - test
    * - Default Schema either in sql files or import path to function that will load it (list of values for each)
      - load

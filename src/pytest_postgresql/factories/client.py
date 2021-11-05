@@ -22,7 +22,6 @@ import pytest
 from _pytest.fixtures import FixtureRequest
 
 from pytest_postgresql.compat import connection, check_for_psycopg, psycopg
-from pytest_postgresql.config import get_config
 from pytest_postgresql.executor import PostgreSQLExecutor
 from pytest_postgresql.executor_noop import NoopExecutor
 from pytest_postgresql.janitor import DatabaseJanitor
@@ -54,7 +53,6 @@ def postgresql(
         :param request: fixture request object
         :returns: postgresql client
         """
-        config = get_config(request)
         check_for_psycopg()
         proc_fixture: Union[PostgreSQLExecutor, NoopExecutor] = request.getfixturevalue(
             process_fixture_name
@@ -65,8 +63,8 @@ def postgresql(
         pg_user = proc_fixture.user
         pg_password = proc_fixture.password
         pg_options = proc_fixture.options
-        pg_db = dbname or config["dbname"]
-        pg_load = load or config["load"]  # TODO: only a fixture param should be left here.
+        pg_db = dbname or proc_fixture.dbname
+        pg_load = load or []
 
         with DatabaseJanitor(
             pg_user, pg_host, pg_port, pg_db, proc_fixture.version, pg_password, isolation_level

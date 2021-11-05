@@ -8,12 +8,16 @@ Features
 ++++++++
 
 - Upgrade to psycopg 3.
+- Xdist running test connecting to already existing postgresql,
+  will now create separate databases for each worker.
 
 Backward Incompatibilities
 ++++++++++++++++++++++++++
 
 - Use psycopg 3 and return its connections in client fixtures.
 - Drop support for postgresql 9.6
+- client fixture will no longer utilize configuration's load param
+- client fixture will no longer utilize configuration's dbanme parameter
 
 Misc
 ++++
