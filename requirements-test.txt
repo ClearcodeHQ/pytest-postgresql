@@ -8,5 +8,5 @@ pytest-xdist==2.4.0
 port-for==0.6.1
 mirakuru==2.4.1
 psycopg[binary]==3.0.4; platform_python_implementation != "PyPy"
-psycopg==3.0.3; platform_python_implementation == "PyPy"
+psycopg==3.0.4; platform_python_implementation == "PyPy"
 -e .[tests]
