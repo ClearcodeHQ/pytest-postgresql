@@ -1,7 +1,7 @@
 # test runs requirements (versions we'll be testing against) - automatically updated by requires.io
 pip>=9  # minimum installation requirements
 setuptools>=21  # minimum installation requirements
-coverage==6.1.2 # pytest-cov
+coverage==6.2 # pytest-cov
 pytest==6.2.5
 pytest-cov==3.0.0
 pytest-xdist==2.4.0
