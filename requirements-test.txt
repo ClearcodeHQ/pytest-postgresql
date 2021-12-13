@@ -4,7 +4,7 @@ setuptools>=21  # minimum installation requirements
 coverage==6.2 # pytest-cov
 pytest==6.2.5
 pytest-cov==3.0.0
-pytest-xdist==2.4.0
+pytest-xdist==2.5.0
 port-for==0.6.1
 mirakuru==2.4.1
 psycopg[binary]==3.0.5; platform_python_implementation != "PyPy"
