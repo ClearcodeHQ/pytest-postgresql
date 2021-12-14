@@ -1,4 +1,4 @@
 # test runs requirements (versions we'll be testing against) - automatically updated by requires.io
-psycopg[binary]==3.0.5; platform_python_implementation != "PyPy"
+psycopg[binary]==3.0.6; platform_python_implementation != "PyPy"
 psycopg==3.0.5; platform_python_implementation == "PyPy"
 -r requirements-test.txt
