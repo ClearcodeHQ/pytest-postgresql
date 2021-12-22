@@ -51,7 +51,7 @@ def test_unsupported_version(request: FixtureRequest) -> None:
 def test_executor_init_with_password(
     request: FixtureRequest,
     monkeypatch: pytest.MonkeyPatch,
-    tmpdir_factory: pytest.TempdirFactory,
+    tmp_path_factory: pytest.TempPathFactory,
     locale: str,
 ) -> None:
     """Test whether the executor initializes properly."""
@@ -59,9 +59,10 @@ def test_executor_init_with_password(
     monkeypatch.setenv("LC_ALL", locale)
     port = get_port(config["port"])
     assert port is not None
-    tmpdir = tmpdir_factory.mktemp(f"pytest-postgresql-{request.node.name}")
-    datadir = tmpdir.mkdir(f"data-{port}")
-    logfile_path = tmpdir.join(f"postgresql.{port}.log")
+    tmpdir = tmp_path_factory.mktemp(f"pytest-postgresql-{request.node.name}")
+    datadir = tmpdir / f"data-{port}"
+    datadir.mkdir()
+    logfile_path = tmpdir / f"postgresql.{port}.log"
     executor = PostgreSQLExecutor(
         executable=config["exec"],
         host=config["host"],

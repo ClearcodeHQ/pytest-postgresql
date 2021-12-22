@@ -4,11 +4,12 @@ CHANGELOG
 unreleased
 ----------
 
-Misc
-++++
+Features
+++++++++
 
-- Import FixtureRequest, TempdirFactory from pytest, not private _pytest.
+- Import FixtureRequest from pytest, not private _pytest.
   Require at least pytest 6.2
+- Replace tmpdir_factory with tmp_path_factory
 
 4.0.0
 ----------
