@@ -2,7 +2,7 @@
 import sys
 from typing import Any
 
-from _pytest.fixtures import FixtureRequest
+from pytest import FixtureRequest
 from pkg_resources import parse_version
 
 import pytest
