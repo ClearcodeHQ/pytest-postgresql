@@ -1,6 +1,18 @@
 CHANGELOG
 =========
 
+unreleased
+----------
+
+Cherry picked from v4.x
+
+Misc
+++++
+
+- Import FixtureRequest, TempdirFactory from pytest, not private _pytest.
+  Require at least pytest 6.2
+- Add Postgresql 14 to the CI
+
 3.1.2
 ----------
 

@@ -19,12 +19,11 @@
 import os.path
 import platform
 import subprocess
-from _warnings import warn
 from typing import Union, Callable, List, Iterator, Optional, Tuple, Set
+from warnings import warn
 
 import pytest
-from _pytest.fixtures import FixtureRequest
-from _pytest.tmpdir import TempdirFactory
+from pytest import FixtureRequest, TempdirFactory
 from port_for import get_port
 
 from pytest_postgresql.config import get_config

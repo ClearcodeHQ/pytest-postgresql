@@ -19,7 +19,7 @@
 from typing import Union, Callable, List, Iterator, Optional
 
 import pytest
-from _pytest.fixtures import FixtureRequest
+from pytest import FixtureRequest
 
 from pytest_postgresql.config import get_config
 from pytest_postgresql.executor_noop import NoopExecutor

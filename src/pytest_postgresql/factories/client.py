@@ -19,7 +19,7 @@
 from typing import List, Optional, Callable, Union
 
 import pytest
-from _pytest.fixtures import FixtureRequest
+from pytest import FixtureRequest
 
 from pytest_postgresql.compat import connection, check_for_psycopg2, psycopg2
 from pytest_postgresql.config import get_config
