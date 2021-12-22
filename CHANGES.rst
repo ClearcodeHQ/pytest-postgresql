@@ -1,6 +1,15 @@
 CHANGELOG
 =========
 
+unreleased
+----------
+
+Misc
+++++
+
+- Import FixtureRequest, TempdirFactory from pytest, not private _pytest.
+  Require at least pytest 6.2
+
 4.0.0
 ----------
 
