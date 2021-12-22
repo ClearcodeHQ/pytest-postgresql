@@ -23,7 +23,7 @@ from typing import Union, Callable, List, Iterator, Optional, Tuple, Set
 from warnings import warn
 
 import pytest
-from pytest import FixtureRequest, TempdirFactory
+from pytest import FixtureRequest, TempPathFactory
 from port_for import get_port
 
 from pytest_postgresql.config import get_config
@@ -56,7 +56,7 @@ def postgresql_proc(
     logs_prefix: str = "",
     postgres_options: Optional[str] = None,
     load: Optional[List[Union[Callable, str]]] = None,
-) -> Callable[[FixtureRequest, TempdirFactory], Iterator[PostgreSQLExecutor]]:
+) -> Callable[[FixtureRequest, TempPathFactory], Iterator[PostgreSQLExecutor]]:
     """
     Postgresql process factory.
 
@@ -83,12 +83,13 @@ def postgresql_proc(
 
     @pytest.fixture(scope="session")
     def postgresql_proc_fixture(
-        request: FixtureRequest, tmpdir_factory: TempdirFactory
+        request: FixtureRequest, tmp_path_factory: TempPathFactory
     ) -> Iterator[PostgreSQLExecutor]:
         """
         Process fixture for PostgreSQL.
 
         :param request: fixture request object
+        :param tmp_path_factory: temporary path object (fixture)
         :returns: tcp executor
         """
         config = get_config(request)
@@ -105,7 +106,7 @@ def postgresql_proc(
             ).strip()
             postgresql_ctl = os.path.join(pg_bindir, "pg_ctl")
 
-        tmpdir = tmpdir_factory.mktemp(f"pytest-postgresql-{request.fixturename}")
+        tmpdir = tmp_path_factory.mktemp(f"pytest-postgresql-{request.fixturename}")
 
         if logfile_prefix:
             warn(
@@ -117,8 +118,9 @@ def postgresql_proc(
 
         pg_port = get_port(port) or get_port(config["port"])
         assert pg_port is not None
-        datadir = tmpdir.mkdir(f"data-{pg_port}")
-        logfile_path = tmpdir.join(f"{logfile_prefix}postgresql.{pg_port}.log")
+        datadir = tmpdir / f"data-{pg_port}"
+        datadir.mkdir()
+        logfile_path = tmpdir / f"{logfile_prefix}postgresql.{pg_port}.log"
 
         if platform.system() == "FreeBSD":
             with (datadir / "pg_hba.conf").open(mode="a") as conf_file:
