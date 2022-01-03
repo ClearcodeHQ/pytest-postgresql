@@ -420,11 +420,14 @@ In tests, make sure that all your tests are using **postgresql_noproc** fixture 
 
 .. code-block:: python
 
+    from pytest_postgresql import factories
+
+
     postgresql_in_docker = factories.postgresql_noproc()
-    postresql = factories.postgresql("postgresql_in_docker", db_name="test")
+    postgresql = factories.postgresql("postgresql_in_docker", dbname="test")
 
 
-    def test_postgres_docker(postresql):
+    def test_postgres_docker(postgresql):
         """Run test."""
         cur = postgresql.cursor()
         cur.execute("CREATE TABLE test (id serial PRIMARY KEY, num integer, data varchar);")
