@@ -1,6 +1,15 @@
 CHANGELOG
 =========
 
+unreleased
+----------
+
+Misc
+++++
+
+- Error message typo fix
+- Docker documentation example typo fixes
+
 4.1.0
 ----------
 
