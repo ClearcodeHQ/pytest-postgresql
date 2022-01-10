@@ -31,5 +31,5 @@ def retry(
             return res
         except possible_exception as e:
             if time + timeout_diff < datetime.utcnow():
-                raise TimeoutError(f"Faile after {i} attempts") from e
+                raise TimeoutError(f"Failed after {i} attempts") from e
             sleep(1)
