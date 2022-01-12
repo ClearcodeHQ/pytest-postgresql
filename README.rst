@@ -41,6 +41,8 @@ Install with:
     pip install pytest-postgresql
 
 You will also need to install ``psycopg``. See `its installation instructions <https://www.psycopg.org/psycopg3/docs/basic/install.html>`_.
+Note that this plugin requires ``psycopg`` version 3. It is possible to simultaneously install version 3
+and version 2 for libraries that require it (see `those instructions <https://www.psycopg.org/docs/install.html>`_).
 
 Plugin contains three fixtures:
 
