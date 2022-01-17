@@ -9,6 +9,8 @@ Misc
 
 - Error message typo fix
 - Docker documentation example typo fixes
+- Have setuptools required as package dependency. pkg_resources.parse_version is used in code 
+  but setuptools was only used as build requirements
 
 4.1.0
 ----------
