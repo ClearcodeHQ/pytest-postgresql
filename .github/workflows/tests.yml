@@ -2,14 +2,14 @@ name: Run tests
 
 on:
   push:
-    branches: [ main ]
+    branches: [ v3 ]
     paths:
       - '**.py'
       - .github/workflows/tests.yml
       - requirements-test.txt
       - requirements-test-withpsycopg.txt
   pull_request:
-    branches: [ main ]
+    branches: [ v3 ]
 
 jobs:
   tests:
