@@ -9,4 +9,4 @@ jobs:
     with:
       publish: true
     secrets:
-      pypi_token: ${{ secrets.pypi_token }}
+      pypi_token: ${{ secrets.pypi_password }}
