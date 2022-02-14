@@ -1,6 +1,19 @@
 CHANGELOG
 =========
 
+unreleased
+----------
+
+Cherry picked from v4.x
+
+Misc
+++++
+
+- Import FixtureRequest from pytest, not private _pytest.
+  Require at least pytest 6.2
+- Replace tmpdir_factory with tmp_path_factory
+- Add Postgresql 14 to the CI
+
 3.1.2
 ----------
 

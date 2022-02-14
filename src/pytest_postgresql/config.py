@@ -1,4 +1,4 @@
-from _pytest.fixtures import FixtureRequest
+from pytest import FixtureRequest
 
 
 def get_config(request: FixtureRequest) -> dict:

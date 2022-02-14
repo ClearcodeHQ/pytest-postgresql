@@ -1,6 +1,6 @@
 """Test behavior of postgres_options passed in different ways."""
 
-from _pytest.pytester import Pytester
+from pytest import Pytester
 
 
 def test_postgres_options_config_in_cli(pytester: Pytester) -> None:
