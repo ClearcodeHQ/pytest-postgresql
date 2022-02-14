@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-unreleased
+3.1.3
 ----------
 
 Cherry picked from v4.x
