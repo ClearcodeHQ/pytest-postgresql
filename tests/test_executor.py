@@ -20,7 +20,7 @@ class PatchedPostgreSQLExecutor(PostgreSQLExecutor):
 
     @property
     def version(self) -> Any:
-        """Overwrite version, to always return highes unsupported version."""
+        """Overwrite version, to always return highest unsupported version."""
         return parse_version("8.9")
 
 

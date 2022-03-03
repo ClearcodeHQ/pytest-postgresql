@@ -191,7 +191,7 @@ Bugfix
 2.4.0
 ----------
 
-- [feature] Drop support for pyhon 3.5
+- [feature] Drop support for python 3.5
 - [enhancement] require at least mirakuru 2.3.0 (executor's stop method parameter's change)
 - [bug] pass password to DatabaseJanitor in client's factory
 
@@ -234,7 +234,7 @@ Bugfix
 1.4.1
 ----------
 
-- [bugfix] Allow creating test databse with hyphens 
+- [bugfix] Allow creating test database with hyphens 
 
 1.4.0
 ----------
@@ -281,7 +281,7 @@ Bugfix
 
     .. note::
 
-        Otherwise it caused random test subprocess to connect again and this the drop was unsucessfull which resulted in many more test failes on setup.
+        Otherwise it caused random test subprocess to connect again and this the drop was unsuccessful which resulted in many more test fails on setup.
 
 - [cleanup] - removed path.py dependency
 
