@@ -40,16 +40,15 @@ Install with:
 
     pip install pytest-postgresql
 
-You will also need to install ``psycopg``. See `its installation instructions <https://www.psycopg.org/psycopg3/docs/basic/install.html>`_.
-Note that this plugin requires ``psycopg`` version 3. It is possible to simultaneously install version 3
-and version 2 for libraries that require the latter (see `those instructions <https://www.psycopg.org/docs/install.html>`_).
+You will also need to install ``psycopg2`` (2.9 or newer), or one of its alternative packagings such as ``psycopg2-binary``
+(pre-compiled wheels) or ``psycopg2cffi`` (CFFI based, useful on PyPy).
 
 Plugin contains three fixtures:
 
 * **postgresql** - it's a client fixture that has functional scope.
   After each test it ends all leftover connections, and drops test database
   from PostgreSQL ensuring repeatability.
-  This fixture returns already connected psycopg connection.
+  This fixture returns already connected psycopg2 connection.
 
 * **postgresql_proc** - session scoped fixture, that starts PostgreSQL instance
   at it's first use and stops at the end of the tests.

@@ -1,12 +1,10 @@
 """Helping loader function."""
 
-from typing import Any
-
-from pytest_postgresql.compat import connection, psycopg
+from pytest_postgresql.compat import connection, psycopg2
 
 
-def load_database(**kwargs: Any) -> None:
-    db_connection: connection = psycopg.connect(**kwargs)
+def load_database(**kwargs: str) -> None:
+    db_connection: connection = psycopg2.connect(**kwargs)
     with db_connection.cursor() as cur:
         cur.execute("CREATE TABLE stories (id serial PRIMARY KEY, name varchar);")
         cur.execute(

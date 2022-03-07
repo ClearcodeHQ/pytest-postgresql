@@ -5,12 +5,13 @@ from typing import Any
 from pytest import FixtureRequest
 from pkg_resources import parse_version
 
+import psycopg2
 import pytest
 from port_for import get_port
 
 from pytest_postgresql.executor import PostgreSQLExecutor, PostgreSQLUnsupported
 from pytest_postgresql.factories import postgresql_proc, postgresql
-from pytest_postgresql.compat import connection, psycopg
+from pytest_postgresql.compat import connection
 from pytest_postgresql.config import get_config
 from pytest_postgresql.retry import retry
 
@@ -76,15 +77,15 @@ def test_executor_init_with_password(
     )
     with executor:
         assert executor.running()
-        psycopg.connect(
+        psycopg2.connect(
             dbname=executor.user,
             user=executor.user,
             password=executor.password,
             host=executor.host,
             port=executor.port,
         )
-        with pytest.raises(psycopg.OperationalError):
-            psycopg.connect(
+        with pytest.raises(psycopg2.OperationalError):
+            psycopg2.connect(
                 dbname=executor.user,
                 user=executor.user,
                 password="bogus",
@@ -106,18 +107,18 @@ def test_proc_with_password(
     # no assertion necessary here; we just want to make sure it connects with
     # the password
     retry(
-        lambda: psycopg.connect(
+        lambda: psycopg2.connect(  # type: ignore[no-any-return]
             dbname=postgres_with_password.user,
             user=postgres_with_password.user,
             password=postgres_with_password.password,
             host=postgres_with_password.host,
             port=postgres_with_password.port,
         ),
-        possible_exception=psycopg.OperationalError,
+        possible_exception=psycopg2.OperationalError,
     )
 
-    with pytest.raises(psycopg.OperationalError):
-        psycopg.connect(
+    with pytest.raises(psycopg2.OperationalError):
+        psycopg2.connect(
             dbname=postgres_with_password.user,
             user=postgres_with_password.user,
             password="bogus",
@@ -138,7 +139,7 @@ def test_postgres_options(postgres_max_conns: connection) -> None:
 
 
 postgres_isolation_level = postgresql(
-    "postgresql_proc", isolation_level=psycopg.IsolationLevel.SERIALIZABLE
+    "postgresql_proc", isolation_level=psycopg2.extensions.ISOLATION_LEVEL_SERIALIZABLE
 )
 
 

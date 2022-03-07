@@ -16,12 +16,12 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with pytest-dbfixtures.  If not, see <http://www.gnu.org/licenses/>.
 """Fixture factory for postgresql client."""
-from typing import List, Optional, Callable, Union, Iterator
+from typing import List, Optional, Callable, Union
 
 import pytest
 from pytest import FixtureRequest
 
-from pytest_postgresql.compat import connection, check_for_psycopg, psycopg
+from pytest_postgresql.compat import connection, check_for_psycopg2, psycopg2
 from pytest_postgresql.executor import PostgreSQLExecutor
 from pytest_postgresql.executor_noop import NoopExecutor
 from pytest_postgresql.janitor import DatabaseJanitor
@@ -31,8 +31,8 @@ def postgresql(
     process_fixture_name: str,
     dbname: Optional[str] = None,
     load: Optional[List[Union[Callable, str]]] = None,
-    isolation_level: "Optional[psycopg.IsolationLevel]" = None,
-) -> Callable[[FixtureRequest], Iterator[connection]]:
+    isolation_level: Optional[int] = None,
+) -> Callable[[FixtureRequest], connection]:
     """
     Return connection fixture factory for PostgreSQL.
 
@@ -46,14 +46,14 @@ def postgresql(
     """
 
     @pytest.fixture
-    def postgresql_factory(request: FixtureRequest) -> Iterator[connection]:
+    def postgresql_factory(request: FixtureRequest) -> connection:
         """
         Fixture factory for PostgreSQL.
 
         :param request: fixture request object
         :returns: postgresql client
         """
-        check_for_psycopg()
+        check_for_psycopg2()
         proc_fixture: Union[PostgreSQLExecutor, NoopExecutor] = request.getfixturevalue(
             process_fixture_name
         )
@@ -69,7 +69,7 @@ def postgresql(
         with DatabaseJanitor(
             pg_user, pg_host, pg_port, pg_db, proc_fixture.version, pg_password, isolation_level
         ) as janitor:
-            db_connection: connection = psycopg.connect(
+            db_connection: connection = psycopg2.connect(
                 dbname=pg_db,
                 user=pg_user,
                 password=pg_password,

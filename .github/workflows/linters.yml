@@ -67,7 +67,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements-test.txt
-    - name: Check if the code can be imported without psycopg
+    - name: Check if the code can be imported without psycopg2
       run: |
         python -c "import pytest_postgresql"
         python -c "import pytest_postgresql.plugin"

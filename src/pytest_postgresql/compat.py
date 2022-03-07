@@ -1,35 +1,37 @@
-"""
-psycopg compatibility module.
-
-It should be possible to import pytest-postgresql without errors when psycopg is not
-installed (while tests using it will error or be skipped). So import psycopg only here
-and check if it's available.
-"""
+"""pscypog2 Compatibility module."""
 from typing import Any, TYPE_CHECKING
+from platform import python_implementation
 
 
-__all__ = ("psycopg", "cursor", "connection", "check_for_psycopg")
+__all__ = ("psycopg2", "cursor", "connection", "check_for_psycopg2")
 
 
 try:
-    import psycopg
+    import psycopg2
 except ImportError:
-    psycopg = False  # type: ignore[assignment]
+    psycopg2 = False
+
+if not psycopg2:
     if not TYPE_CHECKING:
         # if there's no postgres, just go with the flow.
         cursor = Any
         connection = Any
-
+elif python_implementation() == "PyPy":
+    from psycopg2cffi._impl.cursor import Cursor as cursor
+    from psycopg2cffi._impl.connection import Connection as connection
 else:
-    from psycopg import Cursor as cursor
-    from psycopg import Connection as connection
+    from psycopg2._psycopg import cursor, connection
 
 
-def check_for_psycopg() -> None:
+def check_for_psycopg2() -> None:
     """
-    Function checks whether psycopg was imported.
+    Function checks whether psycopg2 was imported.
 
     Raises ImportError if not.
     """
-    if not psycopg:
-        raise ImportError("No module named psycopg. Please install psycopg.")
+    if not psycopg2:
+        raise ImportError(
+            "No module named psycopg2. Please install either "
+            "psycopg2 or psycopg2-binary package for CPython "
+            "or psycopg2cffi for Pypy."
+        )
