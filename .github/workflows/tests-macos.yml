@@ -51,7 +51,7 @@ jobs:
     - name: Run test
       run: |
         py.test -n 0 --postgresql-exec="/usr/lib/postgresql/${{ matrix.postgres-version }}/bin/pg_ctl" -k "not docker" --cov-report=xml
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       if: failure()
       with:
         name: postgresql-${{ matrix.python-version }}-${{ matrix.postgres-version }}
