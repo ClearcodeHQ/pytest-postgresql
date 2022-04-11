@@ -81,7 +81,7 @@ jobs:
       run: |
         pytest -n 0 -k docker --postgresql-host=localhost --postgresql-port 5433 --postgresql-password=postgres --cov-report=xml:coverage-docker.xml
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v2.1.0
+      uses: codecov/codecov-action@v3.0.0
       with:
         flags: linux
         env_vars: OS, PYTHON, POSTGRES
