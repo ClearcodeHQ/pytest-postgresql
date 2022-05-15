@@ -19,7 +19,7 @@ jobs:
         # succeeds. This can be changed as needed.
         if: ${{ github.event.workflow_run.conclusion == 'success' }}
         name: Merge me!
-        uses: ridedott/merge-me-action@v2.9.153
+        uses: ridedott/merge-me-action@v2.9.155
         with:
           # Depending on branch protection rules, a  manually populated
           # `GITHUB_TOKEN_WORKAROUND` secret with permissions to push to
