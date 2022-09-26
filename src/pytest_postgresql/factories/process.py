@@ -144,14 +144,15 @@ def postgresql_proc(
         with postgresql_executor:
             postgresql_executor.wait_for_postgres()
             template_dbname = f"{postgresql_executor.dbname}_tmpl"
-            with DatabaseJanitor(
+            janitor = DatabaseJanitor(
                 user=postgresql_executor.user,
                 host=postgresql_executor.host,
                 port=postgresql_executor.port,
                 dbname=template_dbname,
                 version=postgresql_executor.version,
                 password=postgresql_executor.password,
-            ) as janitor:
+            )
+            with janitor:
                 for load_element in pg_load:
                     janitor.load(load_element)
                 yield postgresql_executor
