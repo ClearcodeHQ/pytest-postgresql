@@ -1,5 +1,5 @@
 # test runs requirements (versions we'll be testing against) - automatically updated by requires.io
-psycopg[binary]==3.0.16; platform_python_implementation != "PyPy"
-psycopg==3.0.16; platform_python_implementation == "PyPy" and sys_platform != "darwin"
-psycopg[c]==3.0.16; platform_python_implementation == "PyPy" and sys_platform == "darwin"
+psycopg[binary]==3.0.17; platform_python_implementation != "PyPy"
+psycopg==3.0.17; platform_python_implementation == "PyPy" and sys_platform != "darwin"
+psycopg[c]==3.0.17; platform_python_implementation == "PyPy" and sys_platform == "darwin"
 -r requirements-test.txt
