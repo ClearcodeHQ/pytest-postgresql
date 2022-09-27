@@ -67,7 +67,7 @@ class NoopExecutor:
             # could be called before self.dbname will be created.
             # Use default postgres database
             with psycopg.connect(
-                dbname="postgres",
+                dbname=self.dbname or "postgres",
                 user=self.user,
                 host=self.host,
                 port=self.port,
