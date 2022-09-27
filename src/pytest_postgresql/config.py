@@ -17,6 +17,7 @@ def get_config(request: FixtureRequest) -> dict:
         "dbname",
         "load",
         "postgres_options",
+        "use_database",
     ]
     for option in options:
         option_name = "postgresql_" + option

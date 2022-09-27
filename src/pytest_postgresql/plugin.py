@@ -34,6 +34,7 @@ _help_unixsocketdir = "Location of the socket directory"
 _help_dbname = "Default database name"
 _help_load = "Dotted-style or entrypoint-style path to callable or path to SQL File"
 _help_postgres_options = "Postgres executable extra parameters. Passed via the -o option to pg_ctl"
+_help_use_database = "Use provided database, do not create/drop it"
 
 
 def pytest_addoption(parser: Parser) -> None:
@@ -63,6 +64,7 @@ def pytest_addoption(parser: Parser) -> None:
     parser.addini(name="postgresql_unixsocketdir", help=_help_unixsocketdir, default=gettempdir())
 
     parser.addini(name="postgresql_dbname", help=_help_dbname, default="tests")
+    parser.addini(name="postgresql_use_database", type="bool", help=_help_use_database, default=False)
 
     parser.addini(name="postgresql_load", type="pathlist", help=_help_load, default=None)
     parser.addini(name="postgresql_postgres_options", help=_help_postgres_options, default="")
@@ -117,6 +119,11 @@ def pytest_addoption(parser: Parser) -> None:
 
     parser.addoption(
         "--postgresql-dbname", action="store", dest="postgresql_dbname", help=_help_dbname
+    )
+
+    parser.addoption(
+        "--postgresql-use-database", action="store_true", dest="postgresql_use_database",
+        help=_help_use_database
     )
 
     parser.addoption("--postgresql-load", action="append", dest="postgresql_load", help=_help_load)

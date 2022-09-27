@@ -30,6 +30,7 @@ class DatabaseJanitor:
         password: Optional[str] = None,
         isolation_level: "Optional[psycopg.IsolationLevel]" = None,
         connection_timeout: int = 60,
+        use_database: bool = False,
     ) -> None:
         """
         Initialize janitor.
@@ -44,6 +45,8 @@ class DatabaseJanitor:
             defaults to server's default
         :param connection_timeout: how long to retry connection before
             raising a TimeoutError
+        :param use_database: whether to use an existing database
+            (may imply manual cleanup)
         """
         self.user = user
         self.password = password
@@ -51,6 +54,7 @@ class DatabaseJanitor:
         self.port = port
         self.dbname = dbname
         self._connection_timeout = connection_timeout
+        self._use_database = use_database
         check_for_psycopg()
         self.isolation_level = isolation_level
         if not isinstance(version, Version):
@@ -60,6 +64,8 @@ class DatabaseJanitor:
 
     def init(self) -> None:
         """Create database in postgresql."""
+        if self._use_database:
+            return
         template_name = f"{self.dbname}_tmpl"
         with self.cursor() as cur:
             if self.dbname.endswith("_tmpl"):
@@ -86,6 +92,8 @@ class DatabaseJanitor:
         """Drop database in postgresql."""
         # We cannot drop the database while there are connections to it, so we
         # terminate all connections first while not allowing new connections.
+        if self._use_database:
+            return
         with self.cursor() as cur:
             self._dont_datallowconn(cur, self.dbname)
             self._terminate_connection(cur, self.dbname)
@@ -93,6 +101,8 @@ class DatabaseJanitor:
 
     @staticmethod
     def _dont_datallowconn(cur: cursor, dbname: str) -> None:
+        if self._use_database:
+            return
         cur.execute(f'ALTER DATABASE "{dbname}" with allow_connections false;')
 
     @staticmethod
@@ -136,7 +146,7 @@ class DatabaseJanitor:
 
         def connect() -> connection:
             return psycopg.connect(
-                dbname="postgres",
+                dbname=self.dbname or "postgres",
                 user=self.user,
                 password=self.password,
                 host=self.host,

@@ -73,6 +73,7 @@ def postgresql_noproc(
         pg_dbname = xdistify_dbname(dbname or config["dbname"])
         pg_options = options or config["options"]
         pg_load = load or config["load"]
+        use_database = config["use_database"]
 
         noop_exec = NoopExecutor(
             host=pg_host,
@@ -90,6 +91,7 @@ def postgresql_noproc(
             dbname=template_dbname,
             version=noop_exec.version,
             password=noop_exec.password,
+            use_database=use_database,
         ) as janitor:
             for load_element in pg_load:
                 janitor.load(load_element)
