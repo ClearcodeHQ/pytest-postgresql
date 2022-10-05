@@ -40,6 +40,7 @@ class NoopExecutor:
         options: str,
         dbname: str,
         password: Optional[str] = None,
+        use_database: bool = False,
     ):
         """
         Initialize nooperator executor mock.
@@ -57,6 +58,7 @@ class NoopExecutor:
         self.options = options
         self.password = password
         self.dbname = dbname
+        self._use_database = use_database
         self._version: Any = None
 
     @property
@@ -67,7 +69,7 @@ class NoopExecutor:
             # could be called before self.dbname will be created.
             # Use default postgres database
             with psycopg.connect(
-                dbname=self.dbname or "postgres",
+                dbname=self.dbname if self._use_database else "postgres",
                 user=self.user,
                 host=self.host,
                 port=self.port,

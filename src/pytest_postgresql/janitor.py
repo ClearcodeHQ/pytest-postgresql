@@ -146,7 +146,7 @@ class DatabaseJanitor:
 
         def connect() -> connection:
             return psycopg.connect(
-                dbname=self.dbname or "postgres",
+                dbname=self.dbname if self._use_database else "postgres",
                 user=self.user,
                 password=self.password,
                 host=self.host,

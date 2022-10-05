@@ -82,6 +82,7 @@ def postgresql_noproc(
             password=pg_password,
             dbname=pg_dbname,
             options=pg_options,
+            use_database=use_database,
         )
         template_dbname = f"{noop_exec.dbname}_tmpl"
         with DatabaseJanitor(
