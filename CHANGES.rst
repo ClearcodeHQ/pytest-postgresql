@@ -1,6 +1,15 @@
 CHANGELOG
 =========
 
+unreleased
+----------
+
+Misc
+++++
+
+- Dropped Pypy from CI
+
+
 4.1.1
 ----------
 
