@@ -3,7 +3,7 @@ pip>=9  # minimum installation requirements
 setuptools>=21  # minimum installation requirements
 coverage==6.5.0 # pytest-cov
 pytest==7.1.3
-pytest-cov==3.0.0
+pytest-cov==4.0.0
 pytest-xdist==2.5.0
 port-for==0.6.2
 mirakuru==2.4.2
