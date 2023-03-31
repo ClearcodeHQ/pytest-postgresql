@@ -1,0 +1,1 @@
+pytest-postgresql will now recognise and use development postgresql versions
