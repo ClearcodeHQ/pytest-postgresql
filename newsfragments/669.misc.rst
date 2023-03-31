@@ -1,0 +1,1 @@
+Drop PyPy from CI
