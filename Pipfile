@@ -4,6 +4,21 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+pytest = "==7.2.0"
+port-for = "==0.6.2"
+mirakuru = "==2.4.2"
+psycopg = "==3.1.4"
 
 [dev-packages]
 towncrier = "==22.12"
+pytest-cov = "==4.0.0"
+pytest-xdist = "==3.0.2"
+mock = "==4.0.3"
+pydocstyle = {version = "==6.1.1", extras = ["toml"]}
+black = "==22.10.0"
+mypy = "==0.982"
+pyflakes = "==2.5.0"
+mccabe = "==0.7.0"
+flake8 = "==5.0.4"
+types-setuptools = "==67.6.0.7"
+pycodestyle = "==2.9.0"

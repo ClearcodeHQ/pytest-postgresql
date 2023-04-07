@@ -1,6 +1,7 @@
 """Tests main conftest file."""
 import os
 
+from pytest_postgresql.plugin import *  # noqa: F403,F401
 from pytest_postgresql import factories
 
 pytest_plugins = ["pytester"]
