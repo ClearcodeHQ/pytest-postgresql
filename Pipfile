@@ -16,7 +16,7 @@ pytest-xdist = "==3.0.2"
 mock = "==4.0.3"
 pydocstyle = {version = "==6.1.1", extras = ["toml"]}
 black = "==22.10.0"
-mypy = "==0.982"
+mypy = "==1.2.0"
 pyflakes = "==2.5.0"
 mccabe = "==0.7.0"
 flake8 = "==5.0.4"
