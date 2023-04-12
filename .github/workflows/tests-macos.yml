@@ -48,3 +48,4 @@ jobs:
         flags: macos
         env_vars: OS, PYTHON, POSTGRES
         fail_ci_if_error: true
+        token: ${{ secrets.CODECOV_TOKEN }}
