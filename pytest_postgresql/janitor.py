@@ -106,7 +106,7 @@ class DatabaseJanitor:
 
     def load(self, load: Union[Callable, str]) -> None:
         """
-        Loads data into a database.
+        Load data into a database.
 
         Either runs a passed loader if it's callback,
         or runs predefined loader if it's sql file.
@@ -157,6 +157,7 @@ class DatabaseJanitor:
             conn.close()
 
     def __enter__(self: DatabaseJanitorType) -> DatabaseJanitorType:
+        """Initialize Database Janitor."""
         self.init()
         return self
 
@@ -166,4 +167,5 @@ class DatabaseJanitor:
         exc_val: Optional[BaseException],
         exc_tb: Optional[TracebackType],
     ) -> None:
+        """Exit from Database janitor context cleaning after itself."""
         self.drop()

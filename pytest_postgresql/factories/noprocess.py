@@ -28,7 +28,7 @@ from pytest_postgresql.janitor import DatabaseJanitor
 
 
 def xdistify_dbname(dbname: str) -> str:
-    """Modified the database name depending on the presence and usage of xdist."""
+    """Modify the database name depending on the presence and usage of xdist."""
     xdist_worker = os.getenv("PYTEST_XDIST_WORKER")
     if xdist_worker:
         return f"{dbname}{xdist_worker}"

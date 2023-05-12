@@ -1,3 +1,2 @@
-include *.rst *.py
-include pytest_postgresql/py.typed
+include *.rst *.py pytest_postgresql/py.typed
 recursive-include pytest_postgresql *.py

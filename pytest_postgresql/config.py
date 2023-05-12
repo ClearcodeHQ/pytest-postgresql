@@ -1,9 +1,12 @@
+"""Plugin's configuration."""
 from typing import Optional, TypedDict, Any, List
 
 from pytest import FixtureRequest
 
 
 class PostgresqlConfigDict(TypedDict):
+    """Typed Config dictionary."""
+
     exec: str
     host: str
     port: Optional[str]
