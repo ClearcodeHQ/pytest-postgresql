@@ -27,7 +27,7 @@ else:
 
 def check_for_psycopg() -> None:
     """
-    Function checks whether psycopg was imported.
+    Check whether psycopg was imported.
 
     Raises ImportError if not.
     """

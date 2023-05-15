@@ -1,4 +1,4 @@
-"""Small retry callable in case of specific error occurred"""
+"""Small retry callable in case of specific error occurred."""
 
 from datetime import datetime, timedelta
 from time import sleep

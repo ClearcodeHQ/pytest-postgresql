@@ -1,0 +1,1 @@
+Move most of package configuration to pyproject.toml
