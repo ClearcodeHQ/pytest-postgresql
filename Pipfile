@@ -12,7 +12,7 @@ psycopg = "==3.1.9"
 [dev-packages]
 towncrier = "==22.12"
 pytest-cov = "==4.0.0"
-pytest-xdist = "==3.2.1"
+pytest-xdist = "==3.3.0"
 mock = "==5.0.2"
 pydocstyle = {version = "==6.3.0", extras = ["toml"]}
 black = "==23.3.0"
