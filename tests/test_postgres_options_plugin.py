@@ -10,6 +10,7 @@ import pytest_postgresql
 def pointed_pytester(pytester: Pytester) -> Pytester:
     pytest_postgresql_path = Path(pytest_postgresql.__file__)
     root_path = pytest_postgresql_path.parent.parent
+    print(root_path)
     pytester.syspathinsert(root_path)
     pytester.makeconftest("from pytest_postgresql.plugin import *\n")
     return pytester
@@ -19,7 +20,7 @@ def test_postgres_options_config_in_cli(pointed_pytester: Pytester) -> None:
     """Check that command line arguments are honored."""
     pointed_pytester.copy_example("test_postgres_options.py")
     ret = pointed_pytester.runpytest(
-        "--postgresql-postgres-options", "-N 11", "test_postgres_options.py"
+        "--postgresql-postgres-options", "-N 16", "test_postgres_options.py"
     )
     ret.assert_outcomes(passed=1)
 
@@ -27,6 +28,6 @@ def test_postgres_options_config_in_cli(pointed_pytester: Pytester) -> None:
 def test_postgres_options_config_in_ini(pointed_pytester: Pytester) -> None:
     """Check that pytest.ini arguments are honored."""
     pointed_pytester.copy_example("test_postgres_options.py")
-    pointed_pytester.makefile(".ini", pytest="[pytest]\npostgresql_postgres_options = -N 11\n")
+    pointed_pytester.makefile(".ini", pytest="[pytest]\npostgresql_postgres_options = -N 16\n")
     ret = pointed_pytester.runpytest("test_postgres_options.py")
     ret.assert_outcomes(passed=1)
