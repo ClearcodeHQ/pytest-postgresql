@@ -3,14 +3,15 @@ from pathlib import Path
 
 import pytest
 from pytest import Pytester
+
 import pytest_postgresql
 
 
 @pytest.fixture
 def pointed_pytester(pytester: Pytester) -> Pytester:
+    """Pre-configured pytester fixture."""
     pytest_postgresql_path = Path(pytest_postgresql.__file__)
     root_path = pytest_postgresql_path.parent.parent
-    print(root_path)
     pytester.syspathinsert(root_path)
     pytester.makeconftest("from pytest_postgresql.plugin import *\n")
     return pytester

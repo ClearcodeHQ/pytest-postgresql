@@ -1,8 +1,8 @@
 """Template database tests."""
 import pytest
 
-from pytest_postgresql.factories import postgresql, postgresql_proc
 from pytest_postgresql.compat import connection
+from pytest_postgresql.factories import postgresql, postgresql_proc
 from tests.loader import load_database
 
 postgresql_proc_with_template = postgresql_proc(

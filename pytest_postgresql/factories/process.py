@@ -19,12 +19,12 @@
 import os.path
 import platform
 import subprocess
-from typing import Union, Callable, List, Iterator, Optional, Tuple, Set
+from typing import Callable, Iterator, List, Optional, Set, Tuple, Union
 from warnings import warn
 
 import pytest
-from pytest import FixtureRequest, TempPathFactory
 from port_for import get_port
+from pytest import FixtureRequest, TempPathFactory
 
 from pytest_postgresql.config import get_config
 from pytest_postgresql.executor import PostgreSQLExecutor
@@ -57,8 +57,7 @@ def postgresql_proc(
     postgres_options: Optional[str] = None,
     load: Optional[List[Union[Callable, str]]] = None,
 ) -> Callable[[FixtureRequest, TempPathFactory], Iterator[PostgreSQLExecutor]]:
-    """
-    Postgresql process factory.
+    """Postgresql process factory.
 
     :param executable: path to postgresql_ctl
     :param host: hostname
@@ -85,8 +84,7 @@ def postgresql_proc(
     def postgresql_proc_fixture(
         request: FixtureRequest, tmp_path_factory: TempPathFactory
     ) -> Iterator[PostgreSQLExecutor]:
-        """
-        Process fixture for PostgreSQL.
+        """Process fixture for PostgreSQL.
 
         :param request: fixture request object
         :param tmp_path_factory: temporary path object (fixture)

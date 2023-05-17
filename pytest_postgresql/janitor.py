@@ -3,11 +3,11 @@ import re
 from contextlib import contextmanager
 from functools import partial
 from types import TracebackType
-from typing import TypeVar, Union, Optional, Type, Callable, Iterator
+from typing import Callable, Iterator, Optional, Type, TypeVar, Union
 
 from pkg_resources import parse_version
 
-from pytest_postgresql.compat import psycopg, cursor, check_for_psycopg, connection
+from pytest_postgresql.compat import check_for_psycopg, connection, cursor, psycopg
 from pytest_postgresql.retry import retry
 from pytest_postgresql.sql import loader
 
@@ -31,8 +31,7 @@ class DatabaseJanitor:
         isolation_level: "Optional[psycopg.IsolationLevel]" = None,
         connection_timeout: int = 60,
     ) -> None:
-        """
-        Initialize janitor.
+        """Initialize janitor.
 
         :param user: postgresql username
         :param host: postgresql host
@@ -105,8 +104,7 @@ class DatabaseJanitor:
         )
 
     def load(self, load: Union[Callable, str]) -> None:
-        """
-        Load data into a database.
+        """Load data into a database.
 
         Either runs a passed loader if it's callback,
         or runs predefined loader if it's sql file.

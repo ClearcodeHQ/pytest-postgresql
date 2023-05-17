@@ -2,8 +2,7 @@
 
 from datetime import datetime, timedelta
 from time import sleep
-from typing import Callable, TypeVar, Type
-
+from typing import Callable, Type, TypeVar
 
 T = TypeVar("T")
 
@@ -11,8 +10,7 @@ T = TypeVar("T")
 def retry(
     func: Callable[[], T], timeout: int = 60, possible_exception: Type[Exception] = Exception
 ) -> T:
-    """
-    Attempt to retry the function for timeout time.
+    """Attempt to retry the function for timeout time.
 
     Most often used for connecting to postgresql database as,
     especially on macos on github-actions, first few tries fails

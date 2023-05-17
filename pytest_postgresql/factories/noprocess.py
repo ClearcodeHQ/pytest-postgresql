@@ -17,7 +17,7 @@
 # along with pytest-dbfixtures.  If not, see <http://www.gnu.org/licenses/>.
 """Fixture factory for existing postgresql server."""
 import os
-from typing import Union, Callable, List, Iterator, Optional
+from typing import Callable, Iterator, List, Optional, Union
 
 import pytest
 from pytest import FixtureRequest
@@ -44,8 +44,7 @@ def postgresql_noproc(
     options: str = "",
     load: Optional[List[Union[Callable, str]]] = None,
 ) -> Callable[[FixtureRequest], Iterator[NoopExecutor]]:
-    """
-    Postgresql noprocess factory.
+    """Postgresql noprocess factory.
 
     :param host: hostname
     :param port: exact port (e.g. '8000', 8000)
@@ -59,8 +58,7 @@ def postgresql_noproc(
 
     @pytest.fixture(scope="session")
     def postgresql_noproc_fixture(request: FixtureRequest) -> Iterator[NoopExecutor]:
-        """
-        Noop Process fixture for PostgreSQL.
+        """Noop Process fixture for PostgreSQL.
 
         :param request: fixture request object
         :returns: tcp executor-like object

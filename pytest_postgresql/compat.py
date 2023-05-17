@@ -1,12 +1,10 @@
-"""
-psycopg compatibility module.
+"""psycopg compatibility module.
 
 It should be possible to import pytest-postgresql without errors when psycopg is not
 installed (while tests using it will error or be skipped). So import psycopg only here
 and check if it's available.
 """
-from typing import Any, TYPE_CHECKING
-
+from typing import TYPE_CHECKING, Any
 
 __all__ = ("psycopg", "cursor", "connection", "check_for_psycopg")
 
@@ -21,13 +19,12 @@ except ImportError:
         connection = Any
 
 else:
-    from psycopg import Cursor as cursor
     from psycopg import Connection as connection
+    from psycopg import Cursor as cursor
 
 
 def check_for_psycopg() -> None:
-    """
-    Check whether psycopg was imported.
+    """Check whether psycopg was imported.
 
     Raises ImportError if not.
     """

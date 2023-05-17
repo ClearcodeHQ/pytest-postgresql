@@ -24,11 +24,11 @@ import shutil
 import subprocess
 import tempfile
 import time
-from typing import TypeVar, Optional, Any
+from typing import Any, Optional, TypeVar
 
-from pkg_resources import parse_version
 from mirakuru import TCPExecutor
 from mirakuru.exceptions import ProcessFinishedWithError
+from pkg_resources import parse_version
 
 _LOCALE = "C.UTF-8"
 
@@ -44,8 +44,7 @@ class PostgreSQLUnsupported(Exception):
 
 
 class PostgreSQLExecutor(TCPExecutor):
-    """
-    PostgreSQL executor running on pg_ctl.
+    """PostgreSQL executor running on pg_ctl.
 
     Based over an `pg_ctl program
     <http://www.postgresql.org/docs/current/static/app-pg-ctl.html>`_
@@ -80,8 +79,7 @@ class PostgreSQLExecutor(TCPExecutor):
         options: str = "",
         postgres_options: str = "",
     ):
-        """
-        Initialize PostgreSQLExecutor executor.
+        """Initialize PostgreSQLExecutor executor.
 
         :param executable: pg_ctl location
         :param host: host under which process is accessible
@@ -153,8 +151,7 @@ class PostgreSQLExecutor(TCPExecutor):
         self._directory_initialised = False
 
     def init_directory(self) -> None:
-        """
-        Initialize postgresql data directory.
+        """Initialize postgresql data directory.
 
         See `Initialize postgresql data directory
             <www.postgresql.org/docs/9.5/static/app-initdb.html>`_

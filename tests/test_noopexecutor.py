@@ -1,13 +1,12 @@
 """Test for NoopExecutor."""
-from pytest_postgresql.executor import PostgreSQLExecutor
 from pytest_postgresql.compat import psycopg
+from pytest_postgresql.executor import PostgreSQLExecutor
 from pytest_postgresql.executor_noop import NoopExecutor
 from pytest_postgresql.retry import retry
 
 
 def test_noproc_version(postgresql_proc: PostgreSQLExecutor) -> None:
-    """
-    Test the way postgresql version is being read.
+    """Test the way postgresql version is being read.
 
     Version behaves differently for postgresql >= 10 and differently for older ones
     """

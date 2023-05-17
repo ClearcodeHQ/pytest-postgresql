@@ -16,12 +16,12 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with pytest-dbfixtures.  If not, see <http://www.gnu.org/licenses/>.
 """Fixture factory for postgresql client."""
-from typing import List, Optional, Callable, Union, Iterator
+from typing import Callable, Iterator, List, Optional, Union
 
 import pytest
 from pytest import FixtureRequest
 
-from pytest_postgresql.compat import connection, check_for_psycopg, psycopg
+from pytest_postgresql.compat import check_for_psycopg, connection, psycopg
 from pytest_postgresql.executor import PostgreSQLExecutor
 from pytest_postgresql.executor_noop import NoopExecutor
 from pytest_postgresql.janitor import DatabaseJanitor
@@ -33,8 +33,7 @@ def postgresql(
     load: Optional[List[Union[Callable, str]]] = None,
     isolation_level: "Optional[psycopg.IsolationLevel]" = None,
 ) -> Callable[[FixtureRequest], Iterator[connection]]:
-    """
-    Return connection fixture factory for PostgreSQL.
+    """Return connection fixture factory for PostgreSQL.
 
     :param process_fixture_name: name of the process fixture
     :param dbname: database name
@@ -47,8 +46,7 @@ def postgresql(
 
     @pytest.fixture
     def postgresql_factory(request: FixtureRequest) -> Iterator[connection]:
-        """
-        Fixture factory for PostgreSQL.
+        """Fixture factory for PostgreSQL.
 
         :param request: fixture request object
         :returns: postgresql client

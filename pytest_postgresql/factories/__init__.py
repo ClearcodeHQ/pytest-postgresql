@@ -17,8 +17,8 @@
 # along with pytest-dbfixtures.  If not, see <http://www.gnu.org/licenses/>.
 """Fixture factories for postgresql fixtures."""
 
-from pytest_postgresql.factories.process import postgresql_proc
-from pytest_postgresql.factories.noprocess import postgresql_noproc
 from pytest_postgresql.factories.client import postgresql
+from pytest_postgresql.factories.noprocess import postgresql_noproc
+from pytest_postgresql.factories.process import postgresql_proc
 
 __all__ = ("postgresql_proc", "postgresql_noproc", "postgresql")

@@ -9,25 +9,12 @@ on:
 
 jobs:
   lint:
-    uses: fizyk/actions-reuse/.github/workflows/linters-python.yml@v1.7.1
+    uses: fizyk/actions-reuse/.github/workflows/linters-python.yml@v2.0.0
     with:
-      pipenv: true
       pipenv-install-options: "--skip-lock"
       mypy: true
-      pycodestyle: false
-  flake8:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-
-    steps:
-    - uses: actions/checkout@v3
-    - name: Run flake8 checker
-      uses: fizyk/actions-reuse/.github/actions/pipenv@v1.7.1
-      with:
-        python-version: ${{ matrix.python-version }}
-        pipenv-install-options: "--skip-lock"
-        command: flake8 pytest_postgresql/ tests/
+      ruff: true
+      black: true
         
 
 #  imports:

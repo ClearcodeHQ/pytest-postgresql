@@ -18,9 +18,9 @@
 """Plugin module of pytest-postgresql."""
 from tempfile import gettempdir
 
-from pytest_postgresql import factories
 from _pytest.config.argparsing import Parser
 
+from pytest_postgresql import factories
 
 _help_executable = "Path to PostgreSQL executable"
 _help_host = "Host at which PostgreSQL will accept connections"
