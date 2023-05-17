@@ -1,8 +1,8 @@
 """Tests main conftest file."""
 import os
 
-from pytest_postgresql.plugin import *  # noqa: F403,F401
 from pytest_postgresql import factories
+from pytest_postgresql.plugin import *  # noqa: F403,F401
 
 pytest_plugins = ["pytester"]
 POSTGRESQL_VERSION = os.environ.get("POSTGRES", "13")

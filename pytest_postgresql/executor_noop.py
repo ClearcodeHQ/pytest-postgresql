@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with pytest-dbfixtures.  If not, see <http://www.gnu.org/licenses/>.
 """PostgreSQL Noop executor providing connection details for postgres client."""
-from typing import Union, Optional, Any
+from typing import Any, Optional, Union
 
 from pkg_resources import parse_version
 
@@ -24,8 +24,7 @@ from pytest_postgresql.compat import check_for_psycopg, psycopg
 
 
 class NoopExecutor:
-    """
-    Nooperator executor.
+    """Nooperator executor.
 
     This executor actually does nothing more than provide connection details
     for existing PostgreSQL server. I.E. one already started either on machine
@@ -41,8 +40,7 @@ class NoopExecutor:
         dbname: str,
         password: Optional[str] = None,
     ):
-        """
-        Initialize nooperator executor mock.
+        """Initialize nooperator executor mock.
 
         :param host: Postgresql hostname
         :param port: Postgresql port

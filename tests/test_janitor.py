@@ -1,7 +1,8 @@
 """Database Janitor tests."""
 import sys
-from unittest.mock import patch, MagicMock
 from typing import Any
+from unittest.mock import MagicMock, patch
+
 import pytest
 from pkg_resources import parse_version
 
@@ -45,8 +46,7 @@ def test_cursor_connects_with_password(connect_mock: MagicMock) -> None:
 )
 @patch("pytest_postgresql.janitor.psycopg.connect")
 def test_janitor_populate(connect_mock: MagicMock, load_database: str) -> None:
-    """
-    Test that the cursor requests the postgres database.
+    """Test that the cursor requests the postgres database.
 
     load_database tries to connect to database, which triggers mocks.
     """

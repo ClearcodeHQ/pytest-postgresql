@@ -1,3 +1,4 @@
+"""Noproc fixture tests."""
 import pytest
 
 import pytest_postgresql.factories.client
@@ -19,9 +20,7 @@ postgres_with_template = pytest_postgresql.factories.client.postgresql(
 
 
 def test_postgres_docker_load(postgres_with_schema: connection) -> None:
-    """
-    Check main postgres fixture
-    """
+    """Check main postgres fixture."""
     with postgres_with_schema.cursor() as cur:
         # Query for public.tokens since the eidastats changes postgres' search_path to ''.
         # The search path by default is public, but without it,

@@ -2,16 +2,15 @@
 import sys
 from typing import Any
 
-from pytest import FixtureRequest
-from pkg_resources import parse_version
-
 import pytest
+from pkg_resources import parse_version
 from port_for import get_port
+from pytest import FixtureRequest
 
-from pytest_postgresql.executor import PostgreSQLExecutor, PostgreSQLUnsupported
-from pytest_postgresql.factories import postgresql_proc, postgresql
 from pytest_postgresql.compat import connection, psycopg
 from pytest_postgresql.config import get_config
+from pytest_postgresql.executor import PostgreSQLExecutor, PostgreSQLUnsupported
+from pytest_postgresql.factories import postgresql, postgresql_proc
 from pytest_postgresql.retry import retry
 
 

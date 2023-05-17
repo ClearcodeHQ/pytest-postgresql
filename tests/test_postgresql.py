@@ -4,9 +4,9 @@ import decimal
 import pytest
 from psycopg.pq import ConnStatus
 
+from pytest_postgresql.compat import connection
 from pytest_postgresql.executor import PostgreSQLExecutor
 from pytest_postgresql.retry import retry
-from pytest_postgresql.compat import connection
 from tests.conftest import POSTGRESQL_VERSION
 
 MAKE_Q = "CREATE TABLE test (id serial PRIMARY KEY, num integer, data varchar);"
@@ -68,12 +68,10 @@ def test_rand_postgres_port(postgresql2: connection) -> None:
 )
 @pytest.mark.parametrize("_", range(2))
 def test_postgres_terminate_connection(postgresql2: connection, _: int) -> None:
-    """
-    Test that connections are terminated between tests.
+    """Test that connections are terminated between tests.
 
     And check that only one exists at a time.
     """
-
     with postgresql2.cursor() as cur:
 
         def check_if_one_connection() -> None:
