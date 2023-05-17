@@ -6,4 +6,4 @@ from typing import Any
 def test_postgres_options(postgresql: Any) -> None:
     cur = postgresql.cursor()
     cur.execute("SHOW max_connections")
-    assert cur.fetchone() == ("11",)
+    assert cur.fetchone() == ("16",)

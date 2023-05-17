@@ -25,9 +25,9 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Install postgresql
-      run: |
-        brew install postgresql@${{ matrix.postgres-version }}
+    - uses: ankane/setup-postgres@v1
+      with:
+        postgres-version: ${{ matrix.postgres-version }}
     - name: Check installed locales
       run: |
         locale -a

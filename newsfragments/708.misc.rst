@@ -1,0 +1,1 @@
+Use ankane/setup-postgres@v1 to setup postgresql in CI instead of custom scripts.
