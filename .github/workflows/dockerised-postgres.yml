@@ -1,0 +1,68 @@
+name: Run pytest tests
+
+on:
+  workflow_call:
+    inputs:
+      python-versions:
+        description: 'Supported python versions'
+        default: '["3.8", "3.9", "3.10", "3.11"]'
+        required: false
+        type: string
+      postgresql:
+        description: 'PostgreSQL version'
+        required: true
+        type: number
+    secrets:
+      codecov_token:
+        description: 'Codecov token'
+        required: false
+
+jobs:
+  postgres:
+    runs-on: 'ubuntu-latest'
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ${{ fromJSON(inputs.python-versions) }}
+    env:
+      OS: ${{ inputs.os }}
+      PYTHON: ${{ matrix.python-version }}
+      POSTGRES: ${{ inputs.postgresql }}
+    # Service containers to run with `container-job`
+    services:
+      # Label used to access the service container
+      postgres:
+        # Docker Hub image:
+        image: postgres:${{ inputs.postgresql }}
+        # Provide the password for postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5433:5432
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Run test noproc fixture on docker
+        uses: fizyk/actions-reuse/.github/actions/pipenv@v1.7.1
+        with:
+          python-version: ${{ matrix.python-version }}
+          pipenv-install-options: "--skip-lock"
+          command: pytest -n 0 -k docker --postgresql-host=localhost --postgresql-port 5433 --postgresql-password=postgres --cov-report=xml:coverage-docker.xml
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3.1.3
+        with:
+          token: ${{ secrets.codecov_token }}
+          flags: unittests
+          env_vars: OS,PYTHON
+          fail_ci_if_error: false
