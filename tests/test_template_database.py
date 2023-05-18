@@ -1,7 +1,7 @@
 """Template database tests."""
 import pytest
+from psycopg import Connection
 
-from pytest_postgresql.compat import connection
 from pytest_postgresql.factories import postgresql, postgresql_proc
 from tests.loader import load_database
 
@@ -18,7 +18,7 @@ postgresql_template = postgresql(
 
 
 @pytest.mark.parametrize("_", range(5))
-def test_template_database(postgresql_template: connection, _: int) -> None:
+def test_template_database(postgresql_template: Connection, _: int) -> None:
     """Check that the database structure gets recreated out of a template."""
     with postgresql_template.cursor() as cur:
         cur.execute("SELECT * FROM stories")

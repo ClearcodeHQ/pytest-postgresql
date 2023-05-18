@@ -18,10 +18,11 @@
 """Fixture factory for postgresql client."""
 from typing import Callable, Iterator, List, Optional, Union
 
+import psycopg
 import pytest
+from psycopg import Connection
 from pytest import FixtureRequest
 
-from pytest_postgresql.compat import check_for_psycopg, connection, psycopg
 from pytest_postgresql.executor import PostgreSQLExecutor
 from pytest_postgresql.executor_noop import NoopExecutor
 from pytest_postgresql.janitor import DatabaseJanitor
@@ -32,7 +33,7 @@ def postgresql(
     dbname: Optional[str] = None,
     load: Optional[List[Union[Callable, str]]] = None,
     isolation_level: "Optional[psycopg.IsolationLevel]" = None,
-) -> Callable[[FixtureRequest], Iterator[connection]]:
+) -> Callable[[FixtureRequest], Iterator[Connection]]:
     """Return connection fixture factory for PostgreSQL.
 
     :param process_fixture_name: name of the process fixture
@@ -45,13 +46,12 @@ def postgresql(
     """
 
     @pytest.fixture
-    def postgresql_factory(request: FixtureRequest) -> Iterator[connection]:
+    def postgresql_factory(request: FixtureRequest) -> Iterator[Connection]:
         """Fixture factory for PostgreSQL.
 
         :param request: fixture request object
         :returns: postgresql client
         """
-        check_for_psycopg()
         proc_fixture: Union[PostgreSQLExecutor, NoopExecutor] = request.getfixturevalue(
             process_fixture_name
         )
@@ -67,7 +67,7 @@ def postgresql(
         with DatabaseJanitor(
             pg_user, pg_host, pg_port, pg_db, proc_fixture.version, pg_password, isolation_level
         ) as janitor:
-            db_connection: connection = psycopg.connect(
+            db_connection: Connection = psycopg.connect(
                 dbname=pg_db,
                 user=pg_user,
                 password=pg_password,

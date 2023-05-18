@@ -1,0 +1,8 @@
+psycopg is now a mandatory requirement.
+With pyscop2 it was optional due to the different ways it could be installed:
+
+* psycopg2 - that built itself
+* psycopg2-binary - binary distribution
+* psycopg2cffi - pypy enabled version
+
+Since psycopg version 3 there's only one package to install.

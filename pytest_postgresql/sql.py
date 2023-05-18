@@ -1,7 +1,7 @@
 """SQL Loader function."""
 from typing import Any
 
-from pytest_postgresql.compat import psycopg
+import psycopg
 
 
 def loader(sql_filename: str, **kwargs: Any) -> None:

@@ -5,9 +5,10 @@ from functools import partial
 from types import TracebackType
 from typing import Callable, Iterator, Optional, Type, TypeVar, Union
 
+import psycopg
 from pkg_resources import parse_version
+from psycopg import Connection, Cursor
 
-from pytest_postgresql.compat import check_for_psycopg, connection, cursor, psycopg
 from pytest_postgresql.retry import retry
 from pytest_postgresql.sql import loader
 
@@ -50,7 +51,6 @@ class DatabaseJanitor:
         self.port = port
         self.dbname = dbname
         self._connection_timeout = connection_timeout
-        check_for_psycopg()
         self.isolation_level = isolation_level
         if not isinstance(version, Version):
             self.version = parse_version(str(version))
@@ -91,11 +91,11 @@ class DatabaseJanitor:
             cur.execute(f'DROP DATABASE IF EXISTS "{self.dbname}";')
 
     @staticmethod
-    def _dont_datallowconn(cur: cursor, dbname: str) -> None:
+    def _dont_datallowconn(cur: Cursor, dbname: str) -> None:
         cur.execute(f'ALTER DATABASE "{dbname}" with allow_connections false;')
 
     @staticmethod
-    def _terminate_connection(cur: cursor, dbname: str) -> None:
+    def _terminate_connection(cur: Cursor, dbname: str) -> None:
         cur.execute(
             "SELECT pg_terminate_backend(pg_stat_activity.pid)"
             "FROM pg_stat_activity "
@@ -129,10 +129,10 @@ class DatabaseJanitor:
         )
 
     @contextmanager
-    def cursor(self) -> Iterator[cursor]:
+    def cursor(self) -> Iterator[Cursor]:
         """Return postgresql cursor."""
 
-        def connect() -> connection:
+        def connect() -> Connection:
             return psycopg.connect(
                 dbname="postgres",
                 user=self.user,
