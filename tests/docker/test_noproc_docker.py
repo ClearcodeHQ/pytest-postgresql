@@ -1,9 +1,9 @@
 """Noproc fixture tests."""
 import pytest
+from psycopg import Connection
 
 import pytest_postgresql.factories.client
 import pytest_postgresql.factories.noprocess
-from pytest_postgresql.compat import connection
 from tests.loader import load_database
 
 postgresql_my_proc = pytest_postgresql.factories.noprocess.postgresql_noproc()
@@ -19,7 +19,7 @@ postgres_with_template = pytest_postgresql.factories.client.postgresql(
 )
 
 
-def test_postgres_docker_load(postgres_with_schema: connection) -> None:
+def test_postgres_docker_load(postgres_with_schema: Connection) -> None:
     """Check main postgres fixture."""
     with postgres_with_schema.cursor() as cur:
         # Query for public.tokens since the eidastats changes postgres' search_path to ''.
@@ -30,7 +30,7 @@ def test_postgres_docker_load(postgres_with_schema: connection) -> None:
 
 
 @pytest.mark.parametrize("_", range(5))
-def test_template_database(postgres_with_template: connection, _: int) -> None:
+def test_template_database(postgres_with_template: Connection, _: int) -> None:
     """Check that the database structure gets recreated out of a template."""
     with postgres_with_template.cursor() as cur:
         cur.execute("SELECT * FROM stories")

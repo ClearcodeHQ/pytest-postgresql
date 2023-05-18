@@ -2,9 +2,9 @@
 import decimal
 
 import pytest
+from psycopg import Connection
 from psycopg.pq import ConnStatus
 
-from pytest_postgresql.compat import connection
 from pytest_postgresql.executor import PostgreSQLExecutor
 from pytest_postgresql.retry import retry
 from tests.conftest import POSTGRESQL_VERSION
@@ -18,7 +18,7 @@ def test_postgresql_proc(postgresql_proc: PostgreSQLExecutor) -> None:
     assert postgresql_proc.running() is True
 
 
-def test_main_postgres(postgresql: connection) -> None:
+def test_main_postgres(postgresql: Connection) -> None:
     """Check main postgresql fixture."""
     cur = postgresql.cursor()
     cur.execute(MAKE_Q)
@@ -26,7 +26,7 @@ def test_main_postgres(postgresql: connection) -> None:
     cur.close()
 
 
-def test_two_postgreses(postgresql: connection, postgresql2: connection) -> None:
+def test_two_postgreses(postgresql: Connection, postgresql2: Connection) -> None:
     """Check two postgresql fixtures on one test."""
     cur = postgresql.cursor()
     cur.execute(MAKE_Q)
@@ -39,7 +39,7 @@ def test_two_postgreses(postgresql: connection, postgresql2: connection) -> None
     cur.close()
 
 
-def test_postgres_load_one_file(postgresql_load_1: connection) -> None:
+def test_postgres_load_one_file(postgresql_load_1: Connection) -> None:
     """Check postgresql fixture can load one file."""
     cur = postgresql_load_1.cursor()
     cur.execute(SELECT_Q)
@@ -48,7 +48,7 @@ def test_postgres_load_one_file(postgresql_load_1: connection) -> None:
     cur.close()
 
 
-def test_postgres_load_two_files(postgresql_load_2: connection) -> None:
+def test_postgres_load_two_files(postgresql_load_2: Connection) -> None:
     """Check postgresql fixture can load two files."""
     cur = postgresql_load_2.cursor()
     cur.execute(SELECT_Q)
@@ -57,7 +57,7 @@ def test_postgres_load_two_files(postgresql_load_2: connection) -> None:
     cur.close()
 
 
-def test_rand_postgres_port(postgresql2: connection) -> None:
+def test_rand_postgres_port(postgresql2: Connection) -> None:
     """Check if postgres fixture can be started on random port."""
     assert postgresql2.info.status == ConnStatus.OK
 
@@ -67,7 +67,7 @@ def test_rand_postgres_port(postgresql2: connection) -> None:
     reason="Test query not supported in those postgresql versions, and soon will not be supported.",
 )
 @pytest.mark.parametrize("_", range(2))
-def test_postgres_terminate_connection(postgresql2: connection, _: int) -> None:
+def test_postgres_terminate_connection(postgresql2: Connection, _: int) -> None:
     """Test that connections are terminated between tests.
 
     And check that only one exists at a time.

@@ -2,12 +2,13 @@
 import sys
 from typing import Any
 
+import psycopg
 import pytest
 from pkg_resources import parse_version
 from port_for import get_port
+from psycopg import Connection
 from pytest import FixtureRequest
 
-from pytest_postgresql.compat import connection, psycopg
 from pytest_postgresql.config import get_config
 from pytest_postgresql.executor import PostgreSQLExecutor, PostgreSQLUnsupported
 from pytest_postgresql.factories import postgresql, postgresql_proc
@@ -129,7 +130,7 @@ postgresql_max_conns_proc = postgresql_proc(postgres_options="-N 42")
 postgres_max_conns = postgresql("postgresql_max_conns_proc")
 
 
-def test_postgres_options(postgres_max_conns: connection) -> None:
+def test_postgres_options(postgres_max_conns: Connection) -> None:
     """Check that max connections (-N 42) is honored."""
     cur = postgres_max_conns.cursor()
     cur.execute("SHOW max_connections")
@@ -141,7 +142,7 @@ postgres_isolation_level = postgresql(
 )
 
 
-def test_custom_isolation_level(postgres_isolation_level: connection) -> None:
+def test_custom_isolation_level(postgres_isolation_level: Connection) -> None:
     """Check that a client fixture with a custom isolation level works."""
     cur = postgres_isolation_level.cursor()
     cur.execute("SELECT 1")
