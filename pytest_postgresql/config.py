@@ -14,7 +14,6 @@ class PostgresqlConfigDict(TypedDict):
     password: str
     options: str
     startparams: str
-    logsprefix: str
     unixsocketdir: str
     dbname: str
     load: List[str]
@@ -36,7 +35,6 @@ def get_config(request: FixtureRequest) -> PostgresqlConfigDict:
         password=get_postgresql_option("password"),
         options=get_postgresql_option("options"),
         startparams=get_postgresql_option("startparams"),
-        logsprefix=get_postgresql_option("logsprefix"),
         unixsocketdir=get_postgresql_option("unixsocketdir"),
         dbname=get_postgresql_option("dbname"),
         load=get_postgresql_option("load"),
