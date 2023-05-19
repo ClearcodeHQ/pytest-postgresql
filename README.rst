@@ -206,12 +206,6 @@ You can pick which you prefer, but remember that these settings are handled in t
      - postgresql_postgres_options
      - -
      -
-   * - Log filename's prefix
-     - logsprefix
-     - --postgresql-logsprefix
-     - postgresql_logsprefix
-     - -
-     -
    * - Location for unixsockets
      - unixsocket
      - --postgresql-unixsocketdir

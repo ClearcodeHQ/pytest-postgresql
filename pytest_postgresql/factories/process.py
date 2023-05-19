@@ -20,7 +20,6 @@ import os.path
 import platform
 import subprocess
 from typing import Callable, Iterator, List, Optional, Set, Tuple, Union
-from warnings import warn
 
 import pytest
 from port_for import get_port
@@ -53,7 +52,6 @@ def postgresql_proc(
     options: str = "",
     startparams: Optional[str] = None,
     unixsocketdir: Optional[str] = None,
-    logs_prefix: str = "",
     postgres_options: Optional[str] = None,
     load: Optional[List[Union[Callable, str]]] = None,
 ) -> Callable[[FixtureRequest, TempPathFactory], Iterator[PostgreSQLExecutor]]:
@@ -74,7 +72,6 @@ def postgresql_proc(
     :param options: Postgresql connection options
     :param startparams: postgresql starting parameters
     :param unixsocketdir: directory to create postgresql's unixsockets
-    :param logs_prefix: prefix for log filename
     :param postgres_options: Postgres executable options for use by pg_ctl
     :param load: List of functions used to initialize database's template.
     :returns: function which makes a postgresql process
@@ -92,7 +89,6 @@ def postgresql_proc(
         """
         config = get_config(request)
         postgresql_ctl = executable or config["exec"]
-        logfile_prefix = logs_prefix or config["logsprefix"]
         pg_dbname = dbname or config["dbname"]
         pg_load = load or config["load"]
 
@@ -106,19 +102,11 @@ def postgresql_proc(
 
         tmpdir = tmp_path_factory.mktemp(f"pytest-postgresql-{request.fixturename}")
 
-        if logfile_prefix:
-            warn(
-                f"logfile_prefix and logsprefix config option is deprecated, "
-                f"and will be dropped in future releases. All fixture related "
-                f"data resides within {tmpdir}",
-                DeprecationWarning,
-            )
-
         pg_port = get_port(port) or get_port(config["port"])
         assert pg_port is not None
         datadir = tmpdir / f"data-{pg_port}"
         datadir.mkdir()
-        logfile_path = tmpdir / f"{logfile_prefix}postgresql.{pg_port}.log"
+        logfile_path = tmpdir / f"postgresql.{pg_port}.log"
 
         if platform.system() == "FreeBSD":
             with (datadir / "pg_hba.conf").open(mode="a") as conf_file:

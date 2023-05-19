@@ -29,7 +29,6 @@ _help_user = "PostgreSQL username"
 _help_password = "PostgreSQL password"
 _help_options = "PostgreSQL connection options"
 _help_startparams = "Starting parameters for the PostgreSQL"
-_help_logsprefix = "Prefix for the log files"
 _help_unixsocketdir = "Location of the socket directory"
 _help_dbname = "Default database name"
 _help_load = "Dotted-style or entrypoint-style path to callable or path to SQL File"
@@ -57,8 +56,6 @@ def pytest_addoption(parser: Parser) -> None:
     parser.addini(name="postgresql_options", help=_help_options, default="")
 
     parser.addini(name="postgresql_startparams", help=_help_startparams, default="-w")
-
-    parser.addini(name="postgresql_logsprefix", help=_help_logsprefix, default="")
 
     parser.addini(name="postgresql_unixsocketdir", help=_help_unixsocketdir, default=gettempdir())
 
@@ -99,13 +96,6 @@ def pytest_addoption(parser: Parser) -> None:
         action="store",
         dest="postgresql_startparams",
         help=_help_startparams,
-    )
-
-    parser.addoption(
-        "--postgresql-logsprefix",
-        action="store",
-        dest="postgresql_logsprefix",
-        help=_help_logsprefix,
     )
 
     parser.addoption(
