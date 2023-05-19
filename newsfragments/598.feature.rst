@@ -1,0 +1,1 @@
+Re-rise FileNotFound errors with more meaningful messages.

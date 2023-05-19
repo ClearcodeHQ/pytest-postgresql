@@ -30,6 +30,8 @@ from mirakuru import TCPExecutor
 from mirakuru.exceptions import ProcessFinishedWithError
 from pkg_resources import parse_version
 
+from pytest_postgresql.exceptions import ExecutableMissingException, PostgreSQLUnsupported
+
 _LOCALE = "C.UTF-8"
 
 if platform.system() == "Darwin":
@@ -37,10 +39,6 @@ if platform.system() == "Darwin":
 
 
 T = TypeVar("T", bound="PostgreSQLExecutor")
-
-
-class PostgreSQLUnsupported(Exception):
-    """Exception raised when unsupported postgresql would be detected."""
 
 
 class PostgreSQLExecutor(TCPExecutor):
@@ -195,7 +193,14 @@ class PostgreSQLExecutor(TCPExecutor):
     @property
     def version(self) -> Any:
         """Detect postgresql version."""
-        version_string = subprocess.check_output([self.executable, "--version"]).decode("utf-8")
+        try:
+            version_string = subprocess.check_output([self.executable, "--version"]).decode("utf-8")
+        except FileNotFoundError as ex:
+            raise ExecutableMissingException(
+                f"Could not found {self.executable}. Is PostgreSQL server installed? "
+                f"Alternatively pg_config installed might be from different "
+                f"version that postgresql-server."
+            ) from ex
         matches = self.VERSION_RE.search(version_string)
         assert matches is not None
         return parse_version(matches.groupdict()["version"])

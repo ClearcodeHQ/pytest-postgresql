@@ -26,6 +26,7 @@ from port_for import get_port
 from pytest import FixtureRequest, TempPathFactory
 
 from pytest_postgresql.config import get_config
+from pytest_postgresql.exceptions import ExecutableMissingException
 from pytest_postgresql.executor import PostgreSQLExecutor
 from pytest_postgresql.janitor import DatabaseJanitor
 
@@ -95,9 +96,14 @@ def postgresql_proc(
         # check if that executable exists, as it's no on system PATH
         # only replace if executable isn't passed manually
         if not os.path.exists(postgresql_ctl) and executable is None:
-            pg_bindir = subprocess.check_output(
-                ["pg_config", "--bindir"], universal_newlines=True
-            ).strip()
+            try:
+                pg_bindir = subprocess.check_output(
+                    ["pg_config", "--bindir"], universal_newlines=True
+                ).strip()
+            except FileNotFoundError as ex:
+                raise ExecutableMissingException(
+                    "Could not found pg_config executable. Is it in systenm $PATH?"
+                ) from ex
             postgresql_ctl = os.path.join(pg_bindir, "pg_ctl")
 
         tmpdir = tmp_path_factory.mktemp(f"pytest-postgresql-{request.fixturename}")
