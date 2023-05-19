@@ -10,7 +10,8 @@ from psycopg import Connection
 from pytest import FixtureRequest
 
 from pytest_postgresql.config import get_config
-from pytest_postgresql.executor import PostgreSQLExecutor, PostgreSQLUnsupported
+from pytest_postgresql.exceptions import PostgreSQLUnsupported
+from pytest_postgresql.executor import PostgreSQLExecutor
 from pytest_postgresql.factories import postgresql, postgresql_proc
 from pytest_postgresql.retry import retry
 
