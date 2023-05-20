@@ -1,1 +1,0 @@
-Use pypi's trusted publishers to publish packages.
