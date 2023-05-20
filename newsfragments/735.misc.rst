@@ -1,1 +1,0 @@
-Replaced flake8 and pydocstyle with ruff, turned on isort rules

@@ -1,1 +1,0 @@
-Move project dependency management to pipenv

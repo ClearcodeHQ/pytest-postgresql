@@ -1,1 +1,0 @@
-Dropped --postgresql-logsprefix/postgresql_logsprefix options. All fixture data is already distinguished by tmpdir itself.

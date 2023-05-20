@@ -1,1 +1,0 @@
-Use tbump instead of bumpversion to manage versioning and releases.

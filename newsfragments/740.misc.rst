@@ -1,1 +1,0 @@
-Split single bid test job into smaller running each after another.
