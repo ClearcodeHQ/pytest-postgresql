@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 pytest = "==7.3.2"
-port-for = "==0.6.3"
+port-for = "==0.7.0"
 mirakuru = "==2.5.1"
 psycopg = "==3.1.9"
 
