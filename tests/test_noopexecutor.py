@@ -19,7 +19,7 @@ def test_noproc_version(postgresql_proc: PostgreSQLExecutor) -> None:
         postgresql_proc.dbname,
     )
     noproc_version = retry(
-        lambda: postgresql_noproc.version,  # type: ignore[no-any-return]
+        lambda: postgresql_noproc.version,
         possible_exception=psycopg.OperationalError,
     )
     assert postgresql_proc.version == noproc_version
@@ -35,7 +35,7 @@ def test_noproc_cached_version(postgresql_proc: PostgreSQLExecutor) -> None:
         postgresql_proc.dbname,
     )
     ver = retry(
-        lambda: postgresql_noproc.version,  # type: ignore[no-any-return]
+        lambda: postgresql_noproc.version,
         possible_exception=psycopg.OperationalError,
     )
     with postgresql_proc.stopped():
