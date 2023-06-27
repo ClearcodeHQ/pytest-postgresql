@@ -472,6 +472,7 @@ Fast, clean and no dangling transactions, that could be accidentally rolled back
 
 Same approach will work with noproces fixture, while connecting to already running postgresql instance whether
 it'll be on a docker machine or running remotely or locally.
+
 Release
 =======
 
