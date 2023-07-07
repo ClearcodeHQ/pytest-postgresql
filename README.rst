@@ -130,6 +130,7 @@ Client fixture then creates test database out of the template database each test
 
 
 The loading_function from example will receive , and have to commit that.
+
 Connecting to already existing postgresql database
 --------------------------------------------------
 
