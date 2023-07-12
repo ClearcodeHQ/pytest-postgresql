@@ -124,7 +124,7 @@ Client fixture then creates test database out of the template database each test
     )
 
 
-.. code-block:: bash
+.. code-block:: sh
 
     pytest --postgresql-populate-template=path.to.loading_function --postgresql-populate-template=path.to.other:loading_function --postgresql-populate-template=path/to/file.sql
 
@@ -244,7 +244,7 @@ Example usage:
 
 * use ``--postgresql-port`` command line option when you run your tests
 
-    .. code-block::
+    .. code-block:: sh
 
         py.test tests --postgresql-port=8888
 
@@ -351,8 +351,8 @@ For this import DatabaseJanitor and use its init and drop methods:
             postgresql_proc.port,
             "my_test_database",
             postgresql_proc.version,
-            password="secret_password,
-        ):
+            password="secret_password",
+        )
         janitor.init()
         yield psycopg2.connect(
             dbname="my_test_database",
@@ -380,7 +380,7 @@ or use it as a context manager:
             postgresql_proc.port,
             "my_test_database",
             postgresql_proc.version,
-            password="secret_password,
+            password="secret_password",
         ):
             yield psycopg2.connect(
                 dbname="my_test_database",
@@ -479,6 +479,6 @@ Release
 
 Install pipenv and --dev dependencies first, Then run:
 
-.. code-block::
+.. code-block:: sh
 
     pipenv run tbump [NEW_VERSION]

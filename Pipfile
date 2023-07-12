@@ -19,3 +19,4 @@ mypy = "==1.4.1"
 types-setuptools = "==68.0.0.1"
 tbump = "==6.10.0"
 ruff = "==0.0.277"
+rstcheck = {version = "==6.1.2", extras = ["sphinx", "toml"]}

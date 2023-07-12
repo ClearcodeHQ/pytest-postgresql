@@ -77,11 +77,14 @@ select = [
   "D",   # pydocstyle
 ]
 
+[tool.rstcheck]
+report_level = "warning"
+
 [tool.towncrier]
 directory = "newsfragments"
 single_file=true
 filename="CHANGES.rst"
-issue_format="`#{issue} <https://github.com/ClearcodeHQ/pytest-postgresql/issues/{issue}>`_"
+issue_format="`#{issue} <https://github.com/ClearcodeHQ/pytest-postgresql/issues/{issue}>`__"
 
 [tool.towncrier.fragment.feature]
 name = "Features"

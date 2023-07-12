@@ -1,5 +1,5 @@
 Contribute to pytest-postgresql
-==============
+===============================
 
 Thank you for taking time to contribute to pytest-postgresql!
 
