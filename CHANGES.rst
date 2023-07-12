@@ -1,6 +1,5 @@
 CHANGELOG
 =========
-
 .. towncrier release notes start
 
 5.0.0 (2023-05-20)
@@ -9,7 +8,7 @@ CHANGELOG
 Breaking changes
 ----------------
 
-- Drop support for Python 3.7 (`#706 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/706>`_)
+- Drop support for Python 3.7 (`#706 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/706>`__)
 - psycopg is now a mandatory requirement.
   With pyscop2 it was optional due to the different ways it could be installed:
 
@@ -17,32 +16,32 @@ Breaking changes
   * psycopg2-binary - binary distribution
   * psycopg2cffi - pypy enabled version
 
-  Since psycopg version 3 there's only one package to install. (`#744 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/744>`_)
-- Dropped --postgresql-logsprefix/postgresql_logsprefix options. All fixture data is already distinguished by tmpdir itself. (`#748 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/748>`_)
+  Since psycopg version 3 there's only one package to install. (`#744 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/744>`__)
+- Dropped --postgresql-logsprefix/postgresql_logsprefix options. All fixture data is already distinguished by tmpdir itself. (`#748 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/748>`__)
 
 
 Features
 --------
 
-- Re-rise FileNotFound errors with more meaningful messages. (`#598 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/598>`_)
-- Support Python 3.11 (`#678 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/678>`_)
+- Re-rise FileNotFound errors with more meaningful messages. (`#598 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/598>`__)
+- Support Python 3.11 (`#678 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/678>`__)
 
 
 Miscellaneus
 ------------
 
-- Drop PyPy from CI (`#669 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/669>`_)
-- pytest-postgresql will now recognise and use development postgresql versions (`#691 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/691>`_)
-- Use towncrier to maintain project's newsfragments/changelog (`#700 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/700>`_)
-- Move project dependency management to pipenv (`#701 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/701>`_)
-- Migrate to shared automerge workflow for automatic tests dependency updates (`#702 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/702>`_)
-- Use tbump instead of bumpversion to manage versioning and releases. (`#703 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/703>`_)
-- Move most of package configuration to pyproject.toml (`#704 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/704>`_)
-- Introduce Typed config dict (`#706 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/706>`_)
-- Use ankane/setup-postgres@v1 to setup postgresql in CI instead of custom scripts. (`#708 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/708>`_)
-- Pass codecov_token to codecov action to upload coverage. (`#721 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/721>`_)
-- Replaced flake8 and pydocstyle with ruff, turned on isort rules (`#735 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/735>`_)
-- Split single bid test job into smaller running each after another. (`#740 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/740>`_)
+- Drop PyPy from CI (`#669 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/669>`__)
+- pytest-postgresql will now recognise and use development postgresql versions (`#691 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/691>`__)
+- Use towncrier to maintain project's newsfragments/changelog (`#700 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/700>`__)
+- Move project dependency management to pipenv (`#701 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/701>`__)
+- Migrate to shared automerge workflow for automatic tests dependency updates (`#702 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/702>`__)
+- Use tbump instead of bumpversion to manage versioning and releases. (`#703 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/703>`__)
+- Move most of package configuration to pyproject.toml (`#704 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/704>`__)
+- Introduce Typed config dict (`#706 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/706>`__)
+- Use ankane/setup-postgres@v1 to setup postgresql in CI instead of custom scripts. (`#708 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/708>`__)
+- Pass codecov_token to codecov action to upload coverage. (`#721 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/721>`__)
+- Replaced flake8 and pydocstyle with ruff, turned on isort rules (`#735 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/735>`__)
+- Split single bid test job into smaller running each after another. (`#740 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/740>`__)
 
 
 4.1.1
