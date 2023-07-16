@@ -8,4 +8,4 @@ on:
 
 jobs:
   build:
-    uses: fizyk/actions-reuse/.github/workflows/pypi.yml@v2.1.2
+    uses: fizyk/actions-reuse/.github/workflows/pypi.yml@v2.2.1
