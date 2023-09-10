@@ -50,13 +50,13 @@ jobs:
         run: |
           sudo locale-gen de_DE.UTF-8
       - name: Run test
-        uses: fizyk/actions-reuse/.github/actions/pipenv@v2.2.1
+        uses: fizyk/actions-reuse/.github/actions/pipenv@v2.3.1
         with:
           python-version: ${{ matrix.python-version }}
           pipenv-install-options: "--skip-lock"
           command: py.test -svv -n 0 --postgresql-exec="/usr/lib/postgresql/${{ inputs.postgresql }}/bin/pg_ctl" -k "not docker" --cov-report=xml
       - name: Run xdist test
-        uses: fizyk/actions-reuse/.github/actions/pipenv@v2.2.1
+        uses: fizyk/actions-reuse/.github/actions/pipenv@v2.3.1
         with:
           python-version: ${{ matrix.python-version }}
           pipenv-install-options: "--skip-lock"
