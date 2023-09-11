@@ -17,6 +17,6 @@ mock = "==5.1.0"
 black = "==23.7.0"
 mypy = "==1.5.1"
 types-setuptools = "==68.1.0.1"
-tbump = "==6.10.0"
+tbump = "==6.11.0"
 ruff = "==0.0.287"
 rstcheck = {version = "==6.1.2", extras = ["sphinx", "toml"]}
