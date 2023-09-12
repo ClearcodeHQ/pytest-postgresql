@@ -18,5 +18,5 @@ black = "==23.7.0"
 mypy = "==1.5.1"
 types-setuptools = "==68.2.0.0"
 tbump = "==6.11.0"
-ruff = "==0.0.287"
+ruff = "==0.0.288"
 rstcheck = {version = "==6.1.2", extras = ["sphinx", "toml"]}
