@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-      - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.3.2
+      - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.4.0
         with:
           python-version: "3.11"
           pipenv-install-options: "--skip-lock"
@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.actor != 'dependabot[bot]' }}
     steps:
-      - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.3.2
+      - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.4.0
         with:
           python-version: "3.11"
           pipenv-install-options: "--skip-lock"
