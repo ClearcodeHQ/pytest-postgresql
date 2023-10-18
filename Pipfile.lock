@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "3add12ffef2a7838f7e842c9b204a9d4923196732d1a382321523bd12c8cda0f"
+            "sha256": "b1607365f9ee95d9201e4aa52f1192c1995983aa73e1649ec900b25439b8c71b"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -24,12 +24,12 @@
         },
         "mirakuru": {
             "hashes": [
-                "sha256:0a16f897841741f8cd784f790e54d74e61456ba36be9cb9de731b49e2e7a45dc",
-                "sha256:5a60d641fa92c8bfcd383f6e52f7a0bf3f081da0467fc6e3e6a3f6b3e3e47a7b"
+                "sha256:41ca583d355eb7a6cfdc21c1aea549979d685c27b57239b88725434f115a7132",
+                "sha256:90c2d90a8cf14349b2f33e6db30a16acd855499811e0312e56cf80ceacf2d3e5"
             ],
             "index": "pypi",
-            "markers": "python_version >= '3.7'",
-            "version": "==2.5.1"
+            "markers": "python_version >= '3.8'",
+            "version": "==2.5.2"
         },
         "packaging": {
             "hashes": [
