@@ -16,6 +16,7 @@ jobs:
     uses: ./.github/workflows/single-postgres.yml
     with:
       postgresql: 14
+      python-versions: '["3.8", "3.9", "3.10", "3.11", "pypy3.9"]'
   postgresql_13:
     needs: [postgresql_14]
     uses: ./.github/workflows/single-postgres.yml
