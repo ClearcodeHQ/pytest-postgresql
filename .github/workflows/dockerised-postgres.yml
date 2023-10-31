@@ -57,7 +57,6 @@ jobs:
         uses: fizyk/actions-reuse/.github/actions/pipenv@v2.4.2
         with:
           python-version: ${{ matrix.python-version }}
-          pipenv-install-options: "--skip-lock"
           command: pytest -n 0 -k docker --postgresql-host=localhost --postgresql-port 5433 --postgresql-password=postgres --cov-report=xml:coverage-docker.xml
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3.1.4

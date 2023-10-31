@@ -1,0 +1,2 @@
+Rely on cached/artifacted Pipfile.lock.
+That way, it will be specifically defined for given python version/system.
