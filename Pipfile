@@ -12,7 +12,7 @@ psycopg = "==3.1.12"
 [dev-packages]
 towncrier = "==23.11.0"
 pytest-cov = "==4.1.0"
-pytest-xdist = "==3.3.1"
+pytest-xdist = "==3.4.0"
 mock = "==5.1.0"
 black = "==23.11.0"
 mypy = "==1.6.1"
