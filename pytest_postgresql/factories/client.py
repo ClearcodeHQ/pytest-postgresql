@@ -33,6 +33,8 @@ def postgresql(
     dbname: Optional[str] = None,
     load: Optional[List[Union[Callable, str]]] = None,
     isolation_level: "Optional[psycopg.IsolationLevel]" = None,
+    scope="function",
+    target_dbname=None,
 ) -> Callable[[FixtureRequest], Iterator[Connection]]:
     """Return connection fixture factory for PostgreSQL.
 
@@ -45,7 +47,7 @@ def postgresql(
     :returns: function which makes a connection to postgresql
     """
 
-    @pytest.fixture
+    @pytest.fixture(scope=scope)
     def postgresql_factory(request: FixtureRequest) -> Iterator[Connection]:
         """Fixture factory for PostgreSQL.
 
@@ -63,12 +65,13 @@ def postgresql(
         pg_options = proc_fixture.options
         pg_db = dbname or proc_fixture.dbname
         pg_load = load or []
+        target_db = target_dbname if target_dbname else pg_db
 
         with DatabaseJanitor(
-            pg_user, pg_host, pg_port, pg_db, proc_fixture.version, pg_password, isolation_level
+            pg_user, pg_host, pg_port, pg_db, proc_fixture.version, pg_password, isolation_level, target_dbname=target_db
         ) as janitor:
             db_connection: Connection = psycopg.connect(
-                dbname=pg_db,
+                dbname=target_db,
                 user=pg_user,
                 password=pg_password,
                 host=pg_host,

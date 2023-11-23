@@ -31,6 +31,7 @@ class DatabaseJanitor:
         password: Optional[str] = None,
         isolation_level: "Optional[psycopg.IsolationLevel]" = None,
         connection_timeout: int = 60,
+        target_dbname: str = None,
     ) -> None:
         """Initialize janitor.
 
@@ -50,6 +51,7 @@ class DatabaseJanitor:
         self.host = host
         self.port = port
         self.dbname = dbname
+        self.target_dbname = target_dbname if target_dbname else dbname
         self._connection_timeout = connection_timeout
         self.isolation_level = isolation_level
         if not isinstance(version, Version):
@@ -72,23 +74,23 @@ class DatabaseJanitor:
                 row = cur.fetchone()
                 result = (row is not None) and row[0]
             if not result:
-                cur.execute(f'CREATE DATABASE "{self.dbname}";')
+                cur.execute(f'CREATE DATABASE "{self.target_dbname}";')
             else:
                 # All template database does not allow connection:
                 self._dont_datallowconn(cur, template_name)
                 # And make sure no-one is left connected to the template database.
                 # Otherwise Creating database from template will fail
                 self._terminate_connection(cur, template_name)
-                cur.execute(f'CREATE DATABASE "{self.dbname}" TEMPLATE "{template_name}";')
+                cur.execute(f'CREATE DATABASE "{self.target_dbname}" TEMPLATE "{template_name}";')
 
     def drop(self) -> None:
         """Drop database in postgresql."""
         # We cannot drop the database while there are connections to it, so we
         # terminate all connections first while not allowing new connections.
         with self.cursor() as cur:
-            self._dont_datallowconn(cur, self.dbname)
-            self._terminate_connection(cur, self.dbname)
-            cur.execute(f'DROP DATABASE IF EXISTS "{self.dbname}";')
+            self._dont_datallowconn(cur, self.target_dbname)
+            self._terminate_connection(cur, self.target_dbname)
+            cur.execute(f'DROP DATABASE IF EXISTS "{self.target_dbname}";')
 
     @staticmethod
     def _dont_datallowconn(cur: Cursor, dbname: str) -> None:
@@ -124,7 +126,7 @@ class DatabaseJanitor:
             host=self.host,
             port=self.port,
             user=self.user,
-            dbname=self.dbname,
+            dbname=self.target_dbname,
             password=self.password,
         )
 
