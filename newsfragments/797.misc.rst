@@ -1,0 +1,1 @@
+Add SQLAlchemy example for initialising common database state.
