@@ -437,10 +437,10 @@ And run tests:
 
     pytest --postgresql-host=172.17.0.2 --postgresql-password=mysecretpassword
 
-Using a common database initialisation between tests
-----------------------------------------------------
+Basic database state for all tests
+----------------------------------
 
-If you've got several tests that require common initialisation, you need to define a `load` and pass it to
+If you've got several tests that require common initialisation, you can to define a `load` and pass it to
 your custom postgresql process fixture:
 
 .. code-block:: python
@@ -473,6 +473,38 @@ Fast, clean and no dangling transactions, that could be accidentally rolled back
 
 Same approach will work with noproces fixture, while connecting to already running postgresql instance whether
 it'll be on a docker machine or running remotely or locally.
+
+Using SQLAlchemy to initialise basic database state
++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+How to use SQLAlchemy for common initalisation:
+
+.. code-block:: python
+
+    def load_database(**kwargs):
+        connection = f"postgresql+psycopg2://{kwargs['user']}:@{kwargs['host']}:{kwargs['port']}/{kwargs['dbname']}"
+        engine = create_engine(connection)
+        Base.metadata.create_all(engine)
+        session = scoped_session(sessionmaker(bind=engine))
+        # add things to session
+        session.commit()
+
+    postgresql_proc = factories.postgresql_proc(load=[load_database])
+
+    postgresql = factories.postgresql('postgresql_proc') # still need to check if this is actually needed or not
+
+    @pytest.fixture
+    def dbsession(postgresql):
+        connection = f'postgresql+psycopg2://{postgresql.info.user}:@{postgresql.info.host}:{postgresql.info.port}/{postgresql.info.dbname}'
+        engine = create_engine(connection)
+
+        session = scoped_session(sessionmaker(bind=engine))
+
+        yield session
+        # 'Base.metadata.drop_all(engine)' here specifically does not work. It is also not needed. If you leave out the session.close()
+        # all the tests still run, but you get a warning/error at the end of the tests.
+        session.close()
+
 
 Release
 =======
