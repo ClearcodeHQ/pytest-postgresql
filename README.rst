@@ -213,7 +213,7 @@ You can pick which you prefer, but remember that these settings are handled in t
      - postgresql_unixsocketdir
      - -
      - $TMPDIR
-   * - Database name
+   * - Database name which will be created by the fixtures
      - dbname
      - --postgresql-dbname
      - postgresql_dbname
@@ -463,9 +463,6 @@ your custom postgresql process fixture:
     postgresql = factories.postgresql(
         "postgresql_proc",
     )
-
-You can also define your own database name by passing same dbname value
-to **both** factories.
 
 The way this will work is that the process fixture will populate template database,
 which in turn will be used automatically by client fixture to create a test database from scratch.

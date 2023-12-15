@@ -1,0 +1,1 @@
+Removed misleading parapgraph from one example in a README
