@@ -4,7 +4,7 @@ from typing import Any
 
 import psycopg
 import pytest
-from pkg_resources import parse_version
+from packaging.version import parse
 from port_for import get_port
 from psycopg import Connection
 from pytest import FixtureRequest
@@ -22,7 +22,7 @@ class PatchedPostgreSQLExecutor(PostgreSQLExecutor):
     @property
     def version(self) -> Any:
         """Overwrite version, to always return highest unsupported version."""
-        return parse_version("8.9")
+        return parse("8.9")
 
 
 def test_unsupported_version(request: FixtureRequest) -> None:
