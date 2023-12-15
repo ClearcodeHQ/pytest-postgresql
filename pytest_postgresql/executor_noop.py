@@ -19,7 +19,7 @@
 from typing import Any, Optional, Union
 
 import psycopg
-from pkg_resources import parse_version
+from packaging.version import parse
 
 
 class NoopExecutor:
@@ -84,5 +84,5 @@ class NoopExecutor:
                     if not int(part):
                         continue
                     version_parts.append(part)
-                self._version = parse_version(".".join(version_parts[:2]))
+                self._version = parse(".".join(version_parts[:2]))
         return self._version

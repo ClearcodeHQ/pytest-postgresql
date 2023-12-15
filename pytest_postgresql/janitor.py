@@ -6,13 +6,13 @@ from types import TracebackType
 from typing import Callable, Iterator, Optional, Type, TypeVar, Union
 
 import psycopg
-from pkg_resources import parse_version
+from packaging.version import parse
 from psycopg import Connection, Cursor
 
 from pytest_postgresql.retry import retry
 from pytest_postgresql.sql import loader
 
-Version = type(parse_version("1"))
+Version = type(parse("1"))
 
 
 DatabaseJanitorType = TypeVar("DatabaseJanitorType", bound="DatabaseJanitor")
@@ -53,7 +53,7 @@ class DatabaseJanitor:
         self._connection_timeout = connection_timeout
         self.isolation_level = isolation_level
         if not isinstance(version, Version):
-            self.version = parse_version(str(version))
+            self.version = parse(str(version))
         else:
             self.version = version
 

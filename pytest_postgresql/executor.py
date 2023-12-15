@@ -28,7 +28,7 @@ from typing import Any, Optional, TypeVar
 
 from mirakuru import TCPExecutor
 from mirakuru.exceptions import ProcessFinishedWithError
-from pkg_resources import parse_version
+from packaging.version import parse
 
 from pytest_postgresql.exceptions import ExecutableMissingException, PostgreSQLUnsupported
 
@@ -57,7 +57,7 @@ class PostgreSQLExecutor(TCPExecutor):
     )
 
     VERSION_RE = re.compile(r".* (?P<version>\d+(?:\.\d+)?)")
-    MIN_SUPPORTED_VERSION = parse_version("10")
+    MIN_SUPPORTED_VERSION = parse("10")
 
     def __init__(
         self,
@@ -203,7 +203,7 @@ class PostgreSQLExecutor(TCPExecutor):
             ) from ex
         matches = self.VERSION_RE.search(version_string)
         assert matches is not None
-        return parse_version(matches.groupdict()["version"])
+        return parse(matches.groupdict()["version"])
 
     def running(self) -> bool:
         """Check if server is running."""

@@ -4,11 +4,11 @@ from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
-from pkg_resources import parse_version
+from packaging.version import parse
 
 from pytest_postgresql.janitor import DatabaseJanitor
 
-VERSION = parse_version("10")
+VERSION = parse("10")
 
 
 @pytest.mark.parametrize("version", (VERSION, 10, "10"))
