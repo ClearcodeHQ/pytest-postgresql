@@ -1,6 +1,6 @@
 """Small retry callable in case of specific error occurred."""
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 from time import sleep
 from typing import Callable, Type, TypeVar
 
@@ -19,7 +19,7 @@ def retry(
     ... ::
         FATAL:  the database system is starting up
     """
-    time: datetime = datetime.utcnow()
+    time: datetime = datetime.now(UTC)
     timeout_diff: timedelta = timedelta(seconds=timeout)
     i = 0
     while True:
