@@ -8,7 +8,9 @@ T = TypeVar("T")
 
 
 def retry(
-    func: Callable[[], T], timeout: int = 60, possible_exception: Type[Exception] = Exception
+    func: Callable[[], T],
+    timeout: int = 60,
+    possible_exception: Type[Exception] = Exception,
 ) -> T:
     """Attempt to retry the function for timeout time.
 
