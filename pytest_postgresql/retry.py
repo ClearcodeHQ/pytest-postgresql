@@ -1,6 +1,6 @@
 """Small retry callable in case of specific error occurred."""
 
-from datetime import datetime, timedelta, UTC
+from datetime import UTC, datetime, timedelta
 from time import sleep
 from typing import Callable, Type, TypeVar
 
