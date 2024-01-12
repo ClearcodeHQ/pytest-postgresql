@@ -33,3 +33,11 @@ def test_postgres_options_config_in_ini(pointed_pytester: Pytester) -> None:
     pointed_pytester.makefile(".ini", pytest="[pytest]\npostgresql_postgres_options = -N 16\n")
     ret = pointed_pytester.runpytest("test_postgres_options.py")
     ret.assert_outcomes(passed=1)
+
+
+def test_postgres_loader_in_cli(pointed_pytester: Pytester) -> None:
+    """Check that command line arguments are honored."""
+    pointed_pytester.copy_example("test_load.py")
+    test_sql_path = pointed_pytester.copy_example("test.sql")
+    ret = pointed_pytester.runpytest(f"--postgresql-load={test_sql_path}", "test_load.py")
+    ret.assert_outcomes(passed=1)

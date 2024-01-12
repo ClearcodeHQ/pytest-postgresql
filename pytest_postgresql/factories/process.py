@@ -19,6 +19,7 @@
 import os.path
 import platform
 import subprocess
+from pathlib import Path
 from typing import Callable, Iterator, List, Optional, Set, Tuple, Union
 
 import pytest
@@ -54,7 +55,7 @@ def postgresql_proc(
     startparams: Optional[str] = None,
     unixsocketdir: Optional[str] = None,
     postgres_options: Optional[str] = None,
-    load: Optional[List[Union[Callable, str]]] = None,
+    load: Optional[List[Union[Callable, str, Path]]] = None,
 ) -> Callable[[FixtureRequest, TempPathFactory], Iterator[PostgreSQLExecutor]]:
     """Postgresql process factory.
 

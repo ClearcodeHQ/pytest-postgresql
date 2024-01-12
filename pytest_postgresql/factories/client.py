@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with pytest-dbfixtures.  If not, see <http://www.gnu.org/licenses/>.
 """Fixture factory for postgresql client."""
+from pathlib import Path
 from typing import Callable, Iterator, List, Optional, Union
 
 import psycopg
@@ -31,7 +32,7 @@ from pytest_postgresql.janitor import DatabaseJanitor
 def postgresql(
     process_fixture_name: str,
     dbname: Optional[str] = None,
-    load: Optional[List[Union[Callable, str]]] = None,
+    load: Optional[List[Union[Callable, str, Path]]] = None,
     isolation_level: "Optional[psycopg.IsolationLevel]" = None,
 ) -> Callable[[FixtureRequest], Iterator[Connection]]:
     """Return connection fixture factory for PostgreSQL.
