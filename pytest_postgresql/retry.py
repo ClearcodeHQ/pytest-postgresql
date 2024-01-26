@@ -1,6 +1,7 @@
 """Small retry callable in case of specific error occurred."""
 
 from datetime import UTC, datetime, timedelta
+import sys
 from time import sleep
 from typing import Callable, Type, TypeVar
 
@@ -21,7 +22,7 @@ def retry(
     ... ::
         FATAL:  the database system is starting up
     """
-    time: datetime = datetime.now(UTC)
+    time: datetime = get_current_datetime()
     timeout_diff: timedelta = timedelta(seconds=timeout)
     i = 0
     while True:
@@ -33,3 +34,16 @@ def retry(
             if time + timeout_diff < datetime.utcnow():
                 raise TimeoutError(f"Failed after {i} attempts") from e
             sleep(1)
+
+
+def get_current_datetime() -> datetime:
+    """Get the current datetime."""
+
+    # To ensure the current datetime retrieval is adjusted with the latest
+    # versions of Python while ensuring retro-compatibility with
+    # Python 3.8, 3.9 and 3.10, we check what version of Python is
+    # being used before deciding
+    if sys.version_info.major == 3 and sys.version_info.minor > 10:
+        return datetime.now(UTC)
+
+    return datetime.utcnow()
