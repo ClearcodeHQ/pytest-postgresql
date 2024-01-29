@@ -61,7 +61,7 @@ def pytest_addoption(parser: Parser) -> None:
 
     parser.addini(name="postgresql_dbname", help=_help_dbname, default="tests")
 
-    parser.addini(name="postgresql_load", type="pathlist", help=_help_load, default=None)
+    parser.addini(name="postgresql_load", type="pathlist", help=_help_load)
     parser.addini(name="postgresql_postgres_options", help=_help_postgres_options, default="")
 
     parser.addoption(
