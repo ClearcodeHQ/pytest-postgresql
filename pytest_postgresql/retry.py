@@ -42,7 +42,7 @@ def get_current_datetime() -> datetime.datetime:
     # To ensure the current datetime retrieval is adjusted with the latest
     # versions of Python while ensuring retro-compatibility with
     # Python 3.8, 3.9 and 3.10, we check what version of Python is
-    # being used before deciding
+    # being used before deciding how to operate
     if sys.version_info.major == 3 and sys.version_info.minor > 10:
         return datetime.datetime.now(datetime.UTC)
 
