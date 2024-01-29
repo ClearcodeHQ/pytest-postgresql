@@ -1,1 +1,0 @@
-Fixed typing exceptions for mypy 1.4

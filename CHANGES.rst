@@ -1,6 +1,35 @@
 CHANGELOG
 =========
+
 .. towncrier release notes start
+
+5.1.0 (2024-01-29)
+==================
+
+Bugfixes
+--------
+
+- Update postgresql_load default value for it to fallback into the empty list (`#881 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/881>`__)
+
+
+Features
+--------
+
+- Support for Python 3.12 (`#835 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/835>`__)
+
+
+Miscellaneus
+------------
+
+- Removed misleading parapgraph from one example in a README (`#688 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/688>`__)
+- Fixed typing exceptions for mypy 1.4 (`#765 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/765>`__)
+- README: fix section markup (`#771 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/771>`__, `#776 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/776>`__)
+- Add SQLAlchemy example for initialising common database state. (`#797 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/797>`__)
+- Rely on cached/artifacted Pipfile.lock.
+  That way, it will be specifically defined for given python version/system. (`#834 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/834>`__)
+- CI Change - Add PostgreSQL 16, drop PostgreSQL 11 (`#836 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/836>`__)
+- Replace usage of `pkg_resources.parse_version` with `packaging.version.parse` (`#858 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/858>`__)
+
 
 5.0.0 (2023-05-20)
 ==================
