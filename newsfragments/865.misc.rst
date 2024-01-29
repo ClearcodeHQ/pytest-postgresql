@@ -1,0 +1,12 @@
+Fix DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version.
+
+`datetime.datetime.utcnow` has been deprecated by Python and will soon be removed by Python 3.14 (see warning text below)
+
+The following warning used to pop up everytime someone with a recent version of Python (3.12+) uses this plugin
+
+.. code-block::
+
+    .venv/lib/python3.12/site-packages/pytest_postgresql/retry.py:22: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+        time: datetime = datetime.utcnow()
+
+    -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
