@@ -38,7 +38,6 @@ def retry(
 
 def get_current_datetime() -> datetime.datetime:
     """Get the current datetime."""
-
     # To ensure the current datetime retrieval is adjusted with the latest
     # versions of Python while ensuring retro-compatibility with
     # Python 3.8, 3.9 and 3.10, we check what version of Python is
