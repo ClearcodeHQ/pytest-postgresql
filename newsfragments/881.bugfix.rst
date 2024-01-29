@@ -1,0 +1,1 @@
+Update postgresql_load default value for it to fallback into the empty list
