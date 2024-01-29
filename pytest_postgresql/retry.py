@@ -22,7 +22,7 @@ def retry(
     ... ::
         FATAL:  the database system is starting up
     """
-    time: datetime = get_current_datetime()
+    time: datetime.datetime = get_current_datetime()
     timeout_diff: datetime.timedelta = datetime.timedelta(seconds=timeout)
     i = 0
     while True:
