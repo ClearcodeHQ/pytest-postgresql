@@ -1,4 +1,5 @@
 """Plugin's configuration."""
+
 from typing import Any, List, Optional, TypedDict
 
 from pytest import FixtureRequest

@@ -1,4 +1,5 @@
 """Test various executor behaviours."""
+
 import sys
 from typing import Any
 

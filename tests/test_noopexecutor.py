@@ -1,4 +1,5 @@
 """Test for NoopExecutor."""
+
 import psycopg
 
 from pytest_postgresql.executor import PostgreSQLExecutor

@@ -1,4 +1,5 @@
 """SQL Loader function."""
+
 from typing import Any
 
 import psycopg

@@ -1,4 +1,5 @@
 """Test behavior of postgres_options passed in different ways."""
+
 from pathlib import Path
 
 import pytest

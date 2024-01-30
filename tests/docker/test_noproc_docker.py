@@ -1,4 +1,5 @@
 """Noproc fixture tests."""
+
 import pytest
 from psycopg import Connection
 

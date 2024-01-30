@@ -1,4 +1,5 @@
 """Database Janitor tests."""
+
 import sys
 from typing import Any
 from unittest.mock import MagicMock, patch
