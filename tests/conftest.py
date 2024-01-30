@@ -1,4 +1,5 @@
 """Tests main conftest file."""
+
 import os
 
 from pytest_postgresql import factories

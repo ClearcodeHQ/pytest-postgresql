@@ -1,4 +1,5 @@
 """All tests for pytest-postgresql."""
+
 import decimal
 
 import pytest

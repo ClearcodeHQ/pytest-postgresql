@@ -1,4 +1,5 @@
 """Auxiliary tests."""
+
 import pytest
 
 from pytest_postgresql.executor import PostgreSQLExecutor

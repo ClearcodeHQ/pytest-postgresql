@@ -1,4 +1,5 @@
 """Database Janitor."""
+
 import re
 from contextlib import contextmanager
 from functools import partial

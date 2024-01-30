@@ -1,4 +1,5 @@
 """Template database tests."""
+
 import pytest
 from psycopg import Connection
 
