@@ -104,9 +104,10 @@ Client specific loads the database each test
 
 .. code-block:: python
 
+    from pathlib import Path
     postgresql_my_with_schema = factories.postgresql(
         'postgresql_my_proc',
-        load=["schemafile.sql", "otherschema.sql", "import.path.to.function", "import.path.to:otherfunction", load_this]
+        load=[Path("schemafile.sql"), Path("otherschema.sql"), "import.path.to.function", "import.path.to:otherfunction", load_this]
     )
 
 .. warning::
@@ -115,12 +116,13 @@ Client specific loads the database each test
 
 
 The process fixture performs the load once per test session, and loads the data into the template database.
-Client fixture then creates test database out of the template database each test, which significantly speeds up the tests.
+Client fixture then creates test database out of the template database each test, which significantly **speeds up the tests**.
 
 .. code-block:: python
 
+    from pathlib import Path
     postgresql_my_proc = factories.postgresql_proc(
-        load=["schemafile.sql", "otherschema.sql", "import.path.to.function", "import.path.to:otherfunction", load_this]
+        load=[Path("schemafile.sql"), Path("otherschema.sql"), "import.path.to.function", "import.path.to:otherfunction", load_this]
     )
 
 

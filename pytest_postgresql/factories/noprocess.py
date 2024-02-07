@@ -17,6 +17,7 @@
 # along with pytest-dbfixtures.  If not, see <http://www.gnu.org/licenses/>.
 """Fixture factory for existing postgresql server."""
 import os
+from pathlib import Path
 from typing import Callable, Iterator, List, Optional, Union
 
 import pytest
@@ -42,7 +43,7 @@ def postgresql_noproc(
     password: Optional[str] = None,
     dbname: Optional[str] = None,
     options: str = "",
-    load: Optional[List[Union[Callable, str]]] = None,
+    load: Optional[List[Union[Callable, str, Path]]] = None,
 ) -> Callable[[FixtureRequest], Iterator[NoopExecutor]]:
     """Postgresql noprocess factory.
 

@@ -1,0 +1,3 @@
+Now all sql files used to initialise database for tests, has to be passed as pathlib.Path instance.
+
+This helps the DatabaseJanitor choose correct behaviour based on parameter.

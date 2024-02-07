@@ -1,8 +1,7 @@
 """Database Janitor."""
 
-import re
 from contextlib import contextmanager
-from functools import partial
+from pathlib import Path
 from types import TracebackType
 from typing import Callable, Iterator, Optional, Type, TypeVar, Union
 
@@ -10,8 +9,8 @@ import psycopg
 from packaging.version import parse
 from psycopg import Connection, Cursor
 
+from pytest_postgresql.loader import build_loader
 from pytest_postgresql.retry import retry
-from pytest_postgresql.sql import loader
 
 Version = type(parse("1"))
 
@@ -104,23 +103,17 @@ class DatabaseJanitor:
             (dbname,),
         )
 
-    def load(self, load: Union[Callable, str]) -> None:
+    def load(self, load: Union[Callable, str, Path]) -> None:
         """Load data into a database.
 
-        Either runs a passed loader if it's callback,
-        or runs predefined loader if it's sql file.
+        Expects:
+
+            * a Path to sql file, that'll be loaded
+            * an import path to import callable
+            * a callable that expects: host, port, user, dbname and password arguments.
+
         """
-        if isinstance(load, str):
-            if "/" in load:
-                _loader: Callable = partial(loader, load)
-            else:
-                loader_parts = re.split("[.:]", load, 2)
-                import_path = ".".join(loader_parts[:-1])
-                loader_name = loader_parts[-1]
-                _temp_import = __import__(import_path, globals(), locals(), fromlist=[loader_name])
-                _loader = getattr(_temp_import, loader_name)
-        else:
-            _loader = load
+        _loader = build_loader(load)
         _loader(
             host=self.host,
             port=self.port,
