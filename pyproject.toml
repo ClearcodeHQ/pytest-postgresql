@@ -94,13 +94,17 @@ showcontent = true
 name = "Bugfixes"
 showcontent = true
 
+[tool.towncrier.fragment.deprecate]
+name = "Deprecations"
+showcontent = true
+
 [tool.towncrier.fragment.break]
 name = "Breaking changes"
 showcontent = true
 
 [tool.towncrier.fragment.misc]
 name = "Miscellaneus"
-showcontent = true
+showcontent = false
 
 [tool.tbump.version]
 current = "5.1.0"

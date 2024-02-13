@@ -1,0 +1,4 @@
+Deprecated load parameter on a client fixture.
+Developers are encouraged to either use the load function/parameter
+for process fixture, or create an intermediate fixture placed between client
+and tests themselves to fill in the data.
