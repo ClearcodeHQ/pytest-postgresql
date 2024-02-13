@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with pytest-dbfixtures.  If not, see <http://www.gnu.org/licenses/>.
 """Fixture factory for postgresql client."""
+import warnings
 from pathlib import Path
 from typing import Callable, Iterator, List, Optional, Union
 
@@ -64,6 +65,16 @@ def postgresql(
         pg_options = proc_fixture.options
         pg_db = dbname or proc_fixture.dbname
         pg_load = load or []
+        if pg_load:
+            warnings.warn(
+                message=(
+                    "Load is deprecated on a client fixture. "
+                    "You should either process fixture load parameter to pre-fill database, "
+                    "or add a fixture between client and a test, "
+                    "that will fill the database with the data."
+                ),
+                category=DeprecationWarning,
+            )
 
         with DatabaseJanitor(
             pg_user, pg_host, pg_port, pg_db, proc_fixture.version, pg_password, isolation_level
