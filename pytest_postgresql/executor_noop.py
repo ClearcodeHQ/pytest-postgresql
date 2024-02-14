@@ -57,6 +57,11 @@ class NoopExecutor:
         self._version: Any = None
 
     @property
+    def template_dbname(self) -> str:
+        """Return the template database name."""
+        return f"{self.dbname}_tmpl"
+
+    @property
     def version(self) -> Any:
         """Get postgresql's version."""
         if not self._version:
