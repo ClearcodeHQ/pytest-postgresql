@@ -75,9 +75,15 @@ def postgresql(
                 ),
                 category=DeprecationWarning,
             )
-
         with DatabaseJanitor(
-            pg_user, pg_host, pg_port, pg_db, proc_fixture.version, pg_password, isolation_level
+            user=pg_user,
+            host=pg_host,
+            port=pg_port,
+            dbname=pg_db,
+            template_dbname=proc_fixture.template_dbname,
+            version=proc_fixture.version,
+            password=pg_password,
+            isolation_level=isolation_level,
         ) as janitor:
             db_connection: Connection = psycopg.connect(
                 dbname=pg_db,

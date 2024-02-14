@@ -1,0 +1,2 @@
+Have separate parameters for template database name and database name in DatabaseJanitor.
+It'll make it much clearer to understand the code and Janitor's behaviour.

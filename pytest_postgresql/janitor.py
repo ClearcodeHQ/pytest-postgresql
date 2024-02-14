@@ -26,8 +26,9 @@ class DatabaseJanitor:
         user: str,
         host: str,
         port: Union[str, int],
-        dbname: str,
         version: Union[str, float, Version],  # type: ignore[valid-type]
+        dbname: Optional[str] = None,
+        template_dbname: Optional[str] = None,
         password: Optional[str] = None,
         isolation_level: "Optional[psycopg.IsolationLevel]" = None,
         connection_timeout: int = 60,
@@ -38,6 +39,7 @@ class DatabaseJanitor:
         :param host: postgresql host
         :param port: postgresql port
         :param dbname: database name
+        :param dbname: template database name
         :param version: postgresql version number
         :param password: optional postgresql password
         :param isolation_level: optional postgresql isolation level
@@ -49,7 +51,10 @@ class DatabaseJanitor:
         self.password = password
         self.host = host
         self.port = port
+        # At least one of the dbname or template_dbname has to be filled.
+        assert any([dbname, template_dbname])
         self.dbname = dbname
+        self.template_dbname = template_dbname
         self._connection_timeout = connection_timeout
         self.isolation_level = isolation_level
         if not isinstance(version, Version):
@@ -59,36 +64,33 @@ class DatabaseJanitor:
 
     def init(self) -> None:
         """Create database in postgresql."""
-        template_name = f"{self.dbname}_tmpl"
         with self.cursor() as cur:
-            if self.dbname.endswith("_tmpl"):
-                result = False
-            else:
-                cur.execute(
-                    "SELECT EXISTS "
-                    "(SELECT datname FROM pg_catalog.pg_database WHERE datname= %s);",
-                    (template_name,),
-                )
-                row = cur.fetchone()
-                result = (row is not None) and row[0]
-            if not result:
+            if self.is_template():
+                cur.execute(f'CREATE DATABASE "{self.template_dbname}";')
+            elif self.template_dbname is None:
                 cur.execute(f'CREATE DATABASE "{self.dbname}";')
             else:
                 # All template database does not allow connection:
-                self._dont_datallowconn(cur, template_name)
+                self._dont_datallowconn(cur, self.template_dbname)
                 # And make sure no-one is left connected to the template database.
-                # Otherwise Creating database from template will fail
-                self._terminate_connection(cur, template_name)
-                cur.execute(f'CREATE DATABASE "{self.dbname}" TEMPLATE "{template_name}";')
+                # Otherwise, Creating database from template will fail
+                self._terminate_connection(cur, self.template_dbname)
+                cur.execute(f'CREATE DATABASE "{self.dbname}" TEMPLATE "{self.template_dbname}";')
+
+    def is_template(self) -> bool:
+        """Determine whether the DatabaseJanitor maintains template or database."""
+        return self.dbname is None
 
     def drop(self) -> None:
         """Drop database in postgresql."""
         # We cannot drop the database while there are connections to it, so we
         # terminate all connections first while not allowing new connections.
+        db_to_drop = self.template_dbname if self.is_template() else self.dbname
+        assert db_to_drop
         with self.cursor() as cur:
-            self._dont_datallowconn(cur, self.dbname)
-            self._terminate_connection(cur, self.dbname)
-            cur.execute(f'DROP DATABASE IF EXISTS "{self.dbname}";')
+            self._dont_datallowconn(cur, db_to_drop)
+            self._terminate_connection(cur, db_to_drop)
+            cur.execute(f'DROP DATABASE IF EXISTS "{db_to_drop}";')
 
     @staticmethod
     def _dont_datallowconn(cur: Cursor, dbname: str) -> None:
@@ -113,12 +115,13 @@ class DatabaseJanitor:
             * a callable that expects: host, port, user, dbname and password arguments.
 
         """
+        db_to_load = self.template_dbname if self.is_template() else self.dbname
         _loader = build_loader(load)
         _loader(
             host=self.host,
             port=self.port,
             user=self.user,
-            dbname=self.dbname,
+            dbname=db_to_load,
             password=self.password,
         )
 

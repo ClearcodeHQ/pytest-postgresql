@@ -15,14 +15,18 @@ VERSION = parse("10")
 @pytest.mark.parametrize("version", (VERSION, 10, "10"))
 def test_version_cast(version: Any) -> None:
     """Test that version is cast to Version object."""
-    janitor = DatabaseJanitor("user", "host", "1234", "database_name", version)
+    janitor = DatabaseJanitor(
+        user="user", host="host", port="1234", dbname="database_name", version=version
+    )
     assert janitor.version == VERSION
 
 
 @patch("pytest_postgresql.janitor.psycopg.connect")
 def test_cursor_selects_postgres_database(connect_mock: MagicMock) -> None:
     """Test that the cursor requests the postgres database."""
-    janitor = DatabaseJanitor("user", "host", "1234", "database_name", 10)
+    janitor = DatabaseJanitor(
+        user="user", host="host", port="1234", dbname="database_name", version=10
+    )
     with janitor.cursor():
         connect_mock.assert_called_once_with(
             dbname="postgres", user="user", password=None, host="host", port="1234"
@@ -32,7 +36,14 @@ def test_cursor_selects_postgres_database(connect_mock: MagicMock) -> None:
 @patch("pytest_postgresql.janitor.psycopg.connect")
 def test_cursor_connects_with_password(connect_mock: MagicMock) -> None:
     """Test that the cursor requests the postgres database."""
-    janitor = DatabaseJanitor("user", "host", "1234", "database_name", 10, "some_password")
+    janitor = DatabaseJanitor(
+        user="user",
+        host="host",
+        port="1234",
+        dbname="database_name",
+        version=10,
+        password="some_password",
+    )
     with janitor.cursor():
         connect_mock.assert_called_once_with(
             dbname="postgres", user="user", password="some_password", host="host", port="1234"

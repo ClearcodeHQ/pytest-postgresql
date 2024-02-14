@@ -131,6 +131,11 @@ class PostgreSQLExecutor(TCPExecutor):
             },
         )
 
+    @property
+    def template_dbname(self) -> str:
+        """Return the template database name."""
+        return f"{self.dbname}_tmpl"
+
     def start(self: T) -> T:
         """Add check for postgresql version before starting process."""
         if self.version < self.MIN_SUPPORTED_VERSION:

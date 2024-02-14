@@ -136,12 +136,11 @@ def postgresql_proc(
         # start server
         with postgresql_executor:
             postgresql_executor.wait_for_postgres()
-            template_dbname = f"{postgresql_executor.dbname}_tmpl"
             with DatabaseJanitor(
                 user=postgresql_executor.user,
                 host=postgresql_executor.host,
                 port=postgresql_executor.port,
-                dbname=template_dbname,
+                template_dbname=postgresql_executor.template_dbname,
                 version=postgresql_executor.version,
                 password=postgresql_executor.password,
             ) as janitor:
