@@ -376,4 +376,4 @@ Bugfix
 - create command line and pytest.ini configuration options for executable
 - create command line and pytest.ini configuration options for host
 - create command line and pytest.ini configuration options for port
-- Extracted code from pytest-dbfixtures
+- Extracted code from pytest-postgresql
