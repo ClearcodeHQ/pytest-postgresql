@@ -1,0 +1,1 @@
+Really old license miss-name that wasn't fix x years ago, when separating pytest-postgresql from pytest-dbfixtures
