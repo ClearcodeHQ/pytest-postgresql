@@ -31,7 +31,7 @@ def retry(
             res = func()
             return res
         except possible_exception as e:
-            if time + timeout_diff < datetime.datetime.utcnow():
+            if time + timeout_diff < get_current_datetime():
                 raise TimeoutError(f"Failed after {i} attempts") from e
             sleep(1)
 
