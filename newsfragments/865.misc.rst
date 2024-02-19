@@ -2,7 +2,7 @@ Fix DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled f
 
 `datetime.datetime.utcnow` has been deprecated by Python and will soon be removed by Python 3.14 (see warning text below)
 
-The following warning used to pop up everytime someone with a recent version of Python (3.12+) uses this plugin
+The following warning used to pop up every time someone with a recent version of Python (3.12+) uses this plugin
 
 .. code-block::
 
