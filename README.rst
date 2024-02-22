@@ -476,7 +476,7 @@ it'll be on a docker machine or running remotely or locally.
 Using SQLAlchemy to initialise basic database state
 +++++++++++++++++++++++++++++++++++++++++++++++++++
 
-How to use SQLAlchemy for common initalisation:
+How to use SQLAlchemy for common initialisation:
 
 .. code-block:: python
 
