@@ -23,6 +23,7 @@ class DatabaseJanitor:
 
     def __init__(
         self,
+        *,
         user: str,
         host: str,
         port: Union[str, int],
