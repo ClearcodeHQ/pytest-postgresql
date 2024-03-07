@@ -3,6 +3,15 @@ CHANGELOG
 
 .. towncrier release notes start
 
+5.1.1 (2024-03-07)
+==================
+
+Miscellaneus
+------------
+
+- Add missing python 3.12 classifier to pythin package. (`#915 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/915>`__)
+
+
 5.1.0 (2024-01-29)
 ==================
 

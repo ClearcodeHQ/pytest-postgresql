@@ -1,6 +1,6 @@
 [project]
 name = "pytest-postgresql"
-version = "5.1.0"
+version = "5.1.1"
 description = "Postgresql fixtures and fixture factories for Pytest."
 readme = "README.rst"
 keywords = ["tests", "pytest", "fixture", "postgresql"]
@@ -39,7 +39,7 @@ requires-python = ">= 3.8"
 [project.urls]
 "Source" = "https://github.com/ClearcodeHQ/pytest-postgresql"
 "Bug Tracker" = "https://github.com/ClearcodeHQ/pytest-postgresql/issues"
-"Changelog" = "https://github.com/ClearcodeHQ/pytest-postgresql/blob/v5.1.0/CHANGES.rst"
+"Changelog" = "https://github.com/ClearcodeHQ/pytest-postgresql/blob/v5.1.1/CHANGES.rst"
 
 [project.entry-points."pytest11"]
 pytest_postgresql = "pytest_postgresql.plugin"
@@ -104,7 +104,7 @@ name = "Miscellaneus"
 showcontent = true
 
 [tool.tbump.version]
-current = "5.1.0"
+current = "5.1.1"
 
 # Example of a semver regexp.
 # Make sure this matches current_version before
