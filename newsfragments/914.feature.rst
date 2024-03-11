@@ -1,5 +1,0 @@
-Template databases are now created with is_template flag turned on, and not by setting allow_connections to false.
-
-The allow_connections flag being set to false is used strictly right before we attempt to drop the database.
-
-

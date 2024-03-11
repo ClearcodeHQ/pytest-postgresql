@@ -1,1 +1,0 @@
-DatabaseJanitor class now accepts only keyword arguments.

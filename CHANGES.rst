@@ -3,6 +3,49 @@ CHANGELOG
 
 .. towncrier release notes start
 
+6.0.0 (2024-03-11)
+==================
+
+Breaking changes
+----------------
+
+- DatabaseJanitor class now accepts only keyword arguments. (`#899 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/899>`__)
+
+
+Bugfixes
+--------
+
+- Fix the remaining `DepcrecationWarning` for `datetime.datetime.utcnow` on Python 3.12. (`#896 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/896>`__)
+
+
+Deprecations
+------------
+
+- Deprecated load parameter on a client fixture.
+  Developers are encouraged to either use the load function/parameter
+  for process fixture, or create an intermediate fixture placed between client
+  and tests themselves to fill in the data. (`#850 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/850>`__)
+
+
+Features
+--------
+
+- Now all sql files used to initialise database for tests, has to be passed as pathlib.Path instance.
+
+  This helps the DatabaseJanitor choose correct behaviour based on parameter. (`#638 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/638>`__)
+- Have separate parameters for template database name and database name in DatabaseJanitor.
+  It'll make it much clearer to understand the code and Janitor's behaviour. (`#672 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/672>`__)
+- Template databases are now created with is_template flag turned on, and not by setting allow_connections to false.
+
+  The allow_connections flag being set to false is used strictly right before we attempt to drop the database. (`#914 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/914>`__)
+
+
+Miscellaneus
+------------
+
+- `#865 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/865>`__, `#882 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/882>`__, `#893 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/893>`__, `#900 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/900>`__
+
+
 5.1.1 (2024-03-07)
 ==================
 

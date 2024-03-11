@@ -18,4 +18,4 @@
 # along with pytest-postgresql. If not, see <http://www.gnu.org/licenses/>.
 """Main module for pytest-postgresql."""
 
-__version__ = "5.1.1"
+__version__ = "6.0.0"
