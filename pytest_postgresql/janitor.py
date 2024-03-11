@@ -67,8 +67,7 @@ class DatabaseJanitor:
         """Create database in postgresql."""
         with self.cursor() as cur:
             if self.is_template():
-                cur.execute(f'CREATE DATABASE "{self.template_dbname}";')
-                cur.execute(f'ALTER DATABASE "{self.template_dbname}" with is_template true;')
+                cur.execute(f'CREATE DATABASE "{self.template_dbname}" WITH is_template = true;')
             elif self.template_dbname is None:
                 cur.execute(f'CREATE DATABASE "{self.dbname}";')
             else:
