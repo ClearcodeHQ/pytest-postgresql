@@ -68,11 +68,10 @@ class DatabaseJanitor:
         with self.cursor() as cur:
             if self.is_template():
                 cur.execute(f'CREATE DATABASE "{self.template_dbname}";')
+                cur.execute(f'ALTER DATABASE "{self.template_dbname}" with is_template true;')
             elif self.template_dbname is None:
                 cur.execute(f'CREATE DATABASE "{self.dbname}";')
             else:
-                # All template database does not allow connection:
-                self._dont_datallowconn(cur, self.template_dbname)
                 # And make sure no-one is left connected to the template database.
                 # Otherwise, Creating database from template will fail
                 self._terminate_connection(cur, self.template_dbname)
@@ -91,6 +90,8 @@ class DatabaseJanitor:
         with self.cursor() as cur:
             self._dont_datallowconn(cur, db_to_drop)
             self._terminate_connection(cur, db_to_drop)
+            if self.is_template():
+                cur.execute(f'ALTER DATABASE "{db_to_drop}" with is_template false;')
             cur.execute(f'DROP DATABASE IF EXISTS "{db_to_drop}";')
 
     @staticmethod

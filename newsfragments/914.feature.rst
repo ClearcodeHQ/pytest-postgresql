@@ -1,0 +1,1 @@
+Template databases are now created with is_template flag turned on, and not by setting allow_connections to false.
