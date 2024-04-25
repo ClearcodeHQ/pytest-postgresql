@@ -1,0 +1,1 @@
+Dropped python 3.9 from macosx tests
