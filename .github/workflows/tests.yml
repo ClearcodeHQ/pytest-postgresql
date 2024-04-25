@@ -41,7 +41,7 @@ jobs:
     with:
       postgresql: 16
       os: macos-latest
-      python-versions: '["3.9", "3.10", "3.11", "3.12"]'
+      python-versions: '["3.10", "3.11", "3.12"]'
   macos_postgres_15:
     needs: [postgresql_15, macos_postgres_16]
     uses: ./.github/workflows/single-postgres.yml
