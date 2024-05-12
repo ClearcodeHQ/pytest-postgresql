@@ -9,7 +9,7 @@ on:
 
 jobs:
   lint:
-    uses: fizyk/actions-reuse/.github/workflows/linters-python.yml@v2.4.4
+    uses: fizyk/actions-reuse/.github/workflows/linters-python.yml@v2.4.7
     with:
       mypy: true
       ruff: true

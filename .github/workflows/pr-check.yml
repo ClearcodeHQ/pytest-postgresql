@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-      - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.4.4
+      - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.4.7
         with:
           python-version: "3.12"
           command: tbump --dry-run --only-patch $(pipenv run tbump current-version)"-x"
@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.actor != 'dependabot[bot]' }}
     steps:
-      - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.4.4
+      - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.4.7
         with:
           python-version: "3.12"
           command: towncrier check --compare-with origin/main
