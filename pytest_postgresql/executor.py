@@ -49,11 +49,11 @@ class PostgreSQLExecutor(TCPExecutor):
     """
 
     BASE_PROC_START_COMMAND = (
-        "{executable} start -D {datadir} "
+        '{executable} start -D "{datadir}" '
         "-o \"-F -p {port} -c log_destination='stderr' "
         "-c logging_collector=off "
         "-c unix_socket_directories='{unixsocketdir}' {postgres_options}\" "
-        "-l {logfile} {startparams}"
+        '-l "{logfile}" {startparams}'
     )
 
     VERSION_RE = re.compile(r".* (?P<version>\d+(?:\.\d+)?)")
@@ -214,13 +214,13 @@ class PostgreSQLExecutor(TCPExecutor):
         """Check if server is running."""
         if not os.path.exists(self.datadir):
             return False
-        status_code = subprocess.getstatusoutput(f"{self.executable} status -D {self.datadir}")[0]
+        status_code = subprocess.getstatusoutput(f'{self.executable} status -D "{self.datadir}"')[0]
         return status_code == 0
 
     def stop(self: T, sig: Optional[int] = None, exp_sig: Optional[int] = None) -> T:
         """Issue a stop request to executable."""
         subprocess.check_output(
-            f"{self.executable} stop -D {self.datadir} -m f",
+            f'{self.executable} stop -D "{self.datadir}" -m f',
             shell=True,
         )
         try:
