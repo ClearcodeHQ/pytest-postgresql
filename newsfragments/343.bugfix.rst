@@ -1,0 +1,2 @@
+Fixed a long-standing bug, where calls to pg_ctl weren't getting `LC_*` and `LANG` envvars,
+which caused issues on some systems not recognizing --auth parameter.
