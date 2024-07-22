@@ -96,6 +96,32 @@ def test_executor_init_with_password(
     assert_executor_start_stop(executor)
 
 
+@pytest.mark.xfail(reason="issue tracked by #982")
+def test_executor_init_bad_tmp_path(
+    request: FixtureRequest,
+    tmp_path_factory: pytest.TempPathFactory,
+) -> None:
+    r"""Test init with \ and space chars in the path."""
+    config = get_config(request)
+    pg_exe = process._pg_exe(None, config)
+    port = process._pg_port(-1, config)
+    tmpdir = tmp_path_factory.mktemp(f"pytest-postgresql-{request.node.name}") / r"a bad\path/"
+    tmpdir.mkdir(exist_ok=True)
+    datadir, logfile_path = process._prepare_dir(tmpdir, port)
+    executor = PostgreSQLExecutor(
+        executable=pg_exe,
+        host=config["host"],
+        port=port,
+        datadir=str(datadir),
+        unixsocketdir=config["unixsocketdir"],
+        logfile=str(logfile_path),
+        startparams=config["startparams"],
+        password="some password",
+        dbname="some database",
+    )
+    assert_executor_start_stop(executor)
+
+
 postgres_with_password = postgresql_proc(password="hunter2")
 
 
