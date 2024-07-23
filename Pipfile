@@ -16,7 +16,7 @@ pytest-xdist = "==3.6.1"
 mock = "==5.1.0"
 black = "==24.4.2"
 mypy = "==1.11.0"
-types-setuptools = "==70.3.0.20240710"
+types-setuptools = "==71.1.0.20240723"
 tbump = "==6.11.0"
 ruff = "==0.5.3"
 rstcheck = {version = "==6.2.4", extras = ["sphinx", "toml"]}
