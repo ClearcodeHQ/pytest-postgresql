@@ -17,6 +17,28 @@ from pytest_postgresql.factories import postgresql, postgresql_proc
 from pytest_postgresql.retry import retry
 
 
+def assert_executor_start_stop(executor):
+    """Check that the executor is working."""
+    with executor:
+        assert executor.running()
+        psycopg.connect(
+            dbname=executor.user,
+            user=executor.user,
+            password=executor.password,
+            host=executor.host,
+            port=executor.port,
+        )
+        with pytest.raises(psycopg.OperationalError):
+            psycopg.connect(
+                dbname=executor.user,
+                user=executor.user,
+                password="bogus",
+                host=executor.host,
+                port=executor.port,
+            )
+    assert not executor.running()
+
+
 class PatchedPostgreSQLExecutor(PostgreSQLExecutor):
     """PostgreSQLExecutor that always says it's 8.9 version."""
 
@@ -76,24 +98,37 @@ def test_executor_init_with_password(
         password="somepassword",
         dbname="somedatabase",
     )
-    with executor:
-        assert executor.running()
-        psycopg.connect(
-            dbname=executor.user,
-            user=executor.user,
-            password=executor.password,
-            host=executor.host,
-            port=executor.port,
-        )
-        with pytest.raises(psycopg.OperationalError):
-            psycopg.connect(
-                dbname=executor.user,
-                user=executor.user,
-                password="bogus",
-                host=executor.host,
-                port=executor.port,
-            )
-    assert not executor.running()
+    assert_executor_start_stop(executor)
+
+
+@pytest.mark.skipif(
+    sys.platform == "darwin", reason="The default pg_ctl path is for linux, not macos"
+)
+def test_executor_init_bad_tmp_path(
+    request: FixtureRequest,
+    tmp_path_factory: pytest.TempPathFactory,
+) -> None:
+    r"""Test init when \ char is in tmp path."""
+    config = get_config(request)
+    port = get_port(config["port"])
+    assert port is not None
+    tmpdir = tmp_path_factory.mktemp(f"pytest-postgresql-{request.node.name}") / r"bad\path/"
+    tmpdir.mkdir()
+    datadir = tmpdir / f"data-{port}"
+    datadir.mkdir()
+    logfile_path = tmpdir / f"postgresql.{port}.log"
+    executor = PostgreSQLExecutor(
+        executable=config["exec"],
+        host=config["host"],
+        port=port,
+        datadir=str(datadir),
+        unixsocketdir=config["unixsocketdir"],
+        logfile=str(logfile_path),
+        startparams=config["startparams"],
+        password="somepassword",
+        dbname="somedatabase",
+    )
+    assert_executor_start_stop(executor)
 
 
 postgres_with_password = postgresql_proc(password="hunter2")
