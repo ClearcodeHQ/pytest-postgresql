@@ -3,6 +3,22 @@ CHANGELOG
 
 .. towncrier release notes start
 
+6.0.1 (2024-08-14)
+==================
+
+Bugfixes
+--------
+
+- Fixed a long-standing bug, where calls to pg_ctl weren't getting `LC_*` and `LANG` envvars,
+  which caused issues on some systems not recognizing --auth parameter. (`#343 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/343>`__)
+
+
+Miscellaneus
+------------
+
+- `#945 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/945>`__
+
+
 6.0.0 (2024-03-11)
 ==================
 
