@@ -1,0 +1,1 @@
+Add test for `PR #965 <https://github.com/ClearcodeHQ/pytest-postgresql/pull/965>`_
