@@ -16,38 +16,67 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with pytest-postgresql.  If not, see <http://www.gnu.org/licenses/>.
 """Fixture factory for postgresql process."""
+
 import os.path
 import platform
 import subprocess
 from pathlib import Path
-from typing import Callable, Iterator, List, Optional, Set, Tuple, Union
+from typing import Callable, Iterator, List, Optional, Tuple, Union
 
+import port_for
 import pytest
 from port_for import get_port
 from pytest import FixtureRequest, TempPathFactory
 
-from pytest_postgresql.config import get_config
+from pytest_postgresql.config import PostgresqlConfigDict, get_config
 from pytest_postgresql.exceptions import ExecutableMissingException
 from pytest_postgresql.executor import PostgreSQLExecutor
 from pytest_postgresql.janitor import DatabaseJanitor
+
+PortType = port_for.PortType  # mypy requires explicit export
+
+
+def _pg_exe(executable: Optional[str], config: PostgresqlConfigDict) -> str:
+    """If executable is set, use it. Otherwise best effort to find the executable."""
+    postgresql_ctl = executable or config["exec"]
+    # check if that executable exists, as it's no on system PATH
+    # only replace if executable isn't passed manually
+    if not os.path.exists(postgresql_ctl) and executable is None:
+        try:
+            pg_bindir = subprocess.check_output(
+                ["pg_config", "--bindir"], universal_newlines=True
+            ).strip()
+        except FileNotFoundError as ex:
+            raise ExecutableMissingException(
+                "Could not found pg_config executable. Is it in systenm $PATH?"
+            ) from ex
+        postgresql_ctl = os.path.join(pg_bindir, "pg_ctl")
+    return postgresql_ctl
+
+
+def _pg_port(port: Optional[PortType], config: PostgresqlConfigDict) -> int:
+    """User specified port, otherwise find an unused port from config."""
+    pg_port = get_port(port) or get_port(config["port"])
+    assert pg_port is not None
+    return pg_port
+
+
+def _prepare_dir(tmpdir: Path, pg_port: PortType) -> Tuple[Path, Path]:
+    """Prepare directory for the executor."""
+    datadir = tmpdir / f"data-{pg_port}"
+    datadir.mkdir()
+    logfile_path = tmpdir / f"postgresql.{pg_port}.log"
+
+    if platform.system() == "FreeBSD":
+        with (datadir / "pg_hba.conf").open(mode="a") as conf_file:
+            conf_file.write("host all all 0.0.0.0/0 trust\n")
+    return datadir, logfile_path
 
 
 def postgresql_proc(
     executable: Optional[str] = None,
     host: Optional[str] = None,
-    port: Union[
-        None,
-        str,
-        int,
-        Tuple[int, int],
-        Set[int],
-        List[str],
-        List[int],
-        List[Tuple[int, int]],
-        List[Set[int]],
-        List[Union[Set[int], Tuple[int, int]]],
-        List[Union[str, int, Tuple[int, int], Set[int]]],
-    ] = -1,
+    port: Optional[PortType] = -1,
     user: Optional[str] = None,
     password: Optional[str] = None,
     dbname: Optional[str] = None,
@@ -90,34 +119,12 @@ def postgresql_proc(
         :returns: tcp executor
         """
         config = get_config(request)
-        postgresql_ctl = executable or config["exec"]
         pg_dbname = dbname or config["dbname"]
         pg_load = load or config["load"]
-
-        # check if that executable exists, as it's no on system PATH
-        # only replace if executable isn't passed manually
-        if not os.path.exists(postgresql_ctl) and executable is None:
-            try:
-                pg_bindir = subprocess.check_output(
-                    ["pg_config", "--bindir"], universal_newlines=True
-                ).strip()
-            except FileNotFoundError as ex:
-                raise ExecutableMissingException(
-                    "Could not found pg_config executable. Is it in systenm $PATH?"
-                ) from ex
-            postgresql_ctl = os.path.join(pg_bindir, "pg_ctl")
-
+        postgresql_ctl = _pg_exe(executable, config)
+        pg_port = _pg_port(port, config)
         tmpdir = tmp_path_factory.mktemp(f"pytest-postgresql-{request.fixturename}")
-
-        pg_port = get_port(port) or get_port(config["port"])
-        assert pg_port is not None
-        datadir = tmpdir / f"data-{pg_port}"
-        datadir.mkdir()
-        logfile_path = tmpdir / f"postgresql.{pg_port}.log"
-
-        if platform.system() == "FreeBSD":
-            with (datadir / "pg_hba.conf").open(mode="a") as conf_file:
-                conf_file.write("host all all 0.0.0.0/0 trust\n")
+        datadir, logfile_path = _prepare_dir(tmpdir, str(pg_port))
 
         postgresql_executor = PostgreSQLExecutor(
             executable=postgresql_ctl,
