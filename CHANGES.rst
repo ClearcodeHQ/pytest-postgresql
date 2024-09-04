@@ -3,6 +3,22 @@ CHANGELOG
 
 .. towncrier release notes start
 
+6.1.0 (2024-09-04)
+==================
+
+Features
+--------
+
+- add support for \\ character in pytest temporary path (`#982 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/982>`__)
+
+
+Miscellaneus
+------------
+
+- Add test for `PR #965 <https://github.com/ClearcodeHQ/pytest-postgresql/pull/965>`_
+- refactors test_executor.py to enable Mac
+
+
 6.0.1 (2024-08-14)
 ==================
 
