@@ -3,6 +3,15 @@ CHANGELOG
 
 .. towncrier release notes start
 
+6.1.1 (2024-09-05)
+==================
+
+Bugfixes
+--------
+
+- Set minimum version of `port-for` dependecy in pyproject.toml for client installations. (`#1015 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/1015>`__)
+
+
 6.1.0 (2024-09-04)
 ==================
 
