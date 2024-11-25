@@ -32,6 +32,7 @@ from pytest_postgresql.janitor import DatabaseJanitor
 
 def postgresql(
     process_fixture_name: str,
+    scope: str = 'function',
     dbname: Optional[str] = None,
     load: Optional[List[Union[Callable, str, Path]]] = None,
     isolation_level: "Optional[psycopg.IsolationLevel]" = None,
@@ -47,7 +48,7 @@ def postgresql(
     :returns: function which makes a connection to postgresql
     """
 
-    @pytest.fixture
+    @pytest.fixture(scope=scope)
     def postgresql_factory(request: FixtureRequest) -> Iterator[Connection]:
         """Fixture factory for PostgreSQL.
 
