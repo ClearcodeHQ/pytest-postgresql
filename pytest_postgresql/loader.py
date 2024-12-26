@@ -13,7 +13,7 @@ def build_loader(load: Union[Callable, str, Path]) -> Callable:
     if isinstance(load, Path):
         return partial(sql, load)
     elif isinstance(load, str):
-        loader_parts = re.split("[.:]", load, 2)
+        loader_parts = re.split("[.:]", load, maxsplit=2)
         import_path = ".".join(loader_parts[:-1])
         loader_name = loader_parts[-1]
         _temp_import = __import__(import_path, globals(), locals(), fromlist=[loader_name])
