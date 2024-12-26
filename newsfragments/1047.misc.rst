@@ -1,0 +1,2 @@
+Update contributing guidelines.
+Simplify development installation with `psycopg-binary`.
