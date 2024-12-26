@@ -46,7 +46,7 @@ Coding style
 Testing
 -------
 
-# Tests are written using pytest.
-# PR tests run on Github Actions.
-# In order to run the tests locally you need to have one version of postgres installed. And pass envvar named `POSTGRES` with used version number
-# If you encounter any test failures due to locale issues, make sure that both `en_US.UTF-8` and `de_DE.UTF-8` are enabled in `/etc/locale.gen` and then run `sudo locale-gen`.
+#. Tests are written using pytest.
+#. PR tests run on Github Actions.
+#. In order to run the tests locally you need to have one version of postgres installed. And pass envvar named ``POSTGRES`` with used version number
+#. If you encounter any test failures due to locale issues, make sure that both ``en_US.UTF-8`` and ``de_DE.UTF-8`` are enabled in ``/etc/locale.gen`` and then run ``sudo locale-gen``.
