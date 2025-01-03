@@ -22,6 +22,7 @@ from typing import Callable, Iterator, List, Optional, Union
 
 import psycopg
 import pytest
+from _pytest.scope import _ScopeName
 from psycopg import Connection
 from pytest import FixtureRequest
 
@@ -33,6 +34,7 @@ from pytest_postgresql.janitor import DatabaseJanitor
 def postgresql(
     process_fixture_name: str,
     dbname: Optional[str] = None,
+    scope: _ScopeName = "function",
     load: Optional[List[Union[Callable, str, Path]]] = None,
     isolation_level: "Optional[psycopg.IsolationLevel]" = None,
 ) -> Callable[[FixtureRequest], Iterator[Connection]]:
@@ -40,6 +42,7 @@ def postgresql(
 
     :param process_fixture_name: name of the process fixture
     :param dbname: database name
+    :param scope: which scope the fixture should be created for
     :param load: SQL, function or function import paths to automatically load
                  into our test database
     :param isolation_level: optional postgresql isolation level
@@ -47,7 +50,7 @@ def postgresql(
     :returns: function which makes a connection to postgresql
     """
 
-    @pytest.fixture
+    @pytest.fixture(scope=scope)
     def postgresql_factory(request: FixtureRequest) -> Iterator[Connection]:
         """Fixture factory for PostgreSQL.
 
