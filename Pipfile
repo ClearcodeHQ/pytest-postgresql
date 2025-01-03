@@ -11,6 +11,7 @@ psycopg = "==3.2.3"
 
 [dev-packages]
 towncrier = "==24.8.0"
+psycopg-binary = "==3.2.3"
 pytest-cov = "==6.0.0"
 pytest-xdist = "==3.6.1"
 mock = "==5.1.0"
