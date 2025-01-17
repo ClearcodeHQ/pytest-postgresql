@@ -37,7 +37,7 @@ repos:
     rev: v6.2.4
     hooks:
       - id: rstcheck
-        additional_dependencies: [sphinx]
+        additional_dependencies: [sphinx, toml]
 
   - repo: local
     hooks:
