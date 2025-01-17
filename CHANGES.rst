@@ -174,7 +174,7 @@ Misc
 
 - Error message typo fix
 - Docker documentation example typo fixes
-- Have setuptools required as package dependency. pkg_resources.parse_version is used in code 
+- Have setuptools required as package dependency. pkg_resources.parse_version is used in code
   but setuptools was only used as build requirements
 
 4.1.0
@@ -314,7 +314,7 @@ Bugfix
 2.6.0
 =====
 
-- [enhancement] add ability to pass options to pg_ctl's -o flag to send arguments to the underlying postgres executable 
+- [enhancement] add ability to pass options to pg_ctl's -o flag to send arguments to the underlying postgres executable
   Use `postgres_options` as fixture argument, `--postgresql-postgres-options` as pytest starting option or
   `postgresql_postgres_options` as pytest.ini configuration option
 
@@ -364,7 +364,7 @@ Bugfix
 =====
 
 - [feature] Allow to set password for postgresql. Use it throughout the flow.
-- [bugfix] Default Janitor's connections to postgres database. When using custom users, 
+- [bugfix] Default Janitor's connections to postgres database. When using custom users,
   postgres attempts to use user's database and it might not exist.
 - [bugfix] NoopExecutor connects to read version by context manager to properly handle cases
   where it can't connect to the server.
@@ -399,7 +399,7 @@ Bugfix
 1.4.1
 =====
 
-- [bugfix] Allow creating test database with hyphens 
+- [bugfix] Allow creating test database with hyphens
 
 1.4.0
 =====
