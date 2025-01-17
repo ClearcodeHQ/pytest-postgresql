@@ -348,11 +348,11 @@ For this import DatabaseJanitor and use its init and drop methods:
         # variable definition
 
         janitor = DatabaseJanitor(
-            postgresql_proc.user,
-            postgresql_proc.host,
-            postgresql_proc.port,
-            "my_test_database",
-            postgresql_proc.version,
+            user=postgresql_proc.user,
+            host=postgresql_proc.host,
+            proc=postgresql_proc.port,
+            testdb="my_test_database",
+            version=postgresql_proc.version,
             password="secret_password",
         )
         janitor.init()
@@ -377,11 +377,11 @@ or use it as a context manager:
         # variable definition
 
         with DatabaseJanitor(
-            postgresql_proc.user,
-            postgresql_proc.host,
-            postgresql_proc.port,
-            "my_test_database",
-            postgresql_proc.version,
+            user=postgresql_proc.user,
+            host=postgresql_proc.host,
+            port=postgresql_proc.port,
+            dbname="my_test_database",
+            version=postgresql_proc.version,
             password="secret_password",
         ):
             yield psycopg2.connect(
