@@ -1,0 +1,1 @@
+Add PostgreSQL 17 to CI and drop 12

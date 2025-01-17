@@ -1,0 +1,1 @@
+Stop supporting Python 3.8 as it already reached EOL

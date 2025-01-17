@@ -19,7 +19,13 @@ Feature requests/proposals
 #. Provide as detailed description as possible
     * Use case is great to have
 #. There'll be a bit of discussion for the feature. Don't worry, if it is to be accepted, we'd like to support it, so we need to understand it thoroughly.
-  
+
+Development
+-----------
+
+#. Fork the repository
+#. Clone the repository
+#. Create a virtual environment with ``pipenv install --dev``
 
 Pull requests
 -------------
@@ -40,13 +46,17 @@ Commits
 Coding style
 ------------
 
-#. Coding style is being handled by black and doublechecked by flake8 and pydocstyle
+#. Coding style is being handled by black and doublechecked by ruff.
     * We provide a `pre-commit <https://pre-commit.com/>`_ configuration for invoking these on commit.
 
 Testing
 -------
 
-# Tests are written using pytest.
-# PR tests run on Github Actions.
-# In order to run the tests locally you need to have one version of postgres installed. And pass envvar named `POSTGRES` with used version number
-# If you encounter any test failures due to locale issues, make sure that both `en_US.UTF-8` and `de_DE.UTF-8` are enabled in `/etc/locale.gen` and then run `sudo locale-gen`.
+#. Tests are written using `pytest <https://docs.pytest.org/>`_
+#. PR tests run on Github Actions.
+#. Run a PostgreSQL server [#]_, and create a default super user ``createuser --superuser postgres``
+#. Set envvar named ``POSTGRES`` with used version number
+#. Run tests with ``pipenv run pytest``
+#. If you encounter any test failures due to locale issues, make sure that both ``en_US.UTF-8`` and ``de_DE.UTF-8`` are enabled in ``/etc/locale.gen`` and then run ``sudo locale-gen``.
+
+.. [#] Installing and configuring a PostgreSQL server is out of scope of this document. Please refer to `PostgreSQL documentation <https://www.postgresql.org/docs/>`_ for more information.

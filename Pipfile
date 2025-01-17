@@ -4,19 +4,21 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-pytest = "==8.3.3"
-port-for = "==0.7.3"
-mirakuru = "==2.5.2"
-psycopg = "==3.2.2"
+pytest = "==8.3.4"
+port-for = "==0.7.4"
+mirakuru = "==2.5.3"
+packaging = "==24.2"
+psycopg = "==3.2.3"
 
 [dev-packages]
 towncrier = "==24.8.0"
-pytest-cov = "==5.0.0"
+psycopg-binary = "==3.2.3"
+pytest-cov = "==6.0.0"
 pytest-xdist = "==3.6.1"
 mock = "==5.1.0"
-black = "==24.8.0"
-mypy = "==1.11.2"
-types-setuptools = "==75.1.0.20240917"
+black = "==24.10.0"
+mypy = "==1.14.1"
+types-setuptools = "==75.6.0.20241223"
 tbump = "==6.11.0"
-ruff = "==0.6.7"
+ruff = "==0.8.6"
 rstcheck = {version = "==6.2.4", extras = ["sphinx", "toml"]}
