@@ -350,7 +350,7 @@ For this import DatabaseJanitor and use its init and drop methods:
         janitor = DatabaseJanitor(
             user=postgresql_proc.user,
             host=postgresql_proc.host,
-            postgresql_proc.port,
+            proc=postgresql_proc.port,
             testdb="my_test_database",
             version=postgresql_proc.version,
             password="secret_password",
