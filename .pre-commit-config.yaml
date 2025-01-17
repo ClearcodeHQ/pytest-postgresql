@@ -1,4 +1,7 @@
 ---
+ci:
+  skip: [pipenv, mypy, black, ruff]
+
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
 repos:
@@ -7,7 +10,7 @@ repos:
       - id: pipenv
         language: system
         name: Install dependencies for the local linters
-        entry: pip install pipenv && pipenv install --dev
+        entry: bash -c "pip install pipenv && pipenv install --dev"
         types_or:
           - python
           - toml  # Pipfile
