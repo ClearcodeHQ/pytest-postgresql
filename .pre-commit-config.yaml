@@ -1,10 +1,44 @@
 ---
 ci:
-  skip: [pipenv, mypy, black, ruff]
+  skip: [pipenv, mypy]
 
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
+minimum_pre_commit_version: 4.0.0
 repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-case-conflict
+      - id: check-merge-conflict
+      - id: trailing-whitespace
+      - id: check-toml
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+      - id: check-yaml
+      - id: pretty-format-json
+      - id: detect-private-key
+      - id: debug-statements
+
+  - repo: https://github.com/psf/black
+    rev: 24.4.2
+    hooks:
+      - id: black
+        entry: black --config pyproject.toml .
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.9.2
+    hooks:
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix, --respect-gitignore, --show-fixes]
+
+  - repo: https://github.com/rstcheck/rstcheck
+    rev: v6.2.4
+    hooks:
+      - id: rstcheck
+        additional_dependencies: [sphinx]
+
   - repo: local
     hooks:
       - id: pipenv
@@ -15,19 +49,6 @@ repos:
           - python
           - toml  # Pipfile
         pass_filenames: false
-      - id: black
-        name: black
-        entry: black
-        language: system
-        types:
-          - python
-        require_serial: true
-      - id: ruff
-        name: ruff
-        entry: ruff check
-        language: system
-        types_or:
-          - python
       - id: mypy
         name: mypy
         entry: pipenv run mypy .
