@@ -16,7 +16,7 @@ jobs:
           command: tbump --dry-run --only-patch $(pipenv run tbump current-version)"-x"
   towncrier:
     runs-on: ubuntu-latest
-    if: ${{ github.actor != 'dependabot[bot]' }}
+    if: ${{ !contains(fromJSON('["dependabot[bot]","pre-commit-ci"]'), github.actor) }}
     steps:
       - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.4.8
         with:
