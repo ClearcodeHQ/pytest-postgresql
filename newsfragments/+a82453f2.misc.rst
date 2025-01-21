@@ -1,0 +1,1 @@
+Skip newsfragment checks for pre-commit actor.
