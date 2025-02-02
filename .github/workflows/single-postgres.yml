@@ -50,12 +50,12 @@ jobs:
         run: |
           sudo locale-gen de_DE.UTF-8
       - name: Run test
-        uses: fizyk/actions-reuse/.github/actions/pipenv@v2.4.8
+        uses: fizyk/actions-reuse/.github/actions/pipenv@v2.5.0
         with:
           python-version: ${{ matrix.python-version }}
           command: py.test -svv -n 0 --postgresql-exec="/usr/lib/postgresql/${{ inputs.postgresql }}/bin/pg_ctl" -k "not docker" --cov-report=xml
       - name: Run xdist test
-        uses: fizyk/actions-reuse/.github/actions/pipenv@v2.4.8
+        uses: fizyk/actions-reuse/.github/actions/pipenv@v2.5.0
         with:
           python-version: ${{ matrix.python-version }}
           command: py.test -n 1 --postgresql-exec="/usr/lib/postgresql/${{ inputs.postgresql }}/bin/pg_ctl" -k "not docker" --cov-report=xml:coverage-xdist.xml
