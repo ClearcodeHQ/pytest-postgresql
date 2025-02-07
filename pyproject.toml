@@ -30,7 +30,7 @@ classifiers = [
 dependencies = [
     "pytest >= 6.2",
     "port-for >= 0.7.3",
-    "mirakuru",
+    "mirakuru >= 2.6.0",
     "packaging",
     "psycopg >= 3.0.0"
 ]
