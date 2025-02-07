@@ -178,12 +178,12 @@ class PostgreSQLExecutor(TCPExecutor):
                 password_file.flush()
                 init_directory += ["-o", " ".join(options)]
                 # Passing envvars to command to avoid weird MacOs error.
-                subprocess.check_output(init_directory, env=self._envvars)
+                subprocess.check_output(init_directory, env=self.envvars)
         else:
             options += ["--auth=trust"]
             init_directory += ["-o", " ".join(options)]
             # Passing envvars to command to avoid weird MacOs error.
-            subprocess.check_output(init_directory, env=self._envvars)
+            subprocess.check_output(init_directory, env=self.envvars)
 
         self._directory_initialised = True
 
