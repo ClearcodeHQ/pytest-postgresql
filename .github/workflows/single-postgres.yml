@@ -5,7 +5,7 @@ on:
     inputs:
       python-versions:
         description: 'Supported python versions'
-        default: '["3.9", "3.10", "3.11", "3.12", "3.13"]'
+        default: '["3.9", "3.10", "3.11", "3.12", "3.13", "pypy-3.10"]'
         required: false
         type: string
       postgresql:
@@ -49,6 +49,9 @@ jobs:
         if: ${{ inputs.os == 'ubuntu-latest' }}
         run: |
           sudo locale-gen de_DE.UTF-8
+      - name: install libpq
+        if: ${{ contains(inputs.python-versions, 'pypy') }}
+        run: sudo apt install libpq5
       - name: Run test
         uses: fizyk/actions-reuse/.github/actions/pipenv@v2.5.0
         with:
