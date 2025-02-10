@@ -58,7 +58,7 @@ namespaces = false
 
 [tool.pytest.ini_options]
 xfail_strict=true
-addopts = "--max-worker-restart=0 --showlocals --verbose --cov"
+addopts = "--showlocals --verbose --cov"
 testpaths = "tests"
 pytester_example_dir = "tests/examples"
 norecursedirs = "examples"

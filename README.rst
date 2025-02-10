@@ -185,6 +185,12 @@ You can pick which you prefer, but remember that these settings are handled in t
      - postgresql_port
      - yes (5432)
      - random
+   * - Port search count
+     -
+     - --postgresql-port-search-count
+     - postgresql_port_search_count
+     - -
+     - 5
    * - postgresql user
      - user
      - --postgresql-user

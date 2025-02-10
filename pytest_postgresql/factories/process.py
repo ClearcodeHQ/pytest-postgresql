@@ -21,11 +21,11 @@ import os.path
 import platform
 import subprocess
 from pathlib import Path
-from typing import Callable, Iterator, List, Optional, Tuple, Union
+from typing import Callable, Iterable, Iterator, List, Optional, Tuple, Union
 
 import port_for
 import pytest
-from port_for import get_port
+from port_for import PortForException, get_port
 from pytest import FixtureRequest, TempPathFactory
 
 from pytest_postgresql.config import PostgresqlConfigDict, get_config
@@ -54,9 +54,11 @@ def _pg_exe(executable: Optional[str], config: PostgresqlConfigDict) -> str:
     return postgresql_ctl
 
 
-def _pg_port(port: Optional[PortType], config: PostgresqlConfigDict) -> int:
+def _pg_port(
+    port: Optional[PortType], config: PostgresqlConfigDict, excluded_ports: Iterable[int]
+) -> int:
     """User specified port, otherwise find an unused port from config."""
-    pg_port = get_port(port) or get_port(config["port"])
+    pg_port = get_port(port, excluded_ports) or get_port(config["port"], excluded_ports)
     assert pg_port is not None
     return pg_port
 
@@ -122,7 +124,32 @@ def postgresql_proc(
         pg_dbname = dbname or config["dbname"]
         pg_load = load or config["load"]
         postgresql_ctl = _pg_exe(executable, config)
-        pg_port = _pg_port(port, config)
+        port_path = tmp_path_factory.getbasetemp()
+        if hasattr(request.config, "workerinput"):
+            port_path = tmp_path_factory.getbasetemp().parent
+
+        n = 0
+        used_ports: set[int] = set()
+        while True:
+            try:
+                pg_port = _pg_port(port, config, used_ports)
+                if pg_port in used_ports:
+                    raise PortForException(
+                        f"Port {pg_port} already in use, probably by other instances of the test."
+                    )
+                used_ports.add(pg_port)
+                with (port_path / f"postgresql-{pg_port}.port").open("x") as port_file:
+                    port_file.write(f"pg_port {pg_port}\n")
+                break
+            except FileExistsError:
+                if n >= config["port_search_count"]:
+                    raise PortForException(
+                        f"Attempted {n} times to select ports. "
+                        f"All attempted ports: {', '.join(map(str, used_ports))} are already "
+                        f"in use, probably by other instances of the test."
+                    )
+                n += 1
+
         tmpdir = tmp_path_factory.mktemp(f"pytest-postgresql-{request.fixturename}")
         datadir, logfile_path = _prepare_dir(tmpdir, str(pg_port))
 
