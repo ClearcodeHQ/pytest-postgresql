@@ -25,6 +25,7 @@ from pytest_postgresql import factories
 _help_executable = "Path to PostgreSQL executable"
 _help_host = "Host at which PostgreSQL will accept connections"
 _help_port = "Port at which PostgreSQL will accept connections"
+_help_port_search_count = "Number of times, pytest-postgresql will search for free port"
 _help_user = "PostgreSQL username"
 _help_password = "PostgreSQL password"
 _help_options = "PostgreSQL connection options"
@@ -48,6 +49,7 @@ def pytest_addoption(parser: Parser) -> None:
         help=_help_port,
         default=None,
     )
+    parser.addini(name="postgresql_port_search_count", help=_help_port_search_count, default=5)
 
     parser.addini(name="postgresql_user", help=_help_user, default="postgres")
 
@@ -80,6 +82,13 @@ def pytest_addoption(parser: Parser) -> None:
     )
 
     parser.addoption("--postgresql-port", action="store", dest="postgresql_port", help=_help_port)
+    parser.addoption(
+        "--postgresql-port-search-count",
+        action="store",
+        dest="postgresql_port_search_count",
+        help=_help_port_search_count,
+        default=5,
+    )
 
     parser.addoption("--postgresql-user", action="store", dest="postgresql_user", help=_help_user)
 

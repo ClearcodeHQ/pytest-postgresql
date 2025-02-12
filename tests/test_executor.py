@@ -79,7 +79,7 @@ def test_executor_init_with_password(
     config = get_config(request)
     monkeypatch.setenv("LC_ALL", locale)
     pg_exe = process._pg_exe(None, config)
-    port = process._pg_port(-1, config)
+    port = process._pg_port(-1, config, [])
     tmpdir = tmp_path_factory.mktemp(f"pytest-postgresql-{request.node.name}")
     datadir, logfile_path = process._prepare_dir(tmpdir, port)
     executor = PostgreSQLExecutor(
@@ -103,7 +103,7 @@ def test_executor_init_bad_tmp_path(
     r"""Test init with \ and space chars in the path."""
     config = get_config(request)
     pg_exe = process._pg_exe(None, config)
-    port = process._pg_port(-1, config)
+    port = process._pg_port(-1, config, [])
     tmpdir = tmp_path_factory.mktemp(f"pytest-postgresql-{request.node.name}") / r"a bad\path/"
     tmpdir.mkdir(exist_ok=True)
     datadir, logfile_path = process._prepare_dir(tmpdir, port)

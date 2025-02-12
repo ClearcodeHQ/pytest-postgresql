@@ -12,6 +12,7 @@ class PostgresqlConfigDict(TypedDict):
     exec: str
     host: str
     port: Optional[str]
+    port_search_count: int
     user: str
     password: str
     options: str
@@ -35,6 +36,7 @@ def get_config(request: FixtureRequest) -> PostgresqlConfigDict:
         exec=get_postgresql_option("exec"),
         host=get_postgresql_option("host"),
         port=get_postgresql_option("port"),
+        port_search_count=get_postgresql_option("port_search_count"),
         user=get_postgresql_option("user"),
         password=get_postgresql_option("password"),
         options=get_postgresql_option("options"),

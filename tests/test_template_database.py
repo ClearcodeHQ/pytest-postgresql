@@ -18,6 +18,7 @@ postgresql_template = postgresql(
 )
 
 
+@pytest.mark.xdist_group(name="template_database")
 @pytest.mark.parametrize("_", range(5))
 def test_template_database(postgresql_template: Connection, _: int) -> None:
     """Check that the database structure gets recreated out of a template."""
