@@ -85,22 +85,27 @@ Sample test
         postgresql.commit()
         cur.close()
 
-If you want the database fixture to be automatically populated with your schema there are two ways:
+Pre-populating the database for tests
+-------------------------------------
 
-#. client fixture specific
-#. process fixture specific
+If you want the database fixture to be automatically pre-populated with your schema and data, there are two lewels you can achieve it:
 
-Both are accepting same set of possible loaders:
+#. per test in a client fixture
+#. per session in a process fixture
 
-* sql file path
-* loading function import path (string)
-* actual loading function
+Both fixtures are accepting same set of possible loaders:
 
-That function will receive **host**, **port**, **user**, **dbname** and **password** kwargs and will have to perform
-connection to the database inside. However, you'll be able to run SQL files or even trigger programmatically database
-migrations you have.
+* sql file path - which will load and execute sql files
+* loading functions - either by string import path, actual callable.  Loading functions will receive **host**, **port**, **user**, **dbname** and **password** arguments and will have to perform
+  connection to the database inside. Or start session in the ORM of your choice to perform actions with given ORM.
+  This way, you'd be able to trigger ORM based data manipulations, or even trigger database migrations programmatically.
 
-Client specific loads the database each test
+
+Per test in a client fixture
+++++++++++++++++++++++++++++
+
+Client fixture loads are performed the database each test. Are useful if you create several clients for single process fixture.
+
 
 .. code-block:: python
 
@@ -112,10 +117,17 @@ Client specific loads the database each test
 
 .. warning::
 
-    This way, the database will still be dropped each time.
+    The database is dropped after each test and before each test using this fixture, it will load the schema/data again.
+
+.. warning::
+
+    client level pre-population is deprecated. Same functionality can be achieved by intermediary fixture between client and test itself.
 
 
-The process fixture performs the load once per test session, and loads the data into the template database.
+Per session in a process fixture
+++++++++++++++++++++++++++++++++
+
+The process fixture pre-populates the database once per test session, and loads the schema and data into the template database.
 Client fixture then creates test database out of the template database each test, which significantly **speeds up the tests**.
 
 .. code-block:: python
@@ -125,13 +137,14 @@ Client fixture then creates test database out of the template database each test
         load=[Path("schemafile.sql"), Path("otherschema.sql"), "import.path.to.function", "import.path.to:otherfunction", load_this]
     )
 
+Additional benefit, is that test code might safely use separate database connection, and can safely test it's behaviour with transactions and rollbacks,
+as tests and code will work on separate database client instances.
+
+Defining pre-populate on command line:
 
 .. code-block:: sh
 
     pytest --postgresql-populate-template=path.to.loading_function --postgresql-populate-template=path.to.other:loading_function --postgresql-populate-template=path/to/file.sql
-
-
-The loading_function from example will receive , and have to commit that.
 
 Connecting to already existing postgresql database
 --------------------------------------------------
