@@ -90,45 +90,20 @@ Pre-populating the database for tests
 
 If you want the database fixture to be automatically pre-populated with your schema and data, there are two lewels you can achieve it:
 
-#. per test in a client fixture
+#. per test in a client fixture, by an intermediary fixture between client and your test (or other fixtures)
 #. per session in a process fixture
 
-Both fixtures are accepting same set of possible loaders:
+The process fixture accepts a load parameter, which accepts these loaders:
 
 * sql file path - which will load and execute sql files
-* loading functions - either by string import path, actual callable.  Loading functions will receive **host**, **port**, **user**, **dbname** and **password** arguments and will have to perform
+* loading functions - either by string import path, actual callable.
+  Loading functions will receive **host**, **port**, **user**, **dbname** and **password** arguments and will have to perform
   connection to the database inside. Or start session in the ORM of your choice to perform actions with given ORM.
   This way, you'd be able to trigger ORM based data manipulations, or even trigger database migrations programmatically.
 
-
-Per test in a client fixture
-++++++++++++++++++++++++++++
-
-Client fixture loads are performed the database each test. Are useful if you create several clients for single process fixture.
-
-
-.. code-block:: python
-
-    from pathlib import Path
-    postgresql_my_with_schema = factories.postgresql(
-        'postgresql_my_proc',
-        load=[Path("schemafile.sql"), Path("otherschema.sql"), "import.path.to.function", "import.path.to:otherfunction", load_this]
-    )
-
-.. warning::
-
-    The database is dropped after each test and before each test using this fixture, it will load the schema/data again.
-
-.. warning::
-
-    client level pre-population is deprecated. Same functionality can be achieved by intermediary fixture between client and test itself.
-
-
-Per session in a process fixture
-++++++++++++++++++++++++++++++++
-
-The process fixture pre-populates the database once per test session, and loads the schema and data into the template database.
-Client fixture then creates test database out of the template database each test, which significantly **speeds up the tests**.
+The process fixture pre-populates the database once per test session (at the start of the process fixture),
+and loads the schema and data into the template database. Client fixture then creates test database out of the template database each test,
+which significantly **speeds up the tests**.
 
 .. code-block:: python
 
@@ -138,7 +113,7 @@ Client fixture then creates test database out of the template database each test
     )
 
 Additional benefit, is that test code might safely use separate database connection, and can safely test it's behaviour with transactions and rollbacks,
-as tests and code will work on separate database client instances.
+as tests and code will work on separate database connections.
 
 Defining pre-populate on command line:
 

@@ -1,7 +1,5 @@
 """Noproc fixture tests."""
 
-import pathlib
-
 import pytest
 from psycopg import Connection
 
@@ -11,7 +9,7 @@ from tests.loader import load_database
 
 postgresql_my_proc = pytest_postgresql.factories.noprocess.postgresql_noproc()
 postgres_with_schema = pytest_postgresql.factories.client.postgresql(
-    "postgresql_my_proc", dbname="test", load=[pathlib.Path("tests/test_sql/eidastats.sql")]
+    "postgresql_my_proc", dbname="test"
 )
 
 postgresql_my_proc_template = pytest_postgresql.factories.noprocess.postgresql_noproc(

@@ -11,7 +11,7 @@ from pytest_postgresql.retry import retry
 from tests.conftest import POSTGRESQL_VERSION
 
 MAKE_Q = "CREATE TABLE test (id serial PRIMARY KEY, num integer, data varchar);"
-SELECT_Q = "SELECT * FROM test;"
+SELECT_Q = "SELECT * FROM test_load;"
 
 
 def test_postgresql_proc(postgresql_proc: PostgreSQLExecutor) -> None:
@@ -40,18 +40,9 @@ def test_two_postgreses(postgresql: Connection, postgresql2: Connection) -> None
     cur.close()
 
 
-def test_postgres_load_one_file(postgresql_load_1: Connection) -> None:
-    """Check postgresql fixture can load one file."""
-    cur = postgresql_load_1.cursor()
-    cur.execute(SELECT_Q)
-    results = cur.fetchall()
-    assert len(results) == 1
-    cur.close()
-
-
-def test_postgres_load_two_files(postgresql_load_2: Connection) -> None:
+def test_postgres_load_two_files(postgresql_load_1: Connection) -> None:
     """Check postgresql fixture can load two files."""
-    cur = postgresql_load_2.cursor()
+    cur = postgresql_load_1.cursor()
     cur.execute(SELECT_Q)
     results = cur.fetchall()
     assert len(results) == 2
