@@ -9,6 +9,6 @@ on:
 
 jobs:
   lint:
-    uses: fizyk/actions-reuse/.github/workflows/linters-python.yml@v2.6.0
+    uses: fizyk/actions-reuse/.github/workflows/linters-python.yml@v3.0.1
     with:
       pre-commit: true
