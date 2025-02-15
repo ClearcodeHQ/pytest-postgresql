@@ -1,1 +1,1 @@
-INSERT INTO test VALUES(2, 1, 'z');
+INSERT INTO test_load VALUES(2, 1, 'z');

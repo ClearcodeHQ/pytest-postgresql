@@ -9,10 +9,10 @@ import pytest_postgresql.factories.client
 import pytest_postgresql.factories.noprocess
 from tests.loader import load_database
 
-postgresql_my_proc = pytest_postgresql.factories.noprocess.postgresql_noproc()
-postgres_with_schema = pytest_postgresql.factories.client.postgresql(
-    "postgresql_my_proc", dbname="test", load=[pathlib.Path("tests/test_sql/eidastats.sql")]
+postgresql_my_proc = pytest_postgresql.factories.noprocess.postgresql_noproc(
+    load=[pathlib.Path("tests/test_sql/eidastats.sql")]
 )
+postgres_with_schema = pytest_postgresql.factories.client.postgresql("postgresql_my_proc")
 
 postgresql_my_proc_template = pytest_postgresql.factories.noprocess.postgresql_noproc(
     dbname="stories_templated", load=[load_database]
