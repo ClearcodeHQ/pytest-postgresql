@@ -37,9 +37,9 @@ dependencies = [
 requires-python = ">= 3.9"
 
 [project.urls]
-"Source" = "https://github.com/ClearcodeHQ/pytest-postgresql"
-"Bug Tracker" = "https://github.com/ClearcodeHQ/pytest-postgresql/issues"
-"Changelog" = "https://github.com/ClearcodeHQ/pytest-postgresql/blob/v6.1.1/CHANGES.rst"
+"Source" = "https://github.com/dbfixtures/pytest-postgresql"
+"Bug Tracker" = "https://github.com/dbfixtures/pytest-postgresql/issues"
+"Changelog" = "https://github.com/dbfixtures/pytest-postgresql/blob/v6.1.1/CHANGES.rst"
 
 [project.entry-points."pytest11"]
 pytest_postgresql = "pytest_postgresql.plugin"
@@ -84,7 +84,7 @@ report_level = "warning"
 directory = "newsfragments"
 single_file=true
 filename="CHANGES.rst"
-issue_format="`#{issue} <https://github.com/ClearcodeHQ/pytest-postgresql/issues/{issue}>`__"
+issue_format="`#{issue} <https://github.com/dbfixtures/pytest-postgresql/issues/{issue}>`__"
 
 [tool.towncrier.fragment.feature]
 name = "Features"
@@ -145,7 +145,7 @@ search = 'version = "{current_version}"'
 
 [[tool.tbump.file]]
 src = "pyproject.toml"
-search = '"Changelog" = "https://github.com/ClearcodeHQ/pytest-postgresql/blob/v{current_version}/CHANGES.rst"'
+search = '"Changelog" = "https://github.com/dbfixtures/pytest-postgresql/blob/v{current_version}/CHANGES.rst"'
 
 # You can specify a list of commands to
 # run after the files have been patched

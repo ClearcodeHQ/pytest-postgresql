@@ -9,7 +9,7 @@ CHANGELOG
 Bugfixes
 --------
 
-- Set minimum version of `port-for` dependecy in pyproject.toml for client installations. (`#1015 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/1015>`__)
+- Set minimum version of `port-for` dependecy in pyproject.toml for client installations. (`#1015 <https://github.com/dbfixtures/pytest-postgresql/issues/1015>`__)
 
 
 6.1.0 (2024-09-04)
@@ -18,13 +18,13 @@ Bugfixes
 Features
 --------
 
-- add support for \\ character in pytest temporary path (`#982 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/982>`__)
+- add support for \\ character in pytest temporary path (`#982 <https://github.com/dbfixtures/pytest-postgresql/issues/982>`__)
 
 
 Miscellaneus
 ------------
 
-- Add test for `PR #965 <https://github.com/ClearcodeHQ/pytest-postgresql/pull/965>`_
+- Add test for `PR #965 <https://github.com/dbfixtures/pytest-postgresql/pull/965>`_
 - refactors test_executor.py to enable Mac
 
 
@@ -35,13 +35,13 @@ Bugfixes
 --------
 
 - Fixed a long-standing bug, where calls to pg_ctl weren't getting `LC_*` and `LANG` envvars,
-  which caused issues on some systems not recognizing --auth parameter. (`#343 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/343>`__)
+  which caused issues on some systems not recognizing --auth parameter. (`#343 <https://github.com/dbfixtures/pytest-postgresql/issues/343>`__)
 
 
 Miscellaneus
 ------------
 
-- `#945 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/945>`__
+- `#945 <https://github.com/dbfixtures/pytest-postgresql/issues/945>`__
 
 
 6.0.0 (2024-03-11)
@@ -50,13 +50,13 @@ Miscellaneus
 Breaking changes
 ----------------
 
-- DatabaseJanitor class now accepts only keyword arguments. (`#899 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/899>`__)
+- DatabaseJanitor class now accepts only keyword arguments. (`#899 <https://github.com/dbfixtures/pytest-postgresql/issues/899>`__)
 
 
 Bugfixes
 --------
 
-- Fix the remaining `DepcrecationWarning` for `datetime.datetime.utcnow` on Python 3.12. (`#896 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/896>`__)
+- Fix the remaining `DepcrecationWarning` for `datetime.datetime.utcnow` on Python 3.12. (`#896 <https://github.com/dbfixtures/pytest-postgresql/issues/896>`__)
 
 
 Deprecations
@@ -65,7 +65,7 @@ Deprecations
 - Deprecated load parameter on a client fixture.
   Developers are encouraged to either use the load function/parameter
   for process fixture, or create an intermediate fixture placed between client
-  and tests themselves to fill in the data. (`#850 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/850>`__)
+  and tests themselves to fill in the data. (`#850 <https://github.com/dbfixtures/pytest-postgresql/issues/850>`__)
 
 
 Features
@@ -73,18 +73,18 @@ Features
 
 - Now all sql files used to initialise database for tests, has to be passed as pathlib.Path instance.
 
-  This helps the DatabaseJanitor choose correct behaviour based on parameter. (`#638 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/638>`__)
+  This helps the DatabaseJanitor choose correct behaviour based on parameter. (`#638 <https://github.com/dbfixtures/pytest-postgresql/issues/638>`__)
 - Have separate parameters for template database name and database name in DatabaseJanitor.
-  It'll make it much clearer to understand the code and Janitor's behaviour. (`#672 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/672>`__)
+  It'll make it much clearer to understand the code and Janitor's behaviour. (`#672 <https://github.com/dbfixtures/pytest-postgresql/issues/672>`__)
 - Template databases are now created with is_template flag turned on, and not by setting allow_connections to false.
 
-  The allow_connections flag being set to false is used strictly right before we attempt to drop the database. (`#914 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/914>`__)
+  The allow_connections flag being set to false is used strictly right before we attempt to drop the database. (`#914 <https://github.com/dbfixtures/pytest-postgresql/issues/914>`__)
 
 
 Miscellaneus
 ------------
 
-- `#865 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/865>`__, `#882 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/882>`__, `#893 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/893>`__, `#900 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/900>`__
+- `#865 <https://github.com/dbfixtures/pytest-postgresql/issues/865>`__, `#882 <https://github.com/dbfixtures/pytest-postgresql/issues/882>`__, `#893 <https://github.com/dbfixtures/pytest-postgresql/issues/893>`__, `#900 <https://github.com/dbfixtures/pytest-postgresql/issues/900>`__
 
 
 5.1.1 (2024-03-07)
@@ -93,7 +93,7 @@ Miscellaneus
 Miscellaneus
 ------------
 
-- Add missing python 3.12 classifier to pythin package. (`#915 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/915>`__)
+- Add missing python 3.12 classifier to pythin package. (`#915 <https://github.com/dbfixtures/pytest-postgresql/issues/915>`__)
 
 
 5.1.0 (2024-01-29)
@@ -102,26 +102,26 @@ Miscellaneus
 Bugfixes
 --------
 
-- Update postgresql_load default value for it to fallback into the empty list (`#881 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/881>`__)
+- Update postgresql_load default value for it to fallback into the empty list (`#881 <https://github.com/dbfixtures/pytest-postgresql/issues/881>`__)
 
 
 Features
 --------
 
-- Support for Python 3.12 (`#835 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/835>`__)
+- Support for Python 3.12 (`#835 <https://github.com/dbfixtures/pytest-postgresql/issues/835>`__)
 
 
 Miscellaneus
 ------------
 
-- Removed misleading parapgraph from one example in a README (`#688 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/688>`__)
-- Fixed typing exceptions for mypy 1.4 (`#765 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/765>`__)
-- README: fix section markup (`#771 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/771>`__, `#776 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/776>`__)
-- Add SQLAlchemy example for initialising common database state. (`#797 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/797>`__)
+- Removed misleading parapgraph from one example in a README (`#688 <https://github.com/dbfixtures/pytest-postgresql/issues/688>`__)
+- Fixed typing exceptions for mypy 1.4 (`#765 <https://github.com/dbfixtures/pytest-postgresql/issues/765>`__)
+- README: fix section markup (`#771 <https://github.com/dbfixtures/pytest-postgresql/issues/771>`__, `#776 <https://github.com/dbfixtures/pytest-postgresql/issues/776>`__)
+- Add SQLAlchemy example for initialising common database state. (`#797 <https://github.com/dbfixtures/pytest-postgresql/issues/797>`__)
 - Rely on cached/artifacted Pipfile.lock.
-  That way, it will be specifically defined for given python version/system. (`#834 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/834>`__)
-- CI Change - Add PostgreSQL 16, drop PostgreSQL 11 (`#836 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/836>`__)
-- Replace usage of `pkg_resources.parse_version` with `packaging.version.parse` (`#858 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/858>`__)
+  That way, it will be specifically defined for given python version/system. (`#834 <https://github.com/dbfixtures/pytest-postgresql/issues/834>`__)
+- CI Change - Add PostgreSQL 16, drop PostgreSQL 11 (`#836 <https://github.com/dbfixtures/pytest-postgresql/issues/836>`__)
+- Replace usage of `pkg_resources.parse_version` with `packaging.version.parse` (`#858 <https://github.com/dbfixtures/pytest-postgresql/issues/858>`__)
 
 
 5.0.0 (2023-05-20)
@@ -130,7 +130,7 @@ Miscellaneus
 Breaking changes
 ----------------
 
-- Drop support for Python 3.7 (`#706 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/706>`__)
+- Drop support for Python 3.7 (`#706 <https://github.com/dbfixtures/pytest-postgresql/issues/706>`__)
 - psycopg is now a mandatory requirement.
   With pyscop2 it was optional due to the different ways it could be installed:
 
@@ -138,32 +138,32 @@ Breaking changes
   * psycopg2-binary - binary distribution
   * psycopg2cffi - pypy enabled version
 
-  Since psycopg version 3 there's only one package to install. (`#744 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/744>`__)
-- Dropped --postgresql-logsprefix/postgresql_logsprefix options. All fixture data is already distinguished by tmpdir itself. (`#748 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/748>`__)
+  Since psycopg version 3 there's only one package to install. (`#744 <https://github.com/dbfixtures/pytest-postgresql/issues/744>`__)
+- Dropped --postgresql-logsprefix/postgresql_logsprefix options. All fixture data is already distinguished by tmpdir itself. (`#748 <https://github.com/dbfixtures/pytest-postgresql/issues/748>`__)
 
 
 Features
 --------
 
-- Re-rise FileNotFound errors with more meaningful messages. (`#598 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/598>`__)
-- Support Python 3.11 (`#678 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/678>`__)
+- Re-rise FileNotFound errors with more meaningful messages. (`#598 <https://github.com/dbfixtures/pytest-postgresql/issues/598>`__)
+- Support Python 3.11 (`#678 <https://github.com/dbfixtures/pytest-postgresql/issues/678>`__)
 
 
 Miscellaneus
 ------------
 
-- Drop PyPy from CI (`#669 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/669>`__)
-- pytest-postgresql will now recognise and use development postgresql versions (`#691 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/691>`__)
-- Use towncrier to maintain project's newsfragments/changelog (`#700 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/700>`__)
-- Move project dependency management to pipenv (`#701 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/701>`__)
-- Migrate to shared automerge workflow for automatic tests dependency updates (`#702 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/702>`__)
-- Use tbump instead of bumpversion to manage versioning and releases. (`#703 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/703>`__)
-- Move most of package configuration to pyproject.toml (`#704 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/704>`__)
-- Introduce Typed config dict (`#706 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/706>`__)
-- Use ankane/setup-postgres@v1 to setup postgresql in CI instead of custom scripts. (`#708 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/708>`__)
-- Pass codecov_token to codecov action to upload coverage. (`#721 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/721>`__)
-- Replaced flake8 and pydocstyle with ruff, turned on isort rules (`#735 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/735>`__)
-- Split single bid test job into smaller running each after another. (`#740 <https://github.com/ClearcodeHQ/pytest-postgresql/issues/740>`__)
+- Drop PyPy from CI (`#669 <https://github.com/dbfixtures/pytest-postgresql/issues/669>`__)
+- pytest-postgresql will now recognise and use development postgresql versions (`#691 <https://github.com/dbfixtures/pytest-postgresql/issues/691>`__)
+- Use towncrier to maintain project's newsfragments/changelog (`#700 <https://github.com/dbfixtures/pytest-postgresql/issues/700>`__)
+- Move project dependency management to pipenv (`#701 <https://github.com/dbfixtures/pytest-postgresql/issues/701>`__)
+- Migrate to shared automerge workflow for automatic tests dependency updates (`#702 <https://github.com/dbfixtures/pytest-postgresql/issues/702>`__)
+- Use tbump instead of bumpversion to manage versioning and releases. (`#703 <https://github.com/dbfixtures/pytest-postgresql/issues/703>`__)
+- Move most of package configuration to pyproject.toml (`#704 <https://github.com/dbfixtures/pytest-postgresql/issues/704>`__)
+- Introduce Typed config dict (`#706 <https://github.com/dbfixtures/pytest-postgresql/issues/706>`__)
+- Use ankane/setup-postgres@v1 to setup postgresql in CI instead of custom scripts. (`#708 <https://github.com/dbfixtures/pytest-postgresql/issues/708>`__)
+- Pass codecov_token to codecov action to upload coverage. (`#721 <https://github.com/dbfixtures/pytest-postgresql/issues/721>`__)
+- Replaced flake8 and pydocstyle with ruff, turned on isort rules (`#735 <https://github.com/dbfixtures/pytest-postgresql/issues/735>`__)
+- Split single bid test job into smaller running each after another. (`#740 <https://github.com/dbfixtures/pytest-postgresql/issues/740>`__)
 
 
 4.1.1
