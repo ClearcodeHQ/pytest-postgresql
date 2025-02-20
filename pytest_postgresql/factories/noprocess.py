@@ -72,6 +72,7 @@ def postgresql_noproc(
         pg_dbname = xdistify_dbname(dbname or config["dbname"])
         pg_options = options or config["options"]
         pg_load = load or config["load"]
+        drop_test_database = config["drop_test_database"]
 
         noop_exec = NoopExecutor(
             host=pg_host,
@@ -81,14 +82,17 @@ def postgresql_noproc(
             dbname=pg_dbname,
             options=pg_options,
         )
-        with DatabaseJanitor(
+        janitor = DatabaseJanitor(
             user=noop_exec.user,
             host=noop_exec.host,
             port=noop_exec.port,
             template_dbname=noop_exec.template_dbname,
             version=noop_exec.version,
             password=noop_exec.password,
-        ) as janitor:
+        )
+        if drop_test_database is True:
+            janitor.drop()
+        with janitor:
             for load_element in pg_load:
                 janitor.load(load_element)
             yield noop_exec

@@ -23,6 +23,7 @@ import pytest
 from psycopg import Connection
 from pytest import FixtureRequest
 
+from pytest_postgresql.config import get_config
 from pytest_postgresql.executor import PostgreSQLExecutor
 from pytest_postgresql.executor_noop import NoopExecutor
 from pytest_postgresql.janitor import DatabaseJanitor
@@ -52,6 +53,7 @@ def postgresql(
         proc_fixture: Union[PostgreSQLExecutor, NoopExecutor] = request.getfixturevalue(
             process_fixture_name
         )
+        config = get_config(request)
 
         pg_host = proc_fixture.host
         pg_port = proc_fixture.port
@@ -59,7 +61,7 @@ def postgresql(
         pg_password = proc_fixture.password
         pg_options = proc_fixture.options
         pg_db = dbname or proc_fixture.dbname
-        with DatabaseJanitor(
+        janitor = DatabaseJanitor(
             user=pg_user,
             host=pg_host,
             port=pg_port,
@@ -68,7 +70,10 @@ def postgresql(
             version=proc_fixture.version,
             password=pg_password,
             isolation_level=isolation_level,
-        ):
+        )
+        if config["drop_test_database"]:
+            janitor.drop()
+        with janitor:
             db_connection: Connection = psycopg.connect(
                 dbname=pg_db,
                 user=pg_user,

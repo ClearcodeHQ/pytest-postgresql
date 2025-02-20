@@ -127,12 +127,12 @@ class DatabaseJanitor:
         )
 
     @contextmanager
-    def cursor(self) -> Iterator[Cursor]:
+    def cursor(self, dbname: str = "postgres") -> Iterator[Cursor]:
         """Return postgresql cursor."""
 
         def connect() -> Connection:
             return psycopg.connect(
-                dbname="postgres",
+                dbname=dbname,
                 user=self.user,
                 password=self.password,
                 host=self.host,
