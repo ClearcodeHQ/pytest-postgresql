@@ -34,6 +34,11 @@ _help_unixsocketdir = "Location of the socket directory"
 _help_dbname = "Default database name"
 _help_load = "Dotted-style or entrypoint-style path to callable or path to SQL File"
 _help_postgres_options = "Postgres executable extra parameters. Passed via the -o option to pg_ctl"
+_help_drop_test_database = (
+    "Drop test database in noproc and client fixture, for the cases, "
+    "when database was not cleared due to errors in previous test runs. "
+    "Use cautiously and not on CI."
+)
 
 
 def pytest_addoption(parser: Parser) -> None:
@@ -125,6 +130,13 @@ def pytest_addoption(parser: Parser) -> None:
         action="store",
         dest="postgresql_postgres_options",
         help=_help_postgres_options,
+    )
+
+    parser.addoption(
+        "--postgresql-drop-test-database",
+        action="store_true",
+        dest="postgresql_drop_test_database",
+        help=_help_drop_test_database,
     )
 
 

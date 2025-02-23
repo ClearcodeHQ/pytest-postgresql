@@ -21,6 +21,7 @@ class PostgresqlConfigDict(TypedDict):
     dbname: str
     load: List[Union[Path, str]]
     postgres_options: str
+    drop_test_database: bool
 
 
 def get_config(request: FixtureRequest) -> PostgresqlConfigDict:
@@ -45,6 +46,7 @@ def get_config(request: FixtureRequest) -> PostgresqlConfigDict:
         dbname=get_postgresql_option("dbname"),
         load=load_paths,
         postgres_options=get_postgresql_option("postgres_options"),
+        drop_test_database=request.config.getoption("postgresql_drop_test_database"),
     )
 
 

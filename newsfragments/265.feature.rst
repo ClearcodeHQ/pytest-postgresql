@@ -1,0 +1,3 @@
+If a test run ended in an error that prevented proper test cleanup,
+developer can now use `--postgresql-drop-test-database` command line flag,
+to delete database from noproc fixture at the start.

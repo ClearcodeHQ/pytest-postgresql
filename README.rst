@@ -227,6 +227,18 @@ You can pick which you prefer, but remember that these settings are handled in t
      - postgresql_options
      - yes
      -
+   * - Drop test database on start.
+
+       .. warning::
+
+           Use carefully as it might lead to unexpected results within your test suite.
+     -
+     - --postgresql-drop-test-database
+     -
+     - false
+     -
+
+
 
 
 Example usage:
