@@ -1,4 +1,0 @@
-In #858 the runtime dependency on `setuptools` was replaced with `packaging`,
-which is currently installed as a transitive dependency of other dependencies.
-Make `packaging` dependency explicit to prevent accidental breakage
-in the event it is removed.

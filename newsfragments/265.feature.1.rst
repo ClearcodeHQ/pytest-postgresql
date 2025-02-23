@@ -1,3 +1,0 @@
-DatabaseJanitor.cursor now accepts optional parameter dbname, which defaults to `postgres`
-
-This database name is used to make connection to and return a cursor.

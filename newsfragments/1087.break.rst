@@ -1,1 +1,0 @@
-Drop support for load parameter from client fixtures. This can be easily replaced by creating intermediary fixture between test and client fixture.

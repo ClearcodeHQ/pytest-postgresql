@@ -1,1 +1,0 @@
-Run xdist test with -n auto, turn off xdist for xdist-less runs

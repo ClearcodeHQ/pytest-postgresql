@@ -1,1 +1,0 @@
-Add [bot] suffix to the pre-commit actor.

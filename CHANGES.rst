@@ -3,6 +3,62 @@ CHANGELOG
 
 .. towncrier release notes start
 
+7.0.0 (2025-02-23)
+==================
+
+Breaking changes
+----------------
+
+- Drop support for load parameter from client fixtures. This can be easily replaced by creating intermediary fixture between test and client fixture. (`#1087 <https://github.com/dbfixtures/pytest-postgresql/issues/1087>`__)
+- Stop supporting Python 3.8 as it already reached EOL
+
+
+Bugfixes
+--------
+
+- Passing all environment variables to the initdb.
+
+  This helps the cases where og_ctl is replaced by custom shell script
+  making additional calls, and needs all the variables, that ie server process gets. (`#1076 <https://github.com/dbfixtures/pytest-postgresql/issues/1076>`__)
+
+
+Features
+--------
+
+- If a test run ended in an error that prevented proper test cleanup,
+  developer can now use `--postgresql-drop-test-database` command line flag,
+  to delete database from noproc fixture at the start. (`#265 <https://github.com/dbfixtures/pytest-postgresql/issues/265>`__)
+- DatabaseJanitor.cursor now accepts optional parameter dbname, which defaults to `postgres`
+
+  This database name is used to make connection to and return a cursor. (`#265 <https://github.com/dbfixtures/pytest-postgresql/issues/265>`__)
+- When running tests with xdist, pytest-postgresql now attempts to detect random ports
+  selected by other nodes by writing down a .port file in session temporary directory.
+
+  The number of tries it attempts to select unused port is configurable,
+  and defaults to 0.
+
+  In case pytest-postgresql won't be able to select unused port,
+  PortForException is thrown with appropriate message. (`#872 <https://github.com/dbfixtures/pytest-postgresql/issues/872>`__)
+- Mark Python 3.13 as supported.
+
+
+Miscellaneus
+------------
+
+- `#707 <https://github.com/dbfixtures/pytest-postgresql/issues/707>`__, `#895 <https://github.com/dbfixtures/pytest-postgresql/issues/895>`__, `#1047 <https://github.com/dbfixtures/pytest-postgresql/issues/1047>`__, `#1048 <https://github.com/dbfixtures/pytest-postgresql/issues/1048>`__, `#1055 <https://github.com/dbfixtures/pytest-postgresql/issues/1055>`__, `#1061 <https://github.com/dbfixtures/pytest-postgresql/issues/1061>`__, `#1062 <https://github.com/dbfixtures/pytest-postgresql/issues/1062>`__, `#1063 <https://github.com/dbfixtures/pytest-postgresql/issues/1063>`__, `#1081 <https://github.com/dbfixtures/pytest-postgresql/issues/1081>`__
+- Add PostgreSQL 17 to CI and drop 12
+- Add [bot] suffix to the pre-commit actor.
+- Adjust links after repository transfer
+- Adjust workflows for actions-reuse 3.0.1
+- Fix DatabaseJanitor documentation.
+- In Python 3.13, usage of a positional argument for `maxsplit` has been
+  formally deprecated.
+  Update code to use keyword argument `maxsplit` instead of positional.
+- Skip local hooks from ci
+- Skip newsfragment checks for pre-commit actor.
+- Update pre-commit configuration to use ruff instead of flake8/pydocstyle
+
+
 6.1.1 (2024-09-05)
 ==================
 

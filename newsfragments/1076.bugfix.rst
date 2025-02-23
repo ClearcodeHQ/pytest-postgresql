@@ -1,4 +1,0 @@
-Passing all environment variables to the initdb.
-
-This helps the cases where og_ctl is replaced by custom shell script
-making additional calls, and needs all the variables, that ie server process gets.

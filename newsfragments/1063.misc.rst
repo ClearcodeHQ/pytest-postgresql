@@ -1,1 +1,0 @@
-Drop pre-commit used linters from the manually linting ci steps and direct dependencies.

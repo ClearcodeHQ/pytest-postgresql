@@ -1,3 +1,0 @@
-In Python 3.13, usage of a positional argument for `maxsplit` has been
-formally deprecated.
-Update code to use keyword argument `maxsplit` instead of positional.

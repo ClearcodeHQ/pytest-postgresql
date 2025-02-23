@@ -1,8 +1,0 @@
-When running tests with xdist, pytest-postgresql now attempts to detect random ports
-selected by other nodes by writing down a .port file in session temporary directory.
-
-The number of tries it attempts to select unused port is configurable,
-and defaults to 0.
-
-In case pytest-postgresql won't be able to select unused port,
-PortForException is thrown with appropriate message.
